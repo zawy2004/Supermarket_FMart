@@ -1,0 +1,24 @@
+# Java compiled files
+*.class
+*.jar
+*.war
+
+# NetBeans files
+nbproject/private/
+/build/
+/dist/
+
+# Tomcat temp/logs
+**/logs/
+**/temp/
+**/work/
+
+# Log and temp files
+*.log
+*.bak
+*.swp
+*~
+
+# OS generated
+.DS_Store
+Thumbs.db
