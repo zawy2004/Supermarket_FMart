@@ -68,7 +68,6 @@ CREATE TABLE Products (
     ProductID INT IDENTITY(1,1) PRIMARY KEY,
     ProductName NVARCHAR(200) NOT NULL,
     SKU NVARCHAR(50) UNIQUE NOT NULL, -- Mã sản phẩm
-    Barcode NVARCHAR(50) UNIQUE,
     CategoryID INT NOT NULL,
     SupplierID INT,
     Description NVARCHAR(1000),
@@ -347,7 +346,6 @@ CREATE INDEX IX_Users_IsActive ON Users(IsActive);
 -- Products table indexes
 CREATE INDEX IX_Products_CategoryID ON Products(CategoryID);
 CREATE INDEX IX_Products_SKU ON Products(SKU);
-CREATE INDEX IX_Products_Barcode ON Products(Barcode);
 CREATE INDEX IX_Products_IsActive ON Products(IsActive);
 CREATE INDEX IX_Products_ProductName ON Products(ProductName);
 
