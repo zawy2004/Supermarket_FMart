@@ -25,7 +25,7 @@ CREATE TABLE Users (
     PhoneNumber NVARCHAR(15),
     Address NVARCHAR(255),
     DateOfBirth DATE,
-    Gender NVARCHAR(10) CHECK (Gender IN ('Nam', 'Nữ', 'Khác')),
+    Gender NVARCHAR(10) CHECK (Gender IN ('Male', 'Female', 'Other')),
     RoleID INT DEFAULT 1, -- Khóa ngoại đến bảng Roles, mặc định Customer
     IsActive BIT DEFAULT 1,
     CreatedDate DATETIME DEFAULT GETDATE(),
@@ -389,7 +389,8 @@ CREATE INDEX IX_StockMovements_ProductID_MovementDate ON StockMovements(ProductI
 INSERT INTO Roles (RoleName) VALUES
 ('Customer'),
 ('Staff'),
-('Admin');
+('Admin'),
+('Manager');
 
 -- Insert default admin user (Đã chỉnh sửa để sử dụng RoleID)
 INSERT INTO Users (Username, Email, PasswordHash, FullName, RoleID, IsActive)
