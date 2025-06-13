@@ -6,7 +6,7 @@ package model;
 
 /**
  *
- * @author thanh
+ * @author gia huy
  */
 public class Wishlist {
     
