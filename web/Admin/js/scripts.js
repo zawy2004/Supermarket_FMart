@@ -28,9 +28,9 @@ $(".check-all").click(function () {
 
 /*--- Right Click Disable ---*/
 
-window.oncontextmenu = function () {
-	return false;
-}
+//window.oncontextmenu = function () {
+//	return false;
+//}
 $(document).keydown(function (event) {
 	if (event.keyCode == 123) {
 		return false;

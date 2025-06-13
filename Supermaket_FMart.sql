@@ -160,8 +160,8 @@ CREATE TABLE ImportDetails (
 
 -- 12. ORDERS TABLE - Đơn hàng
 CREATE TABLE Orders (
-    OrderID INT IDENTITY(1,1) PRIMARY KEY,
-    OrderNumber NVARCHAR(20) UNIQUE NOT NULL, -- Mã đơn hàng
+    OurderID INT IDENTITY(1,1) PRIMARY KEY,
+    OrderNmber NVARCHAR(20) UNIQUE NOT NULL, -- Mã đơn hàng
     CustomerID INT NOT NULL,
     OrderDate DATETIME DEFAULT GETDATE(),
     OrderType NVARCHAR(20) DEFAULT 'Online' CHECK (OrderType IN ('Online', 'In-Store')),
