@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-                             http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         version="3.0">
-
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                              http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <display-name>Supermarket_FMart</display-name>
+    <servlet>
+        <servlet-name>ProductServlet</servlet-name>
+        <servlet-class>controller.admin.ProductServlet</servlet-class>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>ProductServlet</servlet-name>
+        <url-pattern>/products</url-pattern> <!-- Định tuyến URL tới Servlet -->
+    </servlet-mapping>
+
+    <!-- Chỉ định các URL của các trang JSP -->
+    <servlet>
+        <servlet-name>ProductPage</servlet-name>
+        <jsp-file>Admin/products.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ProductPage</servlet-name>
+        <url-pattern>/products.jsp</url-pattern> <!-- Tạo ánh xạ trực tiếp đến products.jsp -->
+    </servlet-mapping>
+
+    <!-- Cấu hình khác -->
+    <welcome-file-list>
+        <welcome-file>Admin.index.jsp</welcome-file> <!-- Chỉ định trang chào mừng khi vào ứng dụng -->
+    </welcome-file-list>
 </web-app>
-

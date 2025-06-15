@@ -1,415 +1,126 @@
+<%@page import="model.Category"%>
+<%@page import="dao.CategoryDAO"%>
+<%@ page import="java.util.List" %>
+
+
+<%
+    // T?o ??i t??ng DAO và l?y t?t c? danh m?c t? c? s? d? li?u
+    CategoryDAO categoryDAO = new CategoryDAO();
+    List<Category> categories = categoryDAO.getAllCategories();
+%>
+
 <!DOCTYPE html>
 <html lang="en">
-
-<!-- Mirrored from gambolthemes.net/html-items/gambo_admin_new/category.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:09:58 GMT -->
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description-gambolthemes" content="">
-	<meta name="author-gambolthemes" content="">
-	<title>FMart Supermarket Admin</title>
-	<link href="css/styles.css" rel="stylesheet">
-	<link href="css/admin-style.css" rel="stylesheet">
-	
-	<!-- Vendor Stylesheets -->
-	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-	
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>FMart Supermarket Admin</title>
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/admin-style.css" rel="stylesheet">
+    <!-- Vendor Stylesheets -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 </head>
-
-    <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
-            <a class="navbar-brand logo-brand" href="index.jsp">FMart Supermarket</a>
-			<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
-            <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/index.jsp" class="frnt-link"><i class="fas fa-external-link-alt"></i>Home</a>
-            <ul class="navbar-nav ms-auto mr-md-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <a class="dropdown-item admin-dropdown-item" href="edit_profile.jsp">Edit Profile</a>
-						<a class="dropdown-item admin-dropdown-item" href="change_password.jsp">Change Password</a>
-                        <a class="dropdown-item admin-dropdown-item" href="login.jsp">Logout</a>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
+        <a class="navbar-brand logo-brand" href="index.jsp">FMart Supermarket</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/index.jsp" class="frnt-link"><i class="fas fa-external-link-alt"></i>Home</a>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <a class="nav-link" href="category.jsp">Categories</a>
                     </div>
-                </li>
-            </ul>
-        </nav>
-        <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <a class="nav-link" href="index.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
-							</a>
-                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-								<div class="sb-nav-link-icon"><i class="fas fa-newspaper"></i></div>
-                                Posts
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="posts.jsp">All Posts</a>
-									<a class="nav-link sub_nav_link" href="add_post.jsp">Add New</a>
-									<a class="nav-link sub_nav_link" href="post_categories.jsp">Categories</a>
-									<a class="nav-link sub_nav_link" href="post_tags.jsp">Tags</a>
-								</nav>
-                            </div>		
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLocations" aria-expanded="false" aria-controls="collapseLocations">
-								<div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
-                                Locations
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseLocations" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="locations.jsp">All Locations</a>
-									<a class="nav-link sub_nav_link" href="add_location.jsp">Add Location</a>
-								</nav>
-                            </div>		
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAreas" aria-expanded="false" aria-controls="collapseAreas">
-								<div class="sb-nav-link-icon"><i class="fas fa-map-marked-alt"></i></div>
-                                Areas
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseAreas" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="areas.jsp">All Areas</a>
-									<a class="nav-link sub_nav_link" href="add_area.jsp">Add Area</a>
-								</nav>
-                            </div>
-							<a class="nav-link active" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategories" aria-expanded="true" aria-controls="collapseCategories">
-								<div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                                Categories
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse show" id="collapseCategories" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link active" href="category.jsp">All Categories</a>
-									<a class="nav-link sub_nav_link" href="add_category.jsp">Add Category</a>
-								</nav>
-                            </div>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseShops" aria-expanded="false" aria-controls="collapseShops">
-								<div class="sb-nav-link-icon"><i class="fas fa-store"></i></div>
-                                Shops
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseShops" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="shops.jsp">All Shops</a>
-									<a class="nav-link sub_nav_link" href="add_shop.jsp">Add Shop</a>
-								</nav>
-                            </div>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">
-								<div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
-                                Products
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseProducts" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="products.jsp">All Products</a>
-									<a class="nav-link sub_nav_link" href="add_product.jsp">Add Product</a>
-								</nav>
-                            </div>
-							<a class="nav-link" href="orders.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-cart-arrow-down"></i></div>
-                                Orders
-							</a>
-							<a class="nav-link" href="customers.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                Customers
-							</a>
-							<a class="nav-link" href="offers.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-gift"></i></div>
-                                Offers
-							</a>
-							<a class="nav-link" href="pages.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Pages
-							</a>
-                            <a class="nav-link" href="menu.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-layer-group"></i></div>
-                                Menu
-							</a>
-							<a class="nav-link" href="updater.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                Updater
-							</a>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings">
-								<div class="sb-nav-link-icon"><i class="fas fa-cog"></i></div>
-                                Setting
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseSettings" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="general_setting.jsp">General Settings</a>
-									<a class="nav-link sub_nav_link" href="payment_setting.jsp">Payment Settings</a>
-									<a class="nav-link sub_nav_link" href="email_setting.jsp">Email Settings</a>
-								</nav>
-                            </div>
-							<a class="nav-link" href="reports.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
-                                Reports
-							</a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid">
-                        <h2 class="mt-30 page-title">Categories</h2>
-                        <ol class="breadcrumb mb-30">
-                            <li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Categories</li>
-                        </ol>
-                        <div class="row justify-content-between">
-							<div class="col-lg-12">
-								<a href="add_category.jsp" class="add-btn hover-btn">Add New</a>
-							</div>
-							<div class="col-lg-3 col-md-4">
-								<div class="bulk-section mt-30">
-									<div class="input-group">
-										<select id="action" name="action" class="form-control">
-											<option selected>Bulk Actions</option>
-											<option value="1">Active</option>
-											<option value="2">Inactive</option>
-											<option value="3">Delete</option>
-										</select>
-										<div class="input-group-append">
-											<button class="status-btn hover-btn" type="submit">Apply</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-5 col-md-6">
-								<div class="bulk-section mt-30">
-									<div class="search-by-name-input">
-										<input type="text" class="form-control" placeholder="Search">
-									</div>
-									<div class="input-group">
-										<select id="categeory" name="categeory" class="form-control">
-											<option selected>Active</option>
-											<option value="1">Inactive</option>
-										</select>
-										<div class="input-group-append">
-											<button class="status-btn hover-btn" type="submit">Search Category</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-12 col-md-12">
-								<div class="card card-static-2 mt-30 mb-30">
-									<div class="card-title-2">
-										<h4>All Categories</h4>
-									</div>
-									<div class="card-body-table">
-										<div class="table-responsive">
-											<table class="table ucp-table table-hover">
-												<thead>
-													<tr>
-														<th style="width:60px"><input type="checkbox" class="check-all"></th>
-														<th style="width:60px">ID</th>
-														<th style="width:130px">Image</th>
-														<th>Name</th>
-														<th>Description</th>
-														<th>Status</th>
-														<th>Action</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="11"></td>
-														<td>1</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-1.svg" alt="">
-															</div>
-														</td>
-														<td>Fruits and Vegetables</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="10"></td>
-														<td>2</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-2.svg" alt="">
-															</div>
-														</td>
-														<td>Grocery & Staples</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="9"></td>
-														<td>3</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-3.svg" alt="">
-															</div>
-														</td>
-														<td>Dairy & Eggs</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="8"></td>
-														<td>4</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-4.svg" alt="">
-															</div>
-														</td>
-														<td>Beverages</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="7"></td>
-														<td>5</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-5.svg" alt="">
-															</div>
-														</td>
-														<td>Snacks</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="6"></td>
-														<td>6</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-6.svg" alt="">
-															</div>
-														</td>
-														<td>Home Care</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="5"></td>
-														<td>7</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-7.svg" alt="">
-															</div>
-														</td>
-														<td>Noodles & Sauces</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="4"></td>
-														<td>8</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-8.svg" alt="">
-															</div>
-														</td>
-														<td>Personal Care</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="3"></td>
-														<td>9</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-9.svg" alt="">
-															</div>
-														</td>
-														<td>Pet Care</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="2"></td>
-														<td>10</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-10.svg" alt="">
-															</div>
-														</td>
-														<td>Meat & Seafood</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-													<tr>
-														<td><input type="checkbox" class="check-item" name="ids[]" value="1"></td>
-														<td>11</td>
-														<td>
-															<div class="cate-img">
-																<img src="images/category/icon-11.svg" alt="">
-															</div>
-														</td>
-														<td>Electronics</td>
-														<td></td>
-														<td><span class="badge-item badge-status">Active</span></td>
-														<td class="action-btns">
-															<a href="#" class="edit-btn"><i class="fas fa-edit"></i> Edit</a>
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-                        </div>
-                    </div>
-                </main>
-                <footer class="py-4 bg-footer mt-auto">
-                    <div class="container-fluid">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted-1">Â© 2025 <b>FMart Supermarket</b>. by <a href="https://themeforest.net/user/gambolthemes">FMartlthemes</a></div>
-                            <div class="footer-links">
-                                <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/privacy_policy.jsp">Privacy Policy</a>
-                                <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/term_and_conditions.jsp">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
+                </div>
+            </nav>
         </div>
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="js/scripts.js"></script>
-       
-    </body>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid">
+                    <h2 class="mt-30 page-title">Categories</h2>
+                    <ol class="breadcrumb mb-30">
+                        <li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Categories</li>
+                    </ol>
 
-<!-- Mirrored from gambolthemes.net/html-items/gambo_admin_new/category.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:10:01 GMT -->
+                    <div class="row justify-content-between">
+                        <div class="col-lg-12">
+                            <a href="add_category.jsp" class="add-btn hover-btn">Add New</a>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="card card-static-2 mt-30 mb-30">
+                                <div class="card-title-2">
+                                    <h4>All Categories</h4>
+                                </div>
+                                <div class="card-body-table">
+                                    <div class="table-responsive">
+                                        <table class="table ucp-table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:60px"><input type="checkbox" class="check-all"></th>
+                                                    <th style="width:60px">ID</th>
+                                                    <th style="width:130px">Image</th>
+                                                    <th>Name</th>
+                                                    <th>Description</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% 
+                                                    // Duy?t qua danh sách danh m?c và hi?n th? các tr??ng
+                                                    for (Category category : categories) { 
+                                                %>
+                                                <tr>
+                                                    <td><input type="checkbox" class="check-item" name="ids[]" value="<%= category.getCategoryID() %>"></td>
+                                                    <td><%= category.getCategoryID() %></td>
+                                                    <td>
+                                                        <div class="cate-img">
+                                                            <!-- C?p nh?t ???ng d?n hình ?nh t? c? s? d? li?u -->
+                                                            <img src="<%= category.getImageUrl() %>" alt="">
+                                                        </div>
+                                                    </td>
+                                                    <td><%= category.getCategoryName() %></td>
+                                                    <td><%= category.getDescription() %></td>
+                                                    <td>
+                                                        <span class="badge-item badge-status">
+                                                            <!-- Hi?n th? tr?ng thái -->
+                                                            <%= (category.getIsActive() ? "Active" : "Inactive") %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="action-btns">
+                                                        <a href="edit_category.jsp?id=<%= category.getCategoryID() %>" class="edit-btn">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <% 
+                                                    }
+                                                %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-footer mt-auto">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted-1">© 2025 <b>FMart Supermarket</b>. by <a href="https://themeforest.net/user/gambolthemes">FMartthemes</a></div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/scripts.js"></script>
+</body>
 </html>
