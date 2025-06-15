@@ -64,7 +64,7 @@
                     </ol>
                     <div class="row justify-content-between">
                         <div class="col-lg-12">
-                            <a href="add_product.jsp" class="add-btn hover-btn">Add New</a>
+                            <a href="Admin/add_product.jsp" class="add-btn hover-btn">Add New</a>
                         </div>
                         <div class="col-lg-3 col-md-4">
                             <div class="bulk-section mt-30">
@@ -134,8 +134,8 @@
                                                 <td>${product.createdDate}</td>
                                                 <td><span class="badge-item badge-status">${product.isActive ? 'Active' : 'Inactive'}</span></td>
                                                 <td class="action-btns">
-                                                    <a href="product_view.jsp?id=${product.productID}" class="view-shop-btn" title="View"><i class="fas fa-eye"></i></a>
-                                                    <a href="edit_product.jsp?id=${product.productID}" class="edit-btn" title="Edit"><i class="fas fa-edit"></i></a>
+                                                    <a href="ProductServlet?action=view&productId=${product.productID}" class="view-shop-btn" title="View"><i class="fas fa-eye"></i></a>
+                                                    <a href="ProductServlet?action=edit&productId=${product.productID}" class="btn btn-sm btn-primary">Edit</a>
                                                 </td>
                                             </tr>
                                         </c:forEach>

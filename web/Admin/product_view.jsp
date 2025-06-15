@@ -2,19 +2,6 @@
 <%@ page import="model.Product" %>
 <%@ page import="dao.ProductDAO" %>
 
-<%
-    String productIDStr = request.getParameter("id");
-    int productID = Integer.parseInt(productIDStr);
-
-    // L?y s?n ph?m t? c? s? d? li?u
-    ProductDAO productDAO = new ProductDAO();
-    Product product = productDAO.getProductById(productID);
-
-    // N?u s?n ph?m không t?n t?i, chuy?n h??ng v? danh sách s?n ph?m
-    if (product == null) {
-        response.sendRedirect("products.jsp");
-    }
-%>
 <html lang="en">
 
 <head>
@@ -24,9 +11,9 @@
     <meta name="description-gambolthemes" content="">
     <meta name="author-gambolthemes" content="">
     <title>FMart Supermarket Admin</title>
-    <link href="css/styles.css" rel="stylesheet">
-    <link href="css/admin-style.css" rel="stylesheet">
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Admin/css/styles.css" rel="stylesheet">
+    <link href="Admin/css/admin-style.css" rel="stylesheet">
+    <link href="Admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body class="sb-nav-fixed">
@@ -90,7 +77,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="edit_product.jsp?id=${product.productID}" class="btn btn-primary">Edit Product</a>
+                                    <a href="ProductServlet?action=edit&productId=${product.productID}" class="btn btn-sm btn-primary">Edit</a>
                                 </div>
                             </div>
                         </div>
@@ -108,8 +95,8 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="js/scripts.js"></script>
+    <script src="Admin/js/jquery.min.js"></script>
+    <script src="Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="Admin/js/scripts.js"></script>
 </body>
 </html>

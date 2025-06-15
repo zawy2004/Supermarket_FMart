@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                              http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
- <servlet>
-        <servlet-name>UpdateProductServlet</servlet-name>
-        <servlet-class>controller.admin.UpdateProductServlet</servlet-class>
-    </servlet>
-
-    <!-- Mapping servlet đến URL -->
-    <servlet-mapping>
-        <servlet-name>UpdateProductServlet</servlet-name>
-        <url-pattern>/update_product</url-pattern> <!-- URL sẽ gọi đến UpdateProductServlet -->
-    </servlet-mapping>
-
     <!-- Cấu hình Servlet cho ProductServlet (nếu có) -->
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
@@ -20,15 +9,7 @@
     <!-- Mapping servlet đến URL -->
     <servlet-mapping>
         <servlet-name>ProductServlet</servlet-name>
-        <url-pattern>/products</url-pattern> <!-- URL sẽ gọi đến ProductServlet -->
+        <url-pattern>/ProductServlet</url-pattern> <!-- URL sẽ gọi đến ProductServlet -->
     </servlet-mapping>
-<servlet>
-    <servlet-name>AddProductServlet</servlet-name>
-    <servlet-class>controller.admin.AddProductServlet</servlet-class>
-</servlet>
 
-<servlet-mapping>
-    <servlet-name>AddProductServlet</servlet-name>
-    <url-pattern>/add_product</url-pattern>
-</servlet-mapping>
 </web-app>
