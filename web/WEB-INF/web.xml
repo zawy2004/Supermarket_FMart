@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                              http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-    <display-name>Supermarket_FMart</display-name>
+ <servlet>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <servlet-class>controller.admin.UpdateProductServlet</servlet-class>
+    </servlet>
+
+    <!-- Mapping servlet đến URL -->
+    <servlet-mapping>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <url-pattern>/update_product</url-pattern> <!-- URL sẽ gọi đến UpdateProductServlet -->
+    </servlet-mapping>
+
+    <!-- Cấu hình Servlet cho ProductServlet (nếu có) -->
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
         <servlet-class>controller.admin.ProductServlet</servlet-class>
     </servlet>
 
+    <!-- Mapping servlet đến URL -->
     <servlet-mapping>
         <servlet-name>ProductServlet</servlet-name>
-        <url-pattern>/products</url-pattern> <!-- Định tuyến URL tới Servlet -->
+        <url-pattern>/products</url-pattern> <!-- URL sẽ gọi đến ProductServlet -->
     </servlet-mapping>
+<servlet>
+    <servlet-name>AddProductServlet</servlet-name>
+    <servlet-class>controller.admin.AddProductServlet</servlet-class>
+</servlet>
 
-    <!-- Chỉ định các URL của các trang JSP -->
-    <servlet>
-        <servlet-name>ProductPage</servlet-name>
-        <jsp-file>Admin/products.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>ProductPage</servlet-name>
-        <url-pattern>/products.jsp</url-pattern> <!-- Tạo ánh xạ trực tiếp đến products.jsp -->
-    </servlet-mapping>
-
-    <!-- Cấu hình khác -->
-    <welcome-file-list>
-        <welcome-file>Admin.index.jsp</welcome-file> <!-- Chỉ định trang chào mừng khi vào ứng dụng -->
-    </welcome-file-list>
+<servlet-mapping>
+    <servlet-name>AddProductServlet</servlet-name>
+    <url-pattern>/add_product</url-pattern>
+</servlet-mapping>
 </web-app>

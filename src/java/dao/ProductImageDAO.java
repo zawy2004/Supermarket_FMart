@@ -1,4 +1,4 @@
-package controller.admin;
+package dao;
 
 import util.DBConnection;
 import java.sql.*;
