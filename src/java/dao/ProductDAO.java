@@ -1,7 +1,7 @@
 package dao;
 
+import config.DatabaseConfig;
 import model.Product;
-import util.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ public class ProductDAO {
     public boolean insertProduct(Product product) {
         String query = "INSERT INTO Products (productName, sku, categoryID, supplierID, description, unit, costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated, weight, dimensions, expiryDays, brand, origin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             if (conn == null) {
                 throw new SQLException("Connection to the database failed.");
             }
@@ -45,7 +45,7 @@ public class ProductDAO {
         List<Product> productList = new ArrayList<>();
         String query = "SELECT * FROM Products";
 
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             if (conn == null) {
                 throw new SQLException("Connection to the database failed.");
             }
@@ -86,7 +86,7 @@ public boolean updateProduct(Product product) {
                    "Unit = ?, MinStockLevel = ?, IsActive = ?, Brand = ?, Origin = ?, ExpiryDays = ?, Dimensions = ?, " +
                    "Weight = ? WHERE ProductID = ?";
 
-    try (Connection conn = DBConnection.getConnection()) {
+    try (Connection conn = DatabaseConfig.getConnection()) {
         if (conn == null) {
             throw new SQLException("Connection to the database failed.");
         }
@@ -119,7 +119,7 @@ public Product getProductById(int productID) {
     Product product = null;
     String query = "SELECT * FROM Products WHERE ProductID = ?";
 
-    try (Connection conn = DBConnection.getConnection()) {
+    try (Connection conn = DatabaseConfig.getConnection()) {
         if (conn == null) {
             throw new SQLException("Connection to the database failed.");
         }
@@ -155,7 +155,7 @@ public boolean addProduct(Product product) {
         String query = "INSERT INTO Products (ProductName, SKU, SellingPrice, CostPrice, Description, CategoryID) " +
                        "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             if (conn == null) {
                 throw new SQLException("Connection failed.");
             }
@@ -179,7 +179,7 @@ public boolean addProduct(Product product) {
     // Lấy ProductID của sản phẩm mới thêm vào
     public int getLastInsertedProductID() {
         String query = "SELECT MAX(ProductID) AS ProductID FROM Products";
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             if (conn == null) {
                 throw new SQLException("Connection failed.");
             }

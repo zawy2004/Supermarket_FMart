@@ -1,19 +1,19 @@
 
 package dao;
 
+import config.DatabaseConfig;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 import model.Category;
-import util.DBConnection;
 
 public class CategoryDAO {
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
         String query = "SELECT CategoryID, CategoryName, Description, ParentCategoryID, ImageUrl, IsActive, CreatedDate, DisplayOrder FROM Categories";
         
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             
@@ -38,7 +38,7 @@ public class CategoryDAO {
     public boolean updateCategory(Category category) {
         String query = "UPDATE Categories SET CategoryName = ?, Description = ?, ImageUrl = ?, IsActive = ? WHERE CategoryID = ?";
         
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
              
             ps.setString(1, category.getCategoryName());
@@ -58,7 +58,7 @@ public class CategoryDAO {
         Category category = null;
         String query = "SELECT CategoryID, CategoryName, Description, ParentCategoryID, ImageUrl, IsActive, CreatedDate, DisplayOrder FROM Categories WHERE CategoryID = ?";
         
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
              
             ps.setInt(1, categoryID);

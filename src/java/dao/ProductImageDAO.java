@@ -1,6 +1,6 @@
 package dao;
 
-import util.DBConnection;
+import config.DatabaseConfig;
 import java.sql.*;
 
 public class ProductImageDAO {
@@ -9,7 +9,7 @@ public class ProductImageDAO {
     public boolean addProductImage(int productID, String imagePath) {
         String query = "INSERT INTO ProductImages (ProductID, ImageUrl, IsMainImage) VALUES (?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection conn = DatabaseConfig.getConnection()) {
             if (conn == null) {
                 throw new SQLException("Connection failed.");
             }
