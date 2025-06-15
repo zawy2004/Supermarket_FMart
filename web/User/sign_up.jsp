@@ -45,7 +45,7 @@
                     type: "POST",
                     data: formData,
                     success: function(response) {
-                        window.location.href = "${pageContext.request.contextPath}/index.jsp";
+                        window.location.href = "User/index.jsp";
                     },
                     error: function(xhr) {
                         alert("Registration failed: " + xhr.responseText);
