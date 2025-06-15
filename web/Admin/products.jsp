@@ -64,7 +64,7 @@
                     </ol>
                     <div class="row justify-content-between">
                         <div class="col-lg-12">
-                            <a href="Admin/add_product.jsp" class="add-btn hover-btn">Add New</a>
+                            <a href="ProductServlet?action=add"class="btn btn-sm btn-primary">Add New</a>
                         </div>
                         <div class="col-lg-3 col-md-4">
                             <div class="bulk-section mt-30">
@@ -136,6 +136,11 @@
                                                 <td class="action-btns">
                                                     <a href="ProductServlet?action=view&productId=${product.productID}" class="view-shop-btn" title="View"><i class="fas fa-eye"></i></a>
                                                     <a href="ProductServlet?action=edit&productId=${product.productID}" class="btn btn-sm btn-primary">Edit</a>
+                                                    <a href="ProductServlet?action=delete&productId=${product.productID}"
+                                                        class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Are you sure you want to delete this product?');">
+                                                        Delete
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -144,12 +149,10 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </main>
         </div>
     </div>
-
     <script src="Admin/js/jquery.min.js"></script>
     <script src="Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="Admin/js/scripts.js"></script>

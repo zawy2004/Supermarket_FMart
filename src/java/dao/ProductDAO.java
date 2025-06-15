@@ -134,4 +134,14 @@ public static List<Product> getAllProducts() {
             e.printStackTrace();
         }
     }
+        public static void deleteProduct(int productID) {
+        String sql = "DELETE FROM products WHERE productID = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productID);
+            stmt.executeUpdate();
+            System.out.println("Sản phẩm đã được xóa: ID = " + productID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

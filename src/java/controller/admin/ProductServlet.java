@@ -2,6 +2,7 @@ package controller.admin;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import model.Product;
 
+
 public class ProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -19,140 +21,188 @@ public class ProductServlet extends HttpServlet {
         super();
     }
 
- @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String action = request.getParameter("action");
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
 
-    try {
-        if (action == null) {
-            handleProductList(request, response);
-        } else if ("view".equals(action)) {
-            handleViewProduct(request, response);
-        } else if ("edit".equals(action)) {
-            handleEditProduct(request, response);
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown action.");
-        }
-    } catch (NumberFormatException e) {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid product ID format.");
-    } catch (Exception e) {
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server error.");
-        e.printStackTrace(); // Log for debugging
-    }
-}
-private void handleProductList(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    List<Product> products = ProductDAO.getAllProducts();
-    request.setAttribute("products", products);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/products.jsp");
-    dispatcher.forward(request, response);
-}
-private void handleViewProduct(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String productIdParam = request.getParameter("productId");
-
-    if (productIdParam != null && !productIdParam.isEmpty()) {
-        int productID = Integer.parseInt(productIdParam);
-        Product product = ProductDAO.getProductById(productID);
-
-        if (product != null) {
-            request.setAttribute("product", product);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/product_view.jsp");
-            dispatcher.forward(request, response);
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found.");
-        }
-    } else {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID.");
-    }
-}
-private void handleEditProduct(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String productIdParam = request.getParameter("productId");
-
-    if (productIdParam != null && !productIdParam.isEmpty()) {
-        int productID = Integer.parseInt(productIdParam);
-        Product product = ProductDAO.getProductById(productID);
-
-        if (product != null) {
-            request.setAttribute("product", product);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/edit_product.jsp");
-            dispatcher.forward(request, response);
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found.");
-        }
-    } else {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID.");
-    }
-}
-
-@Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String action = request.getParameter("action");
-
-    if ("update".equals(action)) {
         try {
-            int productID = Integer.parseInt(request.getParameter("productId"));
-            String productName = request.getParameter("productName");
-            String sku = request.getParameter("sku");
-            int categoryID = Integer.parseInt(request.getParameter("categoryID"));
-            int supplierID = Integer.parseInt(request.getParameter("supplierID"));
-            String description = request.getParameter("description");
-            String unit = request.getParameter("unit");
-            double costPrice = Double.parseDouble(request.getParameter("costPrice"));
-            double sellingPrice = Double.parseDouble(request.getParameter("sellingPrice"));
-            int minStockLevel = Integer.parseInt(request.getParameter("minStockLevel"));
-            boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
-            double weight = Double.parseDouble(request.getParameter("weight"));
-            String dimensions = request.getParameter("dimensions");
-            int expiryDays = Integer.parseInt(request.getParameter("expiryDays"));
-            String brand = request.getParameter("brand");
-            String origin = request.getParameter("origin");
-            Date lastUpdated = new Date();
-
-            Product updatedProduct = new Product(productID, productName, sku, categoryID, supplierID, description,
-                    unit, costPrice, sellingPrice, minStockLevel, isActive, null, lastUpdated,
-                    weight, dimensions, expiryDays, brand, origin);
-
-            ProductDAO.updateProduct(updatedProduct);
-            request.getSession().setAttribute("msg", "Product updated successfully!");
-            response.sendRedirect("ProductServlet");
+            if (action == null) {
+                handleProductList(request, response);
+            } else if ("view".equals(action)) {
+                handleViewProduct(request, response);
+            } else if ("edit".equals(action)) {
+                handleEditProduct(request, response);
+            } else if ("add".equals(action)) {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/add_product.jsp");
+                dispatcher.forward(request, response);
+            }else if ("delete".equals(action)) {
+    String productIdParam = request.getParameter("productId");
+    if (productIdParam != null && !productIdParam.isEmpty()) {
+        int productID = Integer.parseInt(productIdParam);
+        ProductDAO.deleteProduct(productID);
+        response.sendRedirect("ProductServlet"); // Quay lại danh sách sản phẩm
+    } else {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID for deletion.");
+    }
+}
+ else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown action.");
+            }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid input.");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid product ID format.");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server error.");
         }
     }
-    else if ("add".equals(action)) {
-    String productName = request.getParameter("productName");
-    String sku = request.getParameter("sku");
-    int categoryID = Integer.parseInt(request.getParameter("categoryID"));
-    int supplierID = Integer.parseInt(request.getParameter("supplierID"));
-    String description = request.getParameter("description");
-    String unit = request.getParameter("unit");
-    double costPrice = Double.parseDouble(request.getParameter("costPrice"));
-    double sellingPrice = Double.parseDouble(request.getParameter("sellingPrice"));
-    int minStockLevel = Integer.parseInt(request.getParameter("minStockLevel"));
-    boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
-    double weight = Double.parseDouble(request.getParameter("weight"));
-    String dimensions = request.getParameter("dimensions");
-    int expiryDays = Integer.parseInt(request.getParameter("expiryDays"));
-    String brand = request.getParameter("brand");
-    String origin = request.getParameter("origin");
 
-    Date createdDate = new Date();
-    Date lastUpdated = new Date();
-
-    Product newProduct = new Product(0, productName, sku, categoryID, supplierID, description, unit,
-            costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated,
-            weight, dimensions, expiryDays, brand, origin);
-
-    ProductDAO.addProduct(newProduct);
-    response.sendRedirect("ProductServlet");
-}
+    private void handleProductList(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Product> products = ProductDAO.getAllProducts();
+        request.setAttribute("products", products);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/products.jsp");
+        dispatcher.forward(request, response);
     }
+
+    private void handleViewProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String productIdParam = request.getParameter("productId");
+
+        if (productIdParam != null && !productIdParam.isEmpty()) {
+            int productID = Integer.parseInt(productIdParam);
+            Product product = ProductDAO.getProductById(productID);
+
+            if (product != null) {
+                request.setAttribute("product", product);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/product_view.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found.");
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID.");
+        }
+    }
+
+    private void handleEditProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String productIdParam = request.getParameter("productId");
+
+        if (productIdParam != null && !productIdParam.isEmpty()) {
+            int productID = Integer.parseInt(productIdParam);
+            Product product = ProductDAO.getProductById(productID);
+
+            if (product != null) {
+                request.setAttribute("product", product);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/edit_product.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found.");
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID.");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        try {
+            if ("update".equals(action)) {
+                int productID = parseIntSafe(request.getParameter("productId"));
+                Date lastUpdated = new Date();
+
+                Product updatedProduct = buildProductFromRequest(request);
+                updatedProduct.setProductID(productID);
+                updatedProduct.setLastUpdated(lastUpdated);
+
+                ProductDAO.updateProduct(updatedProduct);
+                request.getSession().setAttribute("msg", "Product updated successfully!");
+                response.sendRedirect("ProductServlet");
+            } else if ("add".equals(action)) {
+    try {
+        String productName = request.getParameter("productName");
+        String sku = request.getParameter("sku");
+        int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+        int supplierID = Integer.parseInt(request.getParameter("supplierID"));
+        String description = request.getParameter("description");
+        String unit = request.getParameter("unit");
+        double costPrice = Double.parseDouble(request.getParameter("costPrice"));
+        double sellingPrice = Double.parseDouble(request.getParameter("sellingPrice"));
+        int minStockLevel = Integer.parseInt(request.getParameter("minStockLevel"));
+        boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
+        double weight = Double.parseDouble(request.getParameter("weight"));
+        String dimensions = request.getParameter("dimensions");
+        int expiryDays = Integer.parseInt(request.getParameter("expiryDays"));
+        String brand = request.getParameter("brand");
+        String origin = request.getParameter("origin");
+
+        Date createdDate = new Date();
+        Date lastUpdated = new Date();
+
+        Product newProduct = new Product(0, productName, sku, categoryID, supplierID, description, unit,
+                costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated,
+                weight, dimensions, expiryDays, brand, origin);
+
+        ProductDAO.addProduct(newProduct);
+        System.out.println(" Thêm thành công: " + productName);
+        response.sendRedirect("ProductServlet");
+    } catch (Exception e) {
+        e.printStackTrace();
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dữ liệu không hợp lệ hoặc thiếu.");
+    }
+} else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action.");
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid number format.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server error.");
+        }
+    }
+
+    // Build product object from form data
+    private Product buildProductFromRequest(HttpServletRequest request) {
+        String productName = request.getParameter("productName");
+        String sku = request.getParameter("sku");
+        int categoryID = parseIntSafe(request.getParameter("categoryID"));
+        int supplierID = parseIntSafe(request.getParameter("supplierID"));
+        String description = request.getParameter("description");
+        String unit = request.getParameter("unit");
+        double costPrice = parseDoubleSafe(request.getParameter("costPrice"));
+        double sellingPrice = parseDoubleSafe(request.getParameter("sellingPrice"));
+        int minStockLevel = parseIntSafe(request.getParameter("minStockLevel"));
+        boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
+        double weight = parseDoubleSafe(request.getParameter("weight"));
+        String dimensions = request.getParameter("dimensions");
+        int expiryDays = parseIntSafe(request.getParameter("expiryDays"));
+        String brand = request.getParameter("brand");
+        String origin = request.getParameter("origin");
+
+        return new Product(0, productName, sku, categoryID, supplierID, description,
+                unit, costPrice, sellingPrice, minStockLevel, isActive, null, null,
+                weight, dimensions, expiryDays, brand, origin);
+    }
+
+    private int parseIntSafe(String value) {
+        try {
+            return (value != null && !value.trim().isEmpty()) ? Integer.parseInt(value.trim()) : 0;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private double parseDoubleSafe(String value) {
+        try {
+            return (value != null && !value.trim().isEmpty()) ? Double.parseDouble(value.trim()) : 0.0;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+    
 }
