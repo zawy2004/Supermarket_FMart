@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import util.ValidationUtil;
 
 public class User {
     private int userID;
@@ -17,36 +18,30 @@ public class User {
     private Date createdDate;
     private Date lastLoginDate;
     private String profileImageUrl;
-    private String studentID;
-    private String department;
 
-    // Constructors, Getters, and Setters...
-
+    // Constructors
     public User() {}
 
     public User(int userID, String username, String email, String passwordHash, String fullName, String phoneNumber,
                 String address, Date dateOfBirth, String gender, int roleID, boolean isActive,
-                Date createdDate, Date lastLoginDate, String profileImageUrl, String studentID, String department) {
-        this.userID = userID;
-        this.username = username;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.roleID = roleID;
-        this.isActive = isActive;
-        this.createdDate = createdDate;
-        this.lastLoginDate = lastLoginDate;
-        this.profileImageUrl = profileImageUrl;
-        this.studentID = studentID;
-        this.department = department;
+                Date createdDate, Date lastLoginDate, String profileImageUrl) {
+        setUserID(userID);
+        setUsername(username);
+        setEmail(email);
+        setPasswordHash(passwordHash);
+        setFullName(fullName);
+        setPhoneNumber(phoneNumber);
+        setAddress(address);
+        setDateOfBirth(dateOfBirth);
+        setGender(gender);
+        setRoleID(roleID);
+        setIsActive(isActive);
+        setCreatedDate(createdDate);
+        setLastLoginDate(lastLoginDate);
+        setProfileImageUrl(profileImageUrl);
     }
 
-    // Getters and Setters here
-
+    // Getters and Setters with validation
     public int getUserID() {
         return userID;
     }
@@ -60,6 +55,9 @@ public class User {
     }
 
     public void setUsername(String username) {
+        if (username != null && !ValidationUtil.isValidUsername(username)) {
+            throw new IllegalArgumentException("Username không hợp lệ (tối đa 10 ký tự, chỉ chữ/số/_).");
+        }
         this.username = username;
     }
 
@@ -68,6 +66,9 @@ public class User {
     }
 
     public void setEmail(String email) {
+        if (email != null && !ValidationUtil.isValidEmail(email)) {
+            throw new IllegalArgumentException("Email không hợp lệ.");
+        }
         this.email = email;
     }
 
@@ -76,6 +77,9 @@ public class User {
     }
 
     public void setPasswordHash(String passwordHash) {
+        if (passwordHash == null) {
+            throw new IllegalArgumentException("Password hash không được để trống.");
+        }
         this.passwordHash = passwordHash;
     }
 
@@ -84,6 +88,9 @@ public class User {
     }
 
     public void setFullName(String fullName) {
+        if (fullName != null && !ValidationUtil.isValidFullName(fullName)) {
+            throw new IllegalArgumentException("Họ tên không hợp lệ (chỉ chứa chữ cái và khoảng trắng).");
+        }
         this.fullName = fullName;
     }
 
@@ -92,6 +99,9 @@ public class User {
     }
 
     public void setPhoneNumber(String phoneNumber) {
+        if (phoneNumber != null && !ValidationUtil.isValidPhoneNumber(phoneNumber)) {
+            throw new IllegalArgumentException("Số điện thoại không hợp lệ (phải bắt đầu bằng 0 và 10 chữ số).");
+        }
         this.phoneNumber = phoneNumber;
     }
 
@@ -100,6 +110,9 @@ public class User {
     }
 
     public void setAddress(String address) {
+        if (address != null && !ValidationUtil.isValidAddress(address)) {
+            throw new IllegalArgumentException("Địa chỉ không hợp lệ (chỉ chứa chữ, số, khoảng trắng).");
+        }
         this.address = address;
     }
 
@@ -108,6 +121,12 @@ public class User {
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
+        if (dateOfBirth != null) {
+            java.util.Date today = new java.util.Date();
+            if (dateOfBirth.after(today)) {
+                throw new IllegalArgumentException("Ngày sinh không được trong tương lai.");
+            }
+        }
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -116,6 +135,9 @@ public class User {
     }
 
     public void setGender(String gender) {
+        if (gender != null && !gender.trim().isEmpty() && !gender.equals("Male") && !gender.equals("Female") && !gender.equals("Other")) {
+            throw new IllegalArgumentException("Giới tính không hợp lệ (chỉ Male, Female, hoặc Other).");
+        }
         this.gender = gender;
     }
 
@@ -158,21 +180,4 @@ public class User {
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
     }
-
-    public String getStudentID() {
-        return studentID;
-    }
-
-    public void setStudentID(String studentID) {
-        this.studentID = studentID;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-    
 }
