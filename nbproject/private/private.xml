@@ -11,6 +11,13 @@
             <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/products.jsp</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/product_view.jsp</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/edit_product.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/add_product.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/add_category.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/update_category.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/category.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/Category.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/admin/CategoryServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/CategoryDAO.java</file>
         </group>
     </open-files>
 </project-private>

@@ -1,84 +1,106 @@
-
 package dao;
 
 import config.DatabaseConfig;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
 import model.Category;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
 
 public class CategoryDAO {
-    public List<Category> getAllCategories() {
-        List<Category> categories = new ArrayList<>();
-        String query = "SELECT CategoryID, CategoryName, Description, ParentCategoryID, ImageUrl, IsActive, CreatedDate, DisplayOrder FROM Categories";
-        
+    public static List<Category> getAllCategories() {
+        List<Category> list = new ArrayList<>();
+        String sql = "SELECT * FROM categories ORDER BY displayOrder";
+
         try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-            
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
-                Category category = new Category();
-                category.setCategoryID(rs.getInt("CategoryID"));
-                category.setCategoryName(rs.getString("CategoryName"));
-                category.setDescription(rs.getString("Description"));
-                category.setParentCategoryID(rs.getInt("ParentCategoryID"));
-                category.setImageUrl(rs.getString("ImageUrl"));
-                category.setIsActive(rs.getBoolean("IsActive"));
-                category.setCreatedDate(rs.getDate("CreatedDate"));
-                category.setDisplayOrder(rs.getInt("DisplayOrder"));
-                categories.add(category);
+                list.add(extractCategory(rs));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        return categories;
+        return list;
     }
-    public boolean updateCategory(Category category) {
-        String query = "UPDATE Categories SET CategoryName = ?, Description = ?, ImageUrl = ?, IsActive = ? WHERE CategoryID = ?";
-        
+
+    public static Category getCategoryById(int id) {
+        String sql = "SELECT * FROM categories WHERE categoryID = ?";
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-             
-            ps.setString(1, category.getCategoryName());
-            ps.setString(2, category.getDescription());
-            ps.setString(3, category.getImageUrl());
-            ps.setBoolean(4, category.getIsActive());
-            ps.setInt(5, category.getCategoryID());
-            
-            int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-     public Category getCategoryByID(int categoryID) {
-        Category category = null;
-        String query = "SELECT CategoryID, CategoryName, Description, ParentCategoryID, ImageUrl, IsActive, CreatedDate, DisplayOrder FROM Categories WHERE CategoryID = ?";
-        
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-             
-            ps.setInt(1, categoryID);
-            ResultSet rs = ps.executeQuery();
-            
-            if (rs.next()) {
-                category = new Category();
-                category.setCategoryID(rs.getInt("CategoryID"));
-                category.setCategoryName(rs.getString("CategoryName"));
-                category.setDescription(rs.getString("Description"));
-                category.setParentCategoryID(rs.getInt("ParentCategoryID"));
-                category.setImageUrl(rs.getString("ImageUrl"));
-                category.setIsActive(rs.getBoolean("IsActive"));
-                category.setCreatedDate(rs.getDate("CreatedDate"));
-                category.setDisplayOrder(rs.getInt("DisplayOrder"));
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return extractCategory(rs);
+                }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        return category;
+        return null;
+    }
+
+    public static void addCategory(Category cat) {
+    String sql = "INSERT INTO categories (categoryName, description, parentCategoryID, imageUrl, isActive, createdDate, displayOrder) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, cat.getCategoryName());
+        stmt.setString(2, cat.getDescription());
+        stmt.setInt(3, cat.getParentCategoryID());
+        stmt.setString(4, cat.getImageUrl());
+        stmt.setBoolean(5, cat.getIsActive());
+        stmt.setDate(6, new java.sql.Date(cat.getCreatedDate().getTime())); // ✅ sử dụng giá trị từ Servlet
+        stmt.setInt(7, cat.getDisplayOrder());
+
+        stmt.executeUpdate();
+        System.out.println("Thêm category thành công: " + cat.getCategoryName());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+    public static void updateCategory(Category cat) {
+        String sql = "UPDATE categories SET categoryName=?, description=?, parentCategoryID=?, imageUrl=?, isActive=?, displayOrder=? WHERE categoryID=?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, cat.getCategoryName());
+            stmt.setString(2, cat.getDescription());
+            stmt.setInt(3, cat.getParentCategoryID());
+            stmt.setString(4, cat.getImageUrl());
+            stmt.setBoolean(5, cat.getIsActive());
+            stmt.setInt(6, cat.getDisplayOrder());
+            stmt.setInt(7, cat.getCategoryID());
+
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteCategory(int id) {
+        String sql = "DELETE FROM categories WHERE categoryID=?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Category extractCategory(ResultSet rs) throws SQLException {
+        return new Category(
+                rs.getInt("categoryID"),
+                rs.getString("categoryName"),
+                rs.getString("description"),
+                rs.getInt("parentCategoryID"),
+                rs.getString("imageUrl"),
+                rs.getBoolean("isActive"),
+                rs.getDate("createdDate"),
+                rs.getInt("displayOrder")
+        );
     }
 }

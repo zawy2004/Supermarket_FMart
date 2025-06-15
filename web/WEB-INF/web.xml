@@ -5,11 +5,16 @@
         <servlet-name>ProductServlet</servlet-name>
         <servlet-class>controller.admin.ProductServlet</servlet-class>
     </servlet>
-
-    <!-- Mapping servlet đến URL -->
+    <servlet>
+        <servlet-name>CategoryServlet</servlet-name>
+        <servlet-class>controller.admin.CategoryServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProductServlet</servlet-name>
-        <url-pattern>/ProductServlet</url-pattern> <!-- URL sẽ gọi đến ProductServlet -->
+        <url-pattern>/ProductServlet</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>CategoryServlet</servlet-name>
+        <url-pattern>/CategoryServlet</url-pattern>
+    </servlet-mapping>
 </web-app>
