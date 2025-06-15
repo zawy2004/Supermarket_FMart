@@ -14,12 +14,12 @@
     <meta name="description-gambolthemes" content="">
     <meta name="author-gambolthemes" content="">
     <title>FMart Supermarket Admin</title>
-    <link href="css/styles.css" rel="stylesheet">
-    <link href="css/admin-style.css" rel="stylesheet">
+    <link href="Admin/css/styles.css" rel="stylesheet">
+    <link href="Admin/css/admin-style.css" rel="stylesheet">
 
     <!-- Vendor Stylesheets -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="Admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 </head>
 
 <body class="sb-nav-fixed">
@@ -150,9 +150,9 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="js/scripts.js"></script>
+    <script src="Admin/js/jquery.min.js"></script>
+    <script src="Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="Admin/js/scripts.js"></script>
 </body>
 
 </html>
