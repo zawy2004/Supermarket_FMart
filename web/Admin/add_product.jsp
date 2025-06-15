@@ -12,8 +12,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>FMart Supermarket Admin</title>
-    <link href="css/styles.css" rel="stylesheet">
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Admin/css/styles.css" rel="stylesheet">
+    <link href="Admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -110,8 +110,8 @@
 
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="Admin/js/jquery.min.js"></script>
+    <script src="Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
