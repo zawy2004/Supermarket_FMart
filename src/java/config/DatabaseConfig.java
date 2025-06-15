@@ -11,8 +11,8 @@ import java.sql.SQLException;
 public class DatabaseConfig {
     // Database connection parameters
     private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=Fmart;encrypt=true;trustServerCertificate=true";
-    private static final String USER = "sa"; // Replace with your SQL Server username
-    private static final String PASSWORD = "123"; // Replace with your SQL Server password
+    private static final String USER = "sa"; // Thay bằng username SQL Server của bạn
+    private static final String PASSWORD = "123"; // Thay bằng password SQL Server của bạn
 
     // Singleton connection instance
     private static Connection connection = null;
@@ -28,20 +28,22 @@ public class DatabaseConfig {
      * @return Connection object
      * @throws SQLException if a database access error occurs
      */
-    public static Connection getConnection() throws SQLException {
+    public static synchronized Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
                 // Load the SQL Server JDBC driver
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 // Establish the connection
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("Database connection established successfully.");
+                if (connection != null) {
+                    System.out.println("Database connection established successfully at " + new java.util.Date());
+                }
             } catch (ClassNotFoundException e) {
-                System.err.println("SQL Server JDBC Driver not found.");
-                throw new SQLException("Driver not found: " + e.getMessage());
+                System.err.println("SQL Server JDBC Driver not found: " + e.getMessage());
+                throw new SQLException("JDBC Driver not found", e);
             } catch (SQLException e) {
-                System.err.println("Failed to connect to the database.");
-                throw new SQLException("Connection error: " + e.getMessage());
+                System.err.println("Failed to connect to the database: " + e.getMessage());
+                throw new SQLException("Database connection error", e);
             }
         }
         return connection;
@@ -50,12 +52,12 @@ public class DatabaseConfig {
     /**
      * Closes the database connection if it is open.
      */
-    public static void closeConnection() {
+    public static synchronized void closeConnection() {
         if (connection != null) {
             try {
                 if (!connection.isClosed()) {
                     connection.close();
-                    System.out.println("Database connection closed successfully.");
+                    System.out.println("Database connection closed successfully at " + new java.util.Date());
                 }
             } catch (SQLException e) {
                 System.err.println("Error closing database connection: " + e.getMessage());
@@ -83,10 +85,10 @@ public class DatabaseConfig {
      */
     public static void main(String[] args) {
         if (testConnection()) {
-            System.out.println("Connection test successful!");
+            System.out.println("Connection test successful at " + new java.util.Date() + "!");
             closeConnection();
         } else {
-            System.out.println("Connection test failed.");
+            System.out.println("Connection test failed at " + new java.util.Date() + ".");
         }
     }
 }

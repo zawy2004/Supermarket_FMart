@@ -16,43 +16,43 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
-/**
- * Servlet xử lý gửi mã xác minh đến email người dùng.
- * Nhận email từ request, validate, sinh mã, và gửi qua email từ tài khoản cố định.
- */
 @WebServlet(name = "SendVerificationCodeServlet", urlPatterns = {"/SendVerificationCodeServlet"})
 public class SendVerificationCodeServlet extends HttpServlet {
 
-    // Cấu hình email cố định (thay EMAIL_PASSWORD bằng mật khẩu thực tế của bạn)
-    private static final String EMAIL_USERNAME = "anltne0201@gmail.com"; // Email của Fmart
-    private static final String EMAIL_PASSWORD = "Ancute1233@";     // Thay bằng mật khẩu ứng dụng nếu dùng 2FA
+    private static final String EMAIL_USERNAME = "anltne0201@gmail.com"; // Thay bằng email của bạn
+    private static final String EMAIL_PASSWORD = "zknkwdsixhbifspr"; // Thay bằng App Password nếu dùng 2FA
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final int SMTP_PORT = 587;
+    private static final int MAX_ATTEMPTS = 3;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Nhận email từ request (email của khách hàng)
+        response.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         String email = request.getParameter("emailaddress");
-        response.setContentType("text/plain;charset=UTF-8");
 
-        try (PrintWriter out = response.getWriter()) {
-            // Validate định dạng email của khách hàng
+        try {
             if (email == null || !ValidationUtil.isValidEmail(email)) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 out.write("{\"status\":\"error\",\"message\":\"Invalid email format.\"}");
                 return;
             }
 
-            // Sinh mã ngẫu nhiên 4 chữ số
-            String code = String.format("%04d", new Random().nextInt(10000)); // Ex: "0234"
             HttpSession session = request.getSession();
-            session.setAttribute("verifyCode", code); // Lưu mã vào session
-            session.setMaxInactiveInterval(300); // Mã hết hạn sau 5 phút
+            Integer sendAttempts = (Integer) session.getAttribute("sendAttempts");
+            if (sendAttempts == null) sendAttempts = 0;
+            if (sendAttempts >= MAX_ATTEMPTS) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.write("{\"status\":\"error\",\"message\":\"Maximum send attempts reached (3).\"}");
+                return;
+            }
 
-            System.out.println("Generated OTP for " + email + ": " + code); // Debug log
+            String code = String.format("%04d", new Random().nextInt(10000));
+            session.setAttribute("verifyCode", code);
+            session.setMaxInactiveInterval(300); // 5 minutes
+            session.setAttribute("sendAttempts", sendAttempts + 1);
 
-            // Cấu hình và gửi email
             Properties props = new Properties();
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.starttls.enable", "true");
@@ -66,37 +66,35 @@ public class SendVerificationCodeServlet extends HttpServlet {
                 }
             });
 
-            mailSession.setDebug(true); // Bật debug cho mail session
+            mailSession.setDebug(true); // Bật debug để xem log email
 
             try {
                 Message message = new MimeMessage(mailSession);
-                message.setFrom(new InternetAddress(EMAIL_USERNAME)); // Gửi từ email Fmart
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); // Gửi đến email khách hàng
+                message.setFrom(new InternetAddress(EMAIL_USERNAME));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
                 message.setSubject("Your Verification Code for Fmart");
-                message.setText("Your verification code is: " + code);
-
+                message.setText("Your verification code is: " + code + ". It expires in 5 minutes.");
                 Transport.send(message);
                 response.setStatus(HttpServletResponse.SC_OK);
                 out.write("{\"status\":\"success\",\"message\":\"Verification code sent to " + email + "\"}");
-                System.out.println("Email sent successfully to " + email);
+                System.out.println("OTP sent successfully to " + email + " at " + new java.util.Date());
             } catch (MessagingException e) {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 out.write("{\"status\":\"error\",\"message\":\"Failed to send verification code: " + e.getMessage() + "\"}");
-                System.out.println("Failed to send email to " + email + ": " + e.getMessage()); // Debug log
-                e.printStackTrace();
+                System.err.println("Email sending failed: " + e.getMessage());
             }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.write("{\"status\":\"error\",\"message\":\"Server error: " + e.getMessage() + "\"}");
+            System.err.println("Servlet error: " + e.getMessage());
+        } finally {
+            out.close();
         }
     }
 
-    // Disable GET method for this servlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "GET not supported.");
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "SendVerificationCodeServlet - Gửi mã xác thực đến email hợp lệ";
     }
 }
