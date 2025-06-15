@@ -26,7 +26,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/User/sign_up.jsp");
         if (dispatcher != null) {
             dispatcher.forward(request, response);
         } else {
@@ -49,7 +49,7 @@ public class RegisterServlet extends HttpServlet {
             if (fullName == null || email == null || password == null || phone == null ||
                 address == null || dobStr == null || gender == null) {
                 request.setAttribute("error", "Vui lòng điền đầy đủ thông tin.");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
 
@@ -59,33 +59,33 @@ public class RegisterServlet extends HttpServlet {
             String verifyCode = (String) session.getAttribute("verifyCode");
             if (verifyCode == null || !verifyCode.equals(code)) {
                 request.setAttribute("error", "Mã xác minh không hợp lệ hoặc đã hết hạn.");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
 
             if (!ValidationUtil.isValidEmail(email)) {
                 request.setAttribute("error", "Email không hợp lệ.");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
             if (!ValidationUtil.isValidFullName(fullName)) {
                 request.setAttribute("error", "Họ tên không hợp lệ (chỉ chứa chữ cái và khoảng trắng).");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
             if (!ValidationUtil.isValidPhoneNumber(phone)) {
                 request.setAttribute("error", "Số điện thoại không hợp lệ (phải bắt đầu bằng 0 và 10 chữ số).");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
             if (!ValidationUtil.isValidAddress(address)) {
                 request.setAttribute("error", "Địa chỉ không hợp lệ (chỉ chứa chữ, số, khoảng trắng).");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
             if (!ValidationUtil.isValidPassword(password)) {
                 request.setAttribute("error", "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ và số.");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
 
@@ -93,13 +93,13 @@ public class RegisterServlet extends HttpServlet {
             java.util.Date today = new java.util.Date();
             if (dateOfBirth.after(today)) {
                 request.setAttribute("error", "Ngày sinh không được trong tương lai.");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
 
             if (!gender.equals("Male") && !gender.equals("Female") && !gender.equals("Other")) {
                 request.setAttribute("error", "Giới tính không hợp lệ (chỉ Male, Female, hoặc Other).");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
 
@@ -120,7 +120,7 @@ public class RegisterServlet extends HttpServlet {
 
             if (userDAO.existsByEmail(email)) {
                 request.setAttribute("error", "Email đã tồn tại.");
-                forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
 
@@ -128,16 +128,16 @@ public class RegisterServlet extends HttpServlet {
     session.removeAttribute("verifyCode");
     session.setAttribute("user", user);
     // Sử dụng đường dẫn tuyệt đối để kiểm tra
-    response.sendRedirect("http://localhost:8080/Supermarket_FMart/User/index.jsp");
+    response.sendRedirect("/User/index.jsp");
 } else {
     request.setAttribute("error", "Đăng ký thất bại do lỗi database.");
-    forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+    forwardToJsp(request, response, "/User/sign_up.jsp");
 }
 
 
         } catch (Exception e) {
             request.setAttribute("error", "Lỗi khi xử lý đăng ký: " + e.getMessage());
-            forwardToJsp(request, response, "http://localhost:8080/Supermarket_FMart/User/sign_up.jsp");
+            forwardToJsp(request, response, "/User/sign_up.jsp");
             e.printStackTrace();
         }
     }
