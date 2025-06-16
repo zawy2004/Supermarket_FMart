@@ -14,8 +14,8 @@ import java.util.List;
 import model.Category;
 import model.Product;
 
-
 public class ProductServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
 
     public ProductServlet() {
@@ -35,21 +35,20 @@ public class ProductServlet extends HttpServlet {
             } else if ("edit".equals(action)) {
                 handleEditProduct(request, response);
             } else if ("add".equals(action)) {
-                 List<Category> categories = CategoryDAO.getAllCategories();
+                List<Category> categories = CategoryDAO.getAllCategories();
                 request.setAttribute("categories", categories);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/add_product.jsp");
                 dispatcher.forward(request, response);
-            }else if ("delete".equals(action)) {
-    String productIdParam = request.getParameter("productId");
-    if (productIdParam != null && !productIdParam.isEmpty()) {
-        int productID = Integer.parseInt(productIdParam);
-        ProductDAO.deleteProduct(productID);
-        response.sendRedirect("ProductServlet"); // Quay lại danh sách sản phẩm
-    } else {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID for deletion.");
-    }
-}
- else {
+            } else if ("delete".equals(action)) {
+                String productIdParam = request.getParameter("productId");
+                if (productIdParam != null && !productIdParam.isEmpty()) {
+                    int productID = Integer.parseInt(productIdParam);
+                    ProductDAO.deleteProduct(productID);
+                    response.sendRedirect("ProductServlet"); // Quay lại danh sách sản phẩm
+                } else {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID for deletion.");
+                }
+            } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown action.");
             }
         } catch (NumberFormatException e) {
@@ -62,11 +61,35 @@ public class ProductServlet extends HttpServlet {
 
     private void handleProductList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Product> products = ProductDAO.getAllProducts();
+        // Phân trang
+        int page = 1;
+        int pageSize = 5; // Tùy chỉnh số sản phẩm/trang
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            try {
+                page = Integer.parseInt(pageParam);
+                if (page < 1) {
+                    page = 1;
+                }
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+        int offset = (page - 1) * pageSize;
+
+        // Lấy sản phẩm theo trang
+        List<Product> products = ProductDAO.getProductsByPage(offset, pageSize); // Cần viết hàm này ở DAO
+        int totalProducts = ProductDAO.getTotalProducts(); // Cần viết hàm này ở DAO
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
         request.setAttribute("products", products);
-        
+        request.setAttribute("page", page);
+        request.setAttribute("totalPages", totalPages);
+
+        // Lấy category
         List<Category> categories = CategoryDAO.getAllCategories();
         request.setAttribute("categories", categories);
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/products.jsp");
         dispatcher.forward(request, response);
     }
@@ -129,40 +152,39 @@ public class ProductServlet extends HttpServlet {
                 request.getSession().setAttribute("msg", "Product updated successfully!");
                 response.sendRedirect("ProductServlet");
             } else if ("add".equals(action)) {
-    try {
-        
-        String productName = request.getParameter("productName");
-        String sku = request.getParameter("sku");
-        int categoryID = Integer.parseInt(request.getParameter("categoryID"));
-        int supplierID = Integer.parseInt(request.getParameter("supplierID"));
-        String description = request.getParameter("description");
-        String unit = request.getParameter("unit");
-        double costPrice = Double.parseDouble(request.getParameter("costPrice"));
-        double sellingPrice = Double.parseDouble(request.getParameter("sellingPrice"));
-        int minStockLevel = Integer.parseInt(request.getParameter("minStockLevel"));
-        boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
-        double weight = Double.parseDouble(request.getParameter("weight"));
-        String dimensions = request.getParameter("dimensions");
-        int expiryDays = Integer.parseInt(request.getParameter("expiryDays"));
-        String brand = request.getParameter("brand");
-        String origin = request.getParameter("origin");
+                try {
 
-        Date createdDate = new Date();
-        Date lastUpdated = new Date();
-        
+                    String productName = request.getParameter("productName");
+                    String sku = request.getParameter("sku");
+                    int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+                    int supplierID = Integer.parseInt(request.getParameter("supplierID"));
+                    String description = request.getParameter("description");
+                    String unit = request.getParameter("unit");
+                    double costPrice = Double.parseDouble(request.getParameter("costPrice"));
+                    double sellingPrice = Double.parseDouble(request.getParameter("sellingPrice"));
+                    int minStockLevel = Integer.parseInt(request.getParameter("minStockLevel"));
+                    boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
+                    double weight = Double.parseDouble(request.getParameter("weight"));
+                    String dimensions = request.getParameter("dimensions");
+                    int expiryDays = Integer.parseInt(request.getParameter("expiryDays"));
+                    String brand = request.getParameter("brand");
+                    String origin = request.getParameter("origin");
 
-        Product newProduct = new Product(0, productName, sku, categoryID, supplierID, description, unit,
-                costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated,
-                weight, dimensions, expiryDays, brand, origin);
+                    Date createdDate = new Date();
+                    Date lastUpdated = new Date();
 
-        ProductDAO.addProduct(newProduct);
-        System.out.println(" Thêm thành công: " + productName);
-        response.sendRedirect("ProductServlet");
-    } catch (Exception e) {
-        e.printStackTrace();
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dữ liệu không hợp lệ hoặc thiếu.");
-    }
-} else {
+                    Product newProduct = new Product(0, productName, sku, categoryID, supplierID, description, unit,
+                            costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated,
+                            weight, dimensions, expiryDays, brand, origin);
+
+                    ProductDAO.addProduct(newProduct);
+                    System.out.println(" Thêm thành công: " + productName);
+                    response.sendRedirect("ProductServlet");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dữ liệu không hợp lệ hoặc thiếu.");
+                }
+            } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action.");
             }
         } catch (NumberFormatException e) {
@@ -212,5 +234,5 @@ public class ProductServlet extends HttpServlet {
             return 0.0;
         }
     }
-    
+
 }

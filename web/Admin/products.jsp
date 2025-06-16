@@ -138,11 +138,14 @@
                                                         </div>
                                                     </td>
                                                     <td>${product.productName}</td>
-                                                    <c:forEach var="cat" items="${categories}">
-                                                        <c:if test="${cat.categoryID == product.categoryID}">
-                                                            <td>${cat.categoryName}</td>
-                                                        </c:if>
-                                                    </c:forEach>
+                                                    <td>
+                                                        <c:forEach var="cat" items="${categories}">
+                                                            <c:if test="${cat.categoryID == product.categoryID}">
+                                                                ${cat.categoryName}
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </td>
+
 
 
 
@@ -162,6 +165,22 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <nav aria-label="Page navigation" class="mt-4">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item <c:if test='${page == 1}'>disabled</c:if>'">
+                                            <a class="page-link" href="?page=${page-1}">Previous</a>
+                                        </li>
+                                        <c:forEach begin="1" end="${totalPages}" var="i">
+                                            <li class="page-item <c:if test='${i == page}'>active</c:if>'">
+                                                <a class="page-link" href="?page=${i}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                        <li class="page-item <c:if test='${page == totalPages || totalPages == 0}'>disabled</c:if>'">
+                                            <a class="page-link" href="?page=${page+1}">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
                             </div>
                         </div>
                     </div>
