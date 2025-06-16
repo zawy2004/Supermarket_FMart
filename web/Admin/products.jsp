@@ -44,9 +44,17 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <a class="nav-link" href="index.jsp">
+                        <a class="nav-link" href="Admin/index.jsp">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
+                        </a>
+                        <a class="nav-link active" href="CategoryServlet">
+                            <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
+                            Categories
+                        </a>
+                        <a class="nav-link active" href="ProductServlet">
+                            <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
+                            Products
                         </a>
                         <!-- Add other navigation items as needed -->
                     </div>
