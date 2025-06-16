@@ -29,6 +29,10 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
                             Categories
                         </a>
+                        <a class="nav-link active" href="ProductServlet">
+                            <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
+                            Products
+                        </a>
                     </div>
                 </div>
             </nav>

@@ -48,6 +48,16 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
+                        </a>
+                        <a class="nav-link active" href="CategoryServlet">
+                            <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
+                            Categories
+                        </a>
+                        <a class="nav-link active" href="ProductServlet">
+                            <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
+                            Products
+                        </a>
+
                         <!-- Add other navigation items as needed -->
                     </div>
                 </div>
