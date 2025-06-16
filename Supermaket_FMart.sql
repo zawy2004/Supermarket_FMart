@@ -1,4 +1,13 @@
-﻿CREATE DATABASE Fmart;
+﻿-- Xóa database nếu đã tồn tại
+IF DB_ID('Fmart') IS NOT NULL
+BEGIN
+    ALTER DATABASE Fmart SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE Fmart;
+END
+GO
+
+-- Tạo lại database Fmart
+CREATE DATABASE Fmart;
 GO
 
 USE Fmart;
@@ -6,33 +15,35 @@ GO
 
 -- ================================================================
 -- FMART SUPERMARKET MANAGEMENT SYSTEM DATABASE SCHEMA
--- Trường Đại học FPT - Nhóm D05-RT06
+-- FPT University - Group D05-RT06
 -- ================================================================
 
--- NEW 1. ROLES TABLE - Quản lý các vai trò người dùng (Bảng mới)
+-- 1. ROLES TABLE - Quản lý các vai trò người dùng
 CREATE TABLE Roles (
     RoleID INT IDENTITY(1,1) PRIMARY KEY,
-    RoleName NVARCHAR(20) UNIQUE NOT NULL -- Ví dụ: 'Customer', 'Staff', 'Admin'
+    RoleName NVARCHAR(20) UNIQUE NOT NULL -- Ví dụ: 'User', 'Staff', 'Admin'
 );
 
--- 2. USERS TABLE - Quản lý tài khoản người dùng (Đã chỉnh sửa để sử dụng RoleID)
+-- 2. USERS TABLE - Quản lý tài khoản người dùng
 CREATE TABLE Users (
     UserID INT IDENTITY(1,1) PRIMARY KEY,
-    Username NVARCHAR(50) UNIQUE NOT NULL,
+    Username NVARCHAR(50) NULL, -- Hỗ trợ OAuth, không bắt buộc
     Email NVARCHAR(100) UNIQUE NOT NULL,
-    PasswordHash NVARCHAR(255) NOT NULL,
+    PasswordHash NVARCHAR(255) NULL, -- Hỗ trợ OAuth, cho phép NULL
     FullName NVARCHAR(100) NOT NULL,
     PhoneNumber NVARCHAR(15),
     Address NVARCHAR(255),
     DateOfBirth DATE,
     Gender NVARCHAR(10) CHECK (Gender IN ('Male', 'Female', 'Other')),
-    RoleID INT DEFAULT 1, -- Khóa ngoại đến bảng Roles, mặc định Customer
+    RoleID INT DEFAULT 1, -- Khóa ngoại đến Roles, mặc định User
     IsActive BIT DEFAULT 1,
     CreatedDate DATETIME DEFAULT GETDATE(),
     LastLoginDate DATETIME,
     ProfileImageUrl NVARCHAR(255),
     StudentID NVARCHAR(20), -- Mã sinh viên (nếu có)
     Department NVARCHAR(100), -- Khoa/Phòng ban
+    AuthProvider NVARCHAR(20) DEFAULT 'Local', -- Hỗ trợ OAuth
+    ExternalID NVARCHAR(100) NULL, -- ID từ Facebook/Google
     FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
 );
 
@@ -160,8 +171,8 @@ CREATE TABLE ImportDetails (
 
 -- 12. ORDERS TABLE - Đơn hàng
 CREATE TABLE Orders (
-    OurderID INT IDENTITY(1,1) PRIMARY KEY,
-    OrderNmber NVARCHAR(20) UNIQUE NOT NULL, -- Mã đơn hàng
+    OrderID INT IDENTITY(1,1) PRIMARY KEY,
+    OrderNumber NVARCHAR(20) UNIQUE NOT NULL, -- Mã đơn hàng
     CustomerID INT NOT NULL,
     OrderDate DATETIME DEFAULT GETDATE(),
     OrderType NVARCHAR(20) DEFAULT 'Online' CHECK (OrderType IN ('Online', 'In-Store')),
@@ -264,9 +275,9 @@ CREATE TABLE Coupons (
     DiscountValue DECIMAL(10,2) NOT NULL,
     MinOrderAmount DECIMAL(10,2),
     MaxDiscountAmount DECIMAL(10,2),
-    UsageLimit INT,
+    UsageLimit INT, -- Số lần sử dụng tối đa trên toàn hệ thống
     UsageCount INT DEFAULT 0,
-    UserLimit INT DEFAULT 1, -- Số lần mỗi user có thể sử dụng
+    OrderLimit INT DEFAULT 0, -- Giới hạn số đơn hàng áp dụng (thay thế UserLimit)
     StartDate DATETIME NOT NULL,
     EndDate DATETIME NOT NULL,
     IsActive BIT DEFAULT 1,
@@ -275,17 +286,17 @@ CREATE TABLE Coupons (
     FOREIGN KEY (CreatedBy) REFERENCES Users(UserID)
 );
 
--- 19. COUPON USAGE TABLE - Lịch sử sử dụng coupon
+-- 19. COUPON USAGE TABLE - Lịch sử sử dụng coupon (chỉ theo OrderID)
 CREATE TABLE CouponUsage (
     UsageID INT IDENTITY(1,1) PRIMARY KEY,
     CouponID INT NOT NULL,
-    UserID INT NOT NULL,
-    OrderID INT NOT NULL,
+    OrderID INT NOT NULL, -- Chỉ liên kết với OrderID
     UsedDate DATETIME DEFAULT GETDATE(),
     DiscountAmount DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (CouponID) REFERENCES Coupons(CouponID),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    -- Thêm ràng buộc UNIQUE trên OrderID nếu muốn mỗi đơn hàng chỉ dùng một coupon
+    -- CONSTRAINT UQ_CouponUsage_OrderID UNIQUE (OrderID)
 );
 
 -- 20. REVIEWS TABLE - Đánh giá sản phẩm
@@ -333,15 +344,41 @@ CREATE TABLE ProductRecommendations (
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE
 );
 
+-- 23. DISPATCH RECEIPTS TABLE - Bảng Phiếu Xuất Kho
+CREATE TABLE DispatchReceipts (
+    DispatchID INT PRIMARY KEY IDENTITY,
+    WarehouseID INT NOT NULL,
+    DispatchDate DATE DEFAULT GETDATE(),
+    DispatchType NVARCHAR(50) NOT NULL CHECK (DispatchType IN ('Return to Supplier', 'Write-off', 'Internal Transfer', 'Internal Use')),
+    CreatedBy INT, -- User tạo phiếu
+    Reference NVARCHAR(255), -- Tham chiếu đến (nếu có): mã NCC, mã kho nhận
+    Notes NVARCHAR(500),
+    FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID),
+    FOREIGN KEY (CreatedBy) REFERENCES Users(UserID)
+);
+
+-- 24. DISPATCH DETAILS TABLE - Bảng Chi Tiết Xuất Kho
+CREATE TABLE DispatchDetails (
+    DispatchDetailID INT PRIMARY KEY IDENTITY,
+    DispatchID INT NOT NULL,
+    ProductID INT NOT NULL,
+    Quantity INT NOT NULL CHECK (Quantity > 0),
+    UnitCost DECIMAL(18,2), -- Ghi nhận giá vốn của sản phẩm tại thời điểm xuất
+    Reason NVARCHAR(255), -- Lý do chi tiết cho từng sản phẩm
+    FOREIGN KEY (DispatchID) REFERENCES DispatchReceipts(DispatchID) ON DELETE CASCADE,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
 -- ================================================================
 -- INDEXES FOR PERFORMANCE OPTIMIZATION
 -- ================================================================
 
 -- Users table indexes
-CREATE INDEX IX_Users_Username ON Users(Username);
+CREATE INDEX IX_Users_Username ON Users(Username) WHERE Username IS NOT NULL;
 CREATE INDEX IX_Users_Email ON Users(Email);
-CREATE INDEX IX_Users_RoleID ON Users(RoleID); -- Cập nhật index cho RoleID
+CREATE INDEX IX_Users_RoleID ON Users(RoleID);
 CREATE INDEX IX_Users_IsActive ON Users(IsActive);
+CREATE INDEX IX_Users_ExternalID ON Users(ExternalID) WHERE ExternalID IS NOT NULL;
 
 -- Products table indexes
 CREATE INDEX IX_Products_CategoryID ON Products(CategoryID);
@@ -374,6 +411,9 @@ CREATE INDEX IX_ImportReceipts_ImportDate ON ImportReceipts(ImportDate);
 CREATE INDEX IX_ImportDetails_ImportID ON ImportDetails(ImportID);
 CREATE INDEX IX_ImportDetails_ProductID ON ImportDetails(ProductID);
 
+-- CouponUsage table index
+CREATE INDEX IX_CouponUsage_OrderID ON CouponUsage(OrderID);
+
 -- Performance indexes for reporting
 CREATE INDEX IX_Orders_OrderDate_Status ON Orders(OrderDate, Status);
 CREATE INDEX IX_OrderDetails_ProductID_OrderID ON OrderDetails(ProductID, OrderID);
@@ -383,23 +423,20 @@ CREATE INDEX IX_StockMovements_ProductID_MovementDate ON StockMovements(ProductI
 -- INITIAL DATA SETUP
 -- ================================================================
 
--- Insert default roles (Mới)
+-- Insert default roles
 INSERT INTO Roles (RoleName) VALUES
-('Customer'),
+('User'),
 ('Staff'),
 ('Admin'),
 ('Manager');
 
--- Insert default admin user (Đã chỉnh sửa để sử dụng RoleID)
-INSERT INTO Users (Username, Email, PasswordHash, FullName, RoleID, IsActive)
-VALUES (
-    'admin',
-    'admin@fmart.fpt.edu.vn',
-    'hashed_password_here',
-    'System Administrator',
-    (SELECT RoleID FROM Roles WHERE RoleName = 'Admin'), -- Lấy RoleID của 'Admin'
-    1
-);
+-- Insert default users
+INSERT INTO Users (Username, Email, PasswordHash, FullName, RoleID, IsActive, AuthProvider, ExternalID)
+VALUES
+    ('admin', 'admin@fmart.fpt.edu.vn', 'hashed_password_here', 'System Administrator', (SELECT RoleID FROM Roles WHERE RoleName = 'Admin'), 1, 'Local', NULL),
+    ('staff1', 'staff1@fmart.fpt.edu.vn', 'hashed_password_here', 'Staff 1', (SELECT RoleID FROM Roles WHERE RoleName = 'Staff'), 1, 'Local', NULL),
+    (NULL, 'user1@fmart.fpt.edu.vn', NULL, 'Customer 1', (SELECT RoleID FROM Roles WHERE RoleName = 'User'), 1, 'Google', 'google_user_id_123'),
+    (NULL, 'user2@fmart.fpt.edu.vn', NULL, 'Customer 2', (SELECT RoleID FROM Roles WHERE RoleName = 'User'), 1, 'Facebook', 'facebook_user_id_456');
 
 -- Insert default categories
 INSERT INTO Categories (CategoryName, Description, DisplayOrder) VALUES
@@ -412,6 +449,53 @@ INSERT INTO Categories (CategoryName, Description, DisplayOrder) VALUES
 -- ================================================================
 -- STORED PROCEDURES FOR COMMON OPERATIONS
 -- ================================================================
+
+-- Procedure to login user
+CREATE PROCEDURE sp_LoginUser
+    @Email NVARCHAR(100),
+    @ExternalID NVARCHAR(100) = NULL,
+    @AuthProvider NVARCHAR(20) = 'Local',
+    @PasswordHash NVARCHAR(255) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @UserID INT, @RoleID INT, @IsActive BIT;
+
+    SELECT 
+        @UserID = UserID, 
+        @RoleID = RoleID, 
+        @IsActive = IsActive
+    FROM Users
+    WHERE 
+        (Email = @Email OR ExternalID = @ExternalID)
+        AND AuthProvider = @AuthProvider
+        AND (@AuthProvider = 'Local' AND PasswordHash = @PasswordHash OR @AuthProvider != 'Local')
+        AND IsActive = 1;
+
+    IF @UserID IS NOT NULL
+    BEGIN
+        UPDATE Users
+        SET LastLoginDate = GETDATE()
+        WHERE UserID = @UserID;
+
+        SELECT 
+            u.UserID,
+            u.Username,
+            u.Email,
+            u.FullName,
+            r.RoleName,
+            u.ProfileImageUrl
+        FROM Users u
+        INNER JOIN Roles r ON u.RoleID = r.RoleID
+        WHERE u.UserID = @UserID;
+    END
+    ELSE
+    BEGIN
+        SELECT NULL AS UserID, 'Invalid credentials or inactive account' AS ErrorMessage;
+    END
+END;
+GO
 
 -- Procedure to update inventory after order
 CREATE PROCEDURE sp_UpdateInventoryAfterOrder
@@ -427,7 +511,6 @@ BEGIN
     INNER JOIN OrderDetails od ON i.ProductID = od.ProductID
     WHERE od.OrderID = @OrderID;
     
-    -- Insert stock movement records
     INSERT INTO StockMovements (ProductID, MovementType, Quantity, Reason, ReferenceID, ReferenceType)
     SELECT 
         od.ProductID, 
@@ -439,6 +522,7 @@ BEGIN
     FROM OrderDetails od
     WHERE od.OrderID = @OrderID;
 END;
+GO
 
 -- Procedure to update inventory after import
 CREATE PROCEDURE sp_UpdateInventoryAfterImport
@@ -455,7 +539,6 @@ BEGIN
     INNER JOIN ImportReceipts ir ON id.ImportID = ir.ImportID
     WHERE id.ImportID = @ImportID;
 
-    -- Insert stock movement records
     INSERT INTO StockMovements (ProductID, MovementType, Quantity, Reason, ReferenceID, ReferenceType, UnitCost)
     SELECT
         id.ProductID,
@@ -468,6 +551,40 @@ BEGIN
     FROM ImportDetails id
     WHERE id.ImportID = @ImportID;
 END;
+GO
+
+-- Procedure to update inventory after dispatch
+CREATE PROCEDURE sp_UpdateInventoryAfterDispatch
+    @DispatchID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @DispatchType NVARCHAR(50);
+    SELECT @DispatchType = DispatchType FROM DispatchReceipts WHERE DispatchID = @DispatchID;
+
+    UPDATE i SET
+        CurrentStock = i.CurrentStock - dd.Quantity,
+        LastStockUpdate = GETDATE()
+    FROM Inventory i
+    INNER JOIN DispatchDetails dd ON i.ProductID = dd.ProductID
+    WHERE dd.DispatchID = @DispatchID;
+
+    INSERT INTO StockMovements (ProductID, MovementType, Quantity, Reason, ReferenceID, ReferenceType, UnitCost, CreatedBy)
+    SELECT
+        dd.ProductID,
+        'OUT',
+        dd.Quantity,
+        dr.DispatchType,
+        @DispatchID,
+        'DispatchReceipt',
+        dd.UnitCost,
+        dr.CreatedBy
+    FROM DispatchDetails dd
+    JOIN DispatchReceipts dr ON dd.DispatchID = dr.DispatchID
+    WHERE dd.DispatchID = @DispatchID;
+END;
+GO
 
 -- Procedure to get low stock products
 CREATE PROCEDURE sp_GetLowStockProducts
@@ -480,7 +597,7 @@ BEGIN
         i.CurrentStock,
         p.MinStockLevel,
         c.CategoryName,
-        w.WarehouseName -- Thêm tên kho
+        w.WarehouseName
     FROM Products p
     INNER JOIN Inventory i ON p.ProductID = i.ProductID
     INNER JOIN Categories c ON p.CategoryID = c.CategoryID
@@ -489,6 +606,7 @@ BEGIN
     AND p.IsActive = 1
     ORDER BY (i.CurrentStock - p.MinStockLevel) ASC;
 END;
+GO
 
 -- Procedure for sales report
 CREATE PROCEDURE sp_GetSalesReport
@@ -510,70 +628,119 @@ BEGIN
     GROUP BY CAST(o.OrderDate AS DATE)
     ORDER BY SaleDate DESC;
 END;
--- NEW 23. DISPATCH RECEIPTS TABLE - Bảng Phiếu Xuất Kho
-CREATE TABLE DispatchReceipts (
-    DispatchID INT PRIMARY KEY IDENTITY,
-    WarehouseID INT NOT NULL,
-    DispatchDate DATE DEFAULT GETDATE(),
-    -- Lý do xuất: Trả hàng NCC, Hủy hàng hỏng, Chuyển kho, Sử dụng nội bộ
-    DispatchType NVARCHAR(50) NOT NULL CHECK (DispatchType IN ('Return to Supplier', 'Write-off', 'Internal Transfer', 'Internal Use')),
-    CreatedBy INT, -- User tạo phiếu
-    Reference NVARCHAR(255), -- Tham chiếu đến (nếu có): mã NCC, mã kho nhận
-    Notes NVARCHAR(500),
-    FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID),
-    FOREIGN KEY (CreatedBy) REFERENCES Users(UserID)
-);
 GO
 
--- NEW 24. DISPATCH DETAILS TABLE - Bảng Chi Tiết Xuất Kho
-CREATE TABLE DispatchDetails (
-    DispatchDetailID INT PRIMARY KEY IDENTITY,
-    DispatchID INT NOT NULL,
-    ProductID INT NOT NULL,
-    Quantity INT NOT NULL CHECK (Quantity > 0),
-    UnitCost DECIMAL(18,2), -- Ghi nhận giá vốn của sản phẩm tại thời điểm xuất
-    Reason NVARCHAR(255), -- Lý do chi tiết cho từng sản phẩm (ví dụ: 'Hết hạn sử dụng')
-    FOREIGN KEY (DispatchID) REFERENCES DispatchReceipts(DispatchID) ON DELETE CASCADE,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
-);
+-- Procedure to add coupon
+CREATE PROCEDURE sp_AddCoupon
+    @CouponCode NVARCHAR(20),
+    @CouponName NVARCHAR(100),
+    @Description NVARCHAR(500),
+    @DiscountType NVARCHAR(20),
+    @DiscountValue DECIMAL(10,2),
+    @MinOrderAmount DECIMAL(10,2),
+    @MaxDiscountAmount DECIMAL(10,2),
+    @UsageLimit INT,
+    @OrderLimit INT = 0,
+    @StartDate DATETIME,
+    @EndDate DATETIME,
+    @CreatedBy INT
+AS
+BEGIN
+    INSERT INTO Coupons (
+        CouponCode, CouponName, Description, DiscountType, DiscountValue,
+        MinOrderAmount, MaxDiscountAmount, UsageLimit, UsageCount,
+        OrderLimit, StartDate, EndDate, IsActive, CreatedBy, CreatedDate
+    )
+    VALUES (
+        @CouponCode, @CouponName, @Description, @DiscountType, @DiscountValue,
+        @MinOrderAmount, @MaxDiscountAmount, @UsageLimit, 0,
+        @OrderLimit, @StartDate, @EndDate, 1, @CreatedBy, GETDATE()
+    );
+
+    SELECT SCOPE_IDENTITY() AS CouponID;
+END;
 GO
 
--- ================================================================
--- NEW STORED PROCEDURE FOR DISPATCH
--- ================================================================
-
--- Procedure to update inventory after a dispatch/stock write-off
-CREATE PROCEDURE sp_UpdateInventoryAfterDispatch
-    @DispatchID INT
+-- Procedure to apply coupon to order
+CREATE PROCEDURE sp_ApplyCouponToOrder
+    @OrderID INT,
+    @CouponCode NVARCHAR(20),
+    @CreatedBy INT
 AS
 BEGIN
     SET NOCOUNT ON;
+    
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- Kiểm tra mã giảm giá hợp lệ
+        DECLARE @CouponID INT, @UsageCount INT, @UsageLimit INT, @OrderLimit INT, @DiscountValue DECIMAL(10,2), @DiscountType NVARCHAR(20), @MinOrderAmount DECIMAL(10,2), @MaxDiscountAmount DECIMAL(10,2);
+        
+        SELECT 
+            @CouponID = CouponID,
+            @UsageCount = UsageCount,
+            @UsageLimit = UsageLimit,
+            @OrderLimit = OrderLimit,
+            @DiscountValue = DiscountValue,
+            @DiscountType = DiscountType,
+            @MinOrderAmount = MinOrderAmount,
+            @MaxDiscountAmount = MaxDiscountAmount
+        FROM Coupons
+        WHERE CouponCode = @CouponCode
+        AND IsActive = 1
+        AND StartDate <= GETDATE()
+        AND EndDate >= GETDATE();
 
-    -- Biến để lưu loại phiếu xuất
-    DECLARE @DispatchType NVARCHAR(50);
-    SELECT @DispatchType = DispatchType FROM DispatchReceipts WHERE DispatchID = @DispatchID;
+        IF @CouponID IS NULL
+            THROW 50001, 'Mã giảm giá không hợp lệ hoặc đã hết hạn.', 1;
 
-    -- Cập nhật số lượng tồn kho trong bảng Inventory
-    UPDATE i SET
-        CurrentStock = i.CurrentStock - dd.Quantity,
-        LastStockUpdate = GETDATE()
-    FROM Inventory i
-    INNER JOIN DispatchDetails dd ON i.ProductID = dd.ProductID
-    WHERE dd.DispatchID = @DispatchID;
+        IF @UsageCount >= @UsageLimit
+            THROW 50002, 'Mã giảm giá đã hết số lần sử dụng.', 1;
 
-    -- Thêm bản ghi vào StockMovements để theo dõi lịch sử
-    INSERT INTO StockMovements (ProductID, MovementType, Quantity, Reason, ReferenceID, ReferenceType, UnitCost, CreatedBy)
-    SELECT
-        dd.ProductID,
-        'OUT',
-        dd.Quantity,
-        dr.DispatchType, -- Lý do chính là loại phiếu xuất
-        @DispatchID,
-        'DispatchReceipt', -- Loại tham chiếu là phiếu xuất kho
-        dd.UnitCost,
-        dr.CreatedBy
-    FROM DispatchDetails dd
-    JOIN DispatchReceipts dr ON dd.DispatchID = dr.DispatchID
-    WHERE dd.DispatchID = @DispatchID;
+        IF @OrderLimit > 0 AND (SELECT COUNT(*) FROM CouponUsage WHERE CouponID = @CouponID) >= @OrderLimit
+            THROW 50003, 'Mã giảm giá đã đạt giới hạn số đơn hàng.', 1;
+
+        -- Lấy tổng giá trị đơn hàng
+        DECLARE @OrderTotal DECIMAL(12,2);
+        SELECT @OrderTotal = FinalAmount FROM Orders WHERE OrderID = @OrderID;
+
+        IF @OrderTotal IS NULL
+            THROW 50004, 'Đơn hàng không tồn tại.', 1;
+
+        IF @MinOrderAmount IS NOT NULL AND @OrderTotal < @MinOrderAmount
+            THROW 50005, 'Tổng giá trị đơn hàng không đủ để áp dụng mã giảm giá.', 1;
+
+        -- Tính discount amount
+        DECLARE @DiscountAmount DECIMAL(10,2) = 0;
+        IF @DiscountType = 'Percentage'
+            SET @DiscountAmount = @OrderTotal * (@DiscountValue / 100);
+        ELSE IF @DiscountType = 'Fixed'
+            SET @DiscountAmount = @DiscountValue;
+
+        IF @MaxDiscountAmount IS NOT NULL AND @DiscountAmount > @MaxDiscountAmount
+            SET @DiscountAmount = @MaxDiscountAmount;
+
+        -- Cập nhật đơn hàng với discount
+        UPDATE Orders
+        SET DiscountAmount = @DiscountAmount,
+            FinalAmount = FinalAmount - @DiscountAmount
+        WHERE OrderID = @OrderID;
+
+        -- Ghi nhận sử dụng mã giảm giá
+        INSERT INTO CouponUsage (CouponID, OrderID, UsedDate, DiscountAmount)
+        VALUES (@CouponID, @OrderID, GETDATE(), @DiscountAmount);
+
+        -- Cập nhật UsageCount
+        UPDATE Coupons
+        SET UsageCount = UsageCount + 1
+        WHERE CouponID = @CouponID;
+
+        COMMIT TRANSACTION;
+        SELECT @DiscountAmount AS AppliedDiscount;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR (@ErrorMessage, 16, 1);
+    END CATCH;
 END;
 GO
