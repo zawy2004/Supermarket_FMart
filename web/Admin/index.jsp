@@ -85,7 +85,7 @@
                             </a>
                             <div class="collapse" id="collapseCategories" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link sub_nav_link" href="category.jsp">All Categories</a>
+                                    <a class="nav-link sub_nav_link" href="category_list.jsp">All Categories</a>
                                     <a class="nav-link sub_nav_link" href="add_category.jsp">Add Category</a>
                                 </nav>
                             </div>
