@@ -41,7 +41,7 @@
                         <div class="sign-form">
                             <div class="sign-inner">
                                 <div class="sign-logo" id="logo">
-                                    <a href="index.jsp"><img src="images/logo.svg" alt=""></a>
+                                    <a href="index.jsp"><img src="images/logo.png" alt=""></a>
                                     <a href="index.jsp"><img class="logo-inverse" src="images/dark-logo.svg" alt=""></a>
                                 </div>
                                 <div class="form-dt">

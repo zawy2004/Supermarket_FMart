@@ -229,7 +229,7 @@
                     <div class="sign-form">
                         <div class="sign-inner">
                             <div class="sign-logo" id="logo">
-                                <a href="index.jsp"><img src="images/logo.svg" alt="FMart Logo"></a>
+                                <a href="index.jsp"><img src="images/logo.png" alt="FMart Logo"></a>
                                 <a href="index.jsp"><img class="logo-inverse" src="images/dark-logo.svg" alt="FMart Dark Logo"></a>
                             </div>
                             <div class="form-dt">
