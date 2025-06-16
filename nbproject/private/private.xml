@@ -3,21 +3,47 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/UserManagementServlet.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/SendVerificationCodeServlet.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/LoginServlet.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/customers.jsp</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/dao/UserDAO.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/js/scripts.js</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/User/index.jsp</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/RegisterServlet.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/config/DatabaseConfig.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/WEB-INF/web.xml</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/dao/CategoryDAO.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/edit_profile.jsp</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/User/sign_up.jsp</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/util/ValidationUtil.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/ReportServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/js/offset_overlay.js</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/dashboard_my_rewards.jsp</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/util/ValidationUtil.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/dashboard_my_orders.jsp</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/ProfileServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/OrderServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/ProductDetailServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/dashboard_my_addresses.jsp</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/RegisterServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/dao/UserDAO.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/model/StockMovement.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/util/DateUtil.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/single_product_view.jsp</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/RequestProductServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/model/Warehouse.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/SendOtpServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/model/ShoppingCart.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/util/PasswordUtil.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/ReviewServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/model/User.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/js/bootstrap-tagsinput.min.js</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/SendVerificationCodeServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/model/Supplier.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/editProfile.jsp</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/model/Wishlist.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/LoginGoogleServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/sign_up.jsp</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/js/jquery.countdown.min.js</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/LoginFacebookServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/ForgotPasswordServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/LoginServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/HomeServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/util/Constants.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/controller/user/RewardServlet.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/src/java/util/FileUploadUtil.java</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/index.jsp</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/js/product.thumbnail.slider.js</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/js/custom.js</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/js/night-mode.js</file>
+            <file>file:/C:/Users/Windows11/Documents/GitHub/Supermarket_FMart/web/User/profile.jsp</file>
         </group>
     </open-files>
 </project-private>

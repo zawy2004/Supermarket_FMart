@@ -12,6 +12,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
@@ -57,8 +58,10 @@ public class RegisterServlet extends HttpServlet {
                           request.getParameter("code3") + request.getParameter("code4");
             HttpSession session = request.getSession();
             String verifyCode = (String) session.getAttribute("verifyCode");
-            if (verifyCode == null || !verifyCode.equals(code)) {
-                request.setAttribute("error", "Mã xác minh không hợp lệ hoặc đã hết hạn.");
+            Timestamp codeTime = (Timestamp) session.getAttribute("verifyCodeTime");
+            if (verifyCode == null || !verifyCode.equals(code) || 
+                (codeTime != null && new Timestamp(System.currentTimeMillis()).after(new Timestamp(codeTime.getTime() + 15 * 60 * 1000)))) {
+                request.setAttribute("error", "Mã xác minh không hợp lệ hoặc đã hết hạn (15 phút).");
                 forwardToJsp(request, response, "/User/sign_up.jsp");
                 return;
             }
@@ -89,7 +92,8 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
-            Date dateOfBirth = Date.valueOf(dobStr.replaceFirst("(\\d{2})/(\\d{2})/(\\d{4})", "$3-$1-$2"));
+            java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(dobStr);
+            Date dateOfBirth = new Date(utilDate.getTime());
             java.util.Date today = new java.util.Date();
             if (dateOfBirth.after(today)) {
                 request.setAttribute("error", "Ngày sinh không được trong tương lai.");
@@ -116,7 +120,7 @@ public class RegisterServlet extends HttpServlet {
             user.setRoleId(1); // Customer
             user.setIsActive(true);
             user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-            user.setLoginType("Email");  // Thêm dòng này để gán giá trị cho LoginType
+            user.setLoginType("Email"); // Thêm giá trị cho LoginType
 
             if (userDAO.existsByEmail(email)) {
                 request.setAttribute("error", "Email đã tồn tại.");
@@ -125,15 +129,13 @@ public class RegisterServlet extends HttpServlet {
             }
 
             if (userDAO.save(user)) {
-    session.removeAttribute("verifyCode");
-    session.setAttribute("user", user);
-    // Sử dụng đường dẫn tuyệt đối để kiểm tra
-    response.sendRedirect("/User/index.jsp");
-} else {
-    request.setAttribute("error", "Đăng ký thất bại do lỗi database.");
-    forwardToJsp(request, response, "/User/sign_up.jsp");
-}
-
+                session.removeAttribute("verifyCode");
+                session.setAttribute("user", user);
+                response.sendRedirect(request.getContextPath() + "/User/index.jsp");
+            } else {
+                request.setAttribute("error", "Đăng ký thất bại do lỗi database.");
+                forwardToJsp(request, response, "/User/sign_up.jsp");
+            }
 
         } catch (Exception e) {
             request.setAttribute("error", "Lỗi khi xử lý đăng ký: " + e.getMessage());
