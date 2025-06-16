@@ -1,8 +1,8 @@
 package controller.admin;
 
+import dao.CategoryDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +11,7 @@ import dao.ProductDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.util.Date;
 import java.util.List;
+import model.Category;
 import model.Product;
 
 
@@ -34,6 +35,8 @@ public class ProductServlet extends HttpServlet {
             } else if ("edit".equals(action)) {
                 handleEditProduct(request, response);
             } else if ("add".equals(action)) {
+                 List<Category> categories = CategoryDAO.getAllCategories();
+                request.setAttribute("categories", categories);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/add_product.jsp");
                 dispatcher.forward(request, response);
             }else if ("delete".equals(action)) {
@@ -61,6 +64,9 @@ public class ProductServlet extends HttpServlet {
             throws ServletException, IOException {
         List<Product> products = ProductDAO.getAllProducts();
         request.setAttribute("products", products);
+        
+        List<Category> categories = CategoryDAO.getAllCategories();
+        request.setAttribute("categories", categories);
         RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/products.jsp");
         dispatcher.forward(request, response);
     }
@@ -124,6 +130,7 @@ public class ProductServlet extends HttpServlet {
                 response.sendRedirect("ProductServlet");
             } else if ("add".equals(action)) {
     try {
+        
         String productName = request.getParameter("productName");
         String sku = request.getParameter("sku");
         int categoryID = Integer.parseInt(request.getParameter("categoryID"));
@@ -142,6 +149,7 @@ public class ProductServlet extends HttpServlet {
 
         Date createdDate = new Date();
         Date lastUpdated = new Date();
+        
 
         Product newProduct = new Product(0, productName, sku, categoryID, supplierID, description, unit,
                 costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated,
