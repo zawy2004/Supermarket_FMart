@@ -33,7 +33,7 @@
                     <h2 class="mt-30 page-title">Product Details</h2>
                     <ol class="breadcrumb mb-30">
                         <li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="products.jsp">Products</a></li>
+                        <li class="breadcrumb-item"><a href="ProductServlet">Products</a></li>
                         <li class="breadcrumb-item active">Product View</li>
                     </ol>
 
@@ -44,7 +44,7 @@
                                     <div class="product-owner-content-left text-center pd-20">
                                         <!-- Hi?n th? hình ?nh s?n ph?m -->
                                         <div class="product_img">
-                                            <img src="images/product/img-1.jpg" alt="">
+                                            <img src="Admin/images/product/img-1.jpg" alt="">
                                         </div>
                                         <ul class="product-dt-purchases">
                                             <li>
@@ -83,6 +83,7 @@
                         </div>
                     </div>
                 </div>
+                                
             </main>
 
             <footer class="py-4 bg-footer mt-auto">

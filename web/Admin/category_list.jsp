@@ -3,6 +3,7 @@
 <%
     List<Category> categories = (List<Category>) request.getAttribute("categories");
 %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -110,7 +111,7 @@
             <footer class="py-4 bg-footer mt-auto">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">© 2025 FMart Supermarket</div>
+                        <div class="text-muted">Â© 2025 FMart Supermarket</div>
                     </div>
                 </div>
             </footer>
