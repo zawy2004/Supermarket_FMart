@@ -11,16 +11,16 @@
 
     <!-- Fonts & Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="vendor/unicons-2.0.1/css/unicons.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/responsive.css" rel="stylesheet">
-    <link href="css/night-mode.css" rel="stylesheet">
-    <link href="css/step-wizard.css" rel="stylesheet">
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
-    <link href="vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="User/vendor/unicons-2.0.1/css/unicons.css" rel="stylesheet">
+    <link href="User/css/style.css" rel="stylesheet">
+    <link href="User/css/responsive.css" rel="stylesheet">
+    <link href="User/css/night-mode.css" rel="stylesheet">
+    <link href="User/css/step-wizard.css" rel="stylesheet">
+    <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
+    <link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+    <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -148,64 +148,41 @@
                         alert("Error resending verification code: " + error + "\nStatus: " + status + "\nResponse: " + xhr.responseText);
                     }
                 });
-            });
+            });      
 
-            // Form submission
-            $(document).on("submit", "#registerForm", function(e) {
-                console.log("Form submitted");
-                e.preventDefault();
-                var code = $("#code1").val() + $("#code2").val() + $("#code3").val() + $("#code4").val();
-                if (code.length !== 4 || code === "----") {
-                    alert("Please enter a valid 4-digit verification code.");
-                    return;
-                }
-                var email = $("#emailaddress").val();
-                var phone = $("#phone").val();
-                var fullName = $("#fullname").val();
-                var address = $("#address").val();
-                var password = $("#password").val();
-                if (!validateEmail(email)) {
-                    alert("Please enter a valid email address.");
-                    return;
-                }
-                if (!validatePhone(phone)) {
-                    alert("Please enter a valid phone number.");
-                    return;
-                }
-                if (!validateFullName(fullName)) {
-                    alert("Please enter a valid full name.");
-                    return;
-                }
-                if (!validateAddress(address)) {
-                    alert("Please enter a valid address.");
-                    return;
-                }
-                if (!validatePassword(password)) {
-                    alert("Please enter a valid password.");
-                    return;
-                }
-                var formData = $(this).serialize() + "&verificationCode=" + code;
-                console.log("Form data: ", formData);
-                $.ajax({
-                    url: "${pageContext.request.contextPath}/register",
-                    type: "POST",
-                    data: formData,
-                    success: function(response) {
-                        console.log("Success: ", response);
-                        var data = JSON.parse(response);
-                        if (data.success) {
-                            window.location.href = "${pageContext.request.contextPath}/User/index.jsp";
-                        } else {
-                            alert("Registration failed: " + data.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log("Error: ", xhr.responseText);
-                        alert("Registration failed: " + xhr.responseText);
+    $(document).on("submit", "#registerForm", function(e) {
+        e.preventDefault();
+        var code = $("#code1").val() + $("#code2").val() + $("#code3").val() + $("#code4").val();
+        var formData = $(this).serialize() + "&verificationCode=" + code;
+
+        $.ajax({
+            url: "${pageContext.request.contextPath}/register",
+            type: "POST",
+            data: formData,
+            success: function(response, status, xhr) {
+                var contentType = xhr.getResponseHeader("Content-Type") || "";
+                if (contentType.indexOf("application/json") >= 0) {
+                    // Backend trả về JSON (đăng ký thành công)
+                    var data = typeof response === "string" ? JSON.parse(response) : response;
+                    if (data.success) {
+                        window.location.href = "${pageContext.request.contextPath}/home";
+                    } else {
+                        alert("Registration failed!");
                     }
-                });
-            });
+                } else {
+                    // Backend trả về HTML (có lỗi validate/OTP) → render lại trang lỗi
+                    document.open();
+                    document.write(response);
+                    document.close();
+                }
+            },
+            error: function(xhr) {
+                alert("Registration failed: " + xhr.status + " - " + xhr.statusText);
+            }
         });
+    });
+    });
+
     </script>
     <style>
         .is-invalid {
@@ -229,12 +206,12 @@
                     <div class="sign-form">
                         <div class="sign-inner">
                             <div class="sign-logo" id="logo">
-                                <a href="index.jsp"><img src="images/logo.png" alt="FMart Logo"></a>
+                                <a href="index.jsp"><img src="User/images/logoFM.png" alt="FMart Logo"></a>
                                 <a href="index.jsp"><img class="logo-inverse" src="images/dark-logo.svg" alt="FMart Dark Logo"></a>
                             </div>
                             <div class="form-dt">
                                 <div class="form-inpts checout-address-step">
-                                    <form action="${pageContext.request.contextPath}/User/index.jsp" method="post"
+                                    <form action="${pageContext.request.contextPath}/home" method="post"
                                         <div class="form-title"><h6>Sign Up</h6></div>
 
                                         <div class="form-group pos_rel mb-3">
@@ -307,14 +284,14 @@
     </div>
 
     <!-- JS scripts -->
-    <script src="js/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-    <script src="vendor/OwlCarousel/owl.carousel.js"></script>
-    <script src="js/jquery.countdown.min.js"></script>
-    <script src="js/custom.js"></script>
-    <script src="js/product.thumbnail.slider.js"></script>
-    <script src="js/offset_overlay.js"></script>
-    <script src="js/night-mode.js"></script>
+    <script src="User/js/jquery.min.js"></script>
+    <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
+    <script src="User/js/jquery.countdown.min.js"></script>
+    <script src="User/js/custom.js"></script>
+    <script src="User/js/product.thumbnail.slider.js"></script>
+    <script src="User/js/offset_overlay.js"></script>
+    <script src="User/js/night-mode.js"></script>
 </body>
 </html>

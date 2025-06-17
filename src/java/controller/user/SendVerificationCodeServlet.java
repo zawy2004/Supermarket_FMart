@@ -38,7 +38,6 @@ public class SendVerificationCodeServlet extends HttpServlet {
                 out.write("{\"status\":\"error\",\"message\":\"Invalid email format.\"}");
                 return;
             }
-
             HttpSession session = request.getSession();
             Integer sendAttempts = (Integer) session.getAttribute("sendAttempts");
             if (sendAttempts == null) sendAttempts = 0;
@@ -48,10 +47,18 @@ public class SendVerificationCodeServlet extends HttpServlet {
                 return;
             }
 
-            String code = String.format("%04d", new Random().nextInt(10000));
-            session.setAttribute("verifyCode", code);
-            session.setMaxInactiveInterval(300); // 5 minutes
-            session.setAttribute("sendAttempts", sendAttempts + 1);
+      // Sinh OTP
+String code = String.format("%04d", new Random().nextInt(10000));
+
+// Lưu mã OTP và thời gian gửi vào session
+session.setAttribute("verifyCode", code);
+session.setAttribute("verifyCodeTime", new java.sql.Timestamp(System.currentTimeMillis()));
+session.setAttribute("sendAttempts", sendAttempts + 1);
+session.setMaxInactiveInterval(300); // 5 phút (timeout session sau 5 phút không thao tác)
+
+// Log để debug
+System.out.println("Send OTP - sessionID: " + session.getId() + " | OTP: " + code + " | Time: " + session.getAttribute("verifyCodeTime"));
+
 
             Properties props = new Properties();
             props.put("mail.smtp.auth", "true");

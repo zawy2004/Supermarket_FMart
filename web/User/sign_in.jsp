@@ -41,8 +41,8 @@
                         <div class="sign-form">
                             <div class="sign-inner">
                                 <div class="sign-logo" id="logo">
-                                    <a href="index.jsp"><img src="images/logo.png" alt=""></a>
-                                    <a href="index.jsp"><img class="logo-inverse" src="images/dark-logo.svg" alt=""></a>
+                                    <a href="index.jsp"><img src="images/logoFM.png" alt=""></a>
+                                    <a href="index.jsp"><img class="logo-inverse" src="images/dark-logoFM.png" alt=""></a>
                                 </div>
                                 <div class="form-dt">
                                     <div class="form-inpts checout-address-step">
@@ -86,7 +86,7 @@
                                         <a href="forgot_password.jsp">Forgot Password?</a>
                                     </div>
                                     <div class="signup-link">
-                                        <p>Don't have an account? - <a href="sign_up.jsp">Sign Up Now</a></p>
+                                        <p>Don't have an account? - <a href="${pageContext.request.contextPath}/register">Sign Up Now</a></p>
                                     </div>
                                 </div>
                             </div>

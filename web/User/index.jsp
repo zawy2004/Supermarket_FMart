@@ -17,16 +17,16 @@
 		<!-- Stylesheets -->
 		<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
 		<link href='vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
-		<link href="css/style.css" rel="stylesheet">
-		<link href="css/responsive.css" rel="stylesheet">
-		<link href="css/night-mode.css" rel="stylesheet">
+		<link href="User/css/style.css" rel="stylesheet">
+		<link href="User/css/responsive.css" rel="stylesheet">
+		<link href="User/css/night-mode.css" rel="stylesheet">
 		
 		<!-- Vendor Stylesheets -->
-		<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-		<link href="vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
-		<link href="vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-		<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-		<link href="vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">	
+		<link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+		<link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
+		<link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+		<link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">	
 		
 	</head>
 
@@ -48,7 +48,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-1.svg" alt="">
+									<img src="User/images/category/icon-1.svg" alt="">
 								</div>
 								<div class="text"> Fruits and Vegetables </div>
 							</a>
@@ -56,7 +56,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-2.svg" alt="">
+									<img src="User/images/category/icon-2.svg" alt="">
 								</div>
 								<div class="text"> Grocery & Staples </div>
 							</a>
@@ -64,7 +64,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-3.svg" alt="">
+									<img src="User/images/category/icon-3.svg" alt="">
 								</div>
 								<div class="text"> Dairy & Eggs </div>
 							</a>
@@ -72,7 +72,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-4.svg" alt="">
+									<img src="User/images/category/icon-4.svg" alt="">
 								</div>
 								<div class="text"> Beverages </div>
 							</a>
@@ -80,7 +80,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-5.svg" alt="">
+									<img src="User/images/category/icon-5.svg" alt="">
 								</div>
 								<div class="text"> Snacks </div>
 							</a>
@@ -88,7 +88,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-6.svg" alt="">
+									<img src="User/images/category/icon-6.svg" alt="">
 								</div>
 								<div class="text"> Home Care </div>
 							</a>
@@ -96,7 +96,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-7.svg" alt="">
+									<img src="User/images/category/icon-7.svg" alt="">
 								</div>
 								<div class="text"> Noodles & Sauces </div>
 							</a>
@@ -104,7 +104,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-8.svg" alt="">
+									<img src="User/images/category/icon-8.svg" alt="">
 								</div>
 								<div class="text"> Personal Care </div>
 							</a>
@@ -112,7 +112,7 @@
 						<li>
 							<a href="#" class="single-cat-item">
 								<div class="icon">
-									<img src="images/category/icon-9.svg" alt="">
+									<img src="User/images/category/icon-9.svg" alt="">
 								</div>
 								<div class="text"> Pet Care </div>
 							</a>
@@ -146,7 +146,7 @@
 			<div class="side-cart-items">
 				<div class="cart-item">
 					<div class="cart-product-img">
-						<img src="images/product/img-1.jpg" alt="">
+						<img src="User/images/product/img-1.jpg" alt="">
 						<div class="offer-badge">6% OFF</div>
 					</div>
 					<div class="cart-text">
@@ -185,7 +185,7 @@
 				</div>
 				<div class="cart-item">
 					<div class="cart-product-img">
-						<img src="images/product/img-2.jpg" alt="">
+						<img src="User/images/product/img-2.jpg" alt="">
 						<div class="offer-badge">6% OFF</div>
 					</div>
 					<div class="cart-text">
@@ -240,8 +240,8 @@
 		<div class="top-header-group">
 			<div class="top-header">
 				<div class="main_logo" id="logo">
-					<a href="index.jsp"><img src="images/logo.svg" alt=""></a>
-					<a href="index.jsp"><img class="logo-inverse" src="images/dark-logo.svg" alt=""></a>
+					<a href="index.jsp"><img src="User/images/logoFM.png" alt=""></a>
+					<a href="index.jsp"><img class="logo-inverse" src="User/images/dark-logo.svg" alt=""></a>
 				</div>
 				<div class="search120">
 					<div class="header_search position-relative">
@@ -265,8 +265,8 @@
 						</li>	
 						<li class="dropdown account-dropdown">
 							<a href="#" class="opts_account" role="button" id="accountClick" data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
-								<img src="images/avatar/img-5.jpg" alt="">
-								<span class="user__name">John Doe</span>
+								<img src="User/images/avatar/img-5.jpg" alt="">
+								<span class="user__name">David My</span>
 								<i class="uil uil-angle-down"></i>
 							</a>
 							<div class="dropdown-menu dropdown-menu-account dropdown-menu-end" aria-labelledby="accountClick" data-bs-popper="none">
@@ -285,7 +285,7 @@
 								<a href="dashboard_my_addresses.jsp" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
 								<a href="offers.jsp" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>
 								<a href="faq.jsp" class="channel_item"><i class="uil uil-info-circle icon__1"></i>Faq</a>
-								<a href="sign_in.jsp" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
+								<a href="User/sign_in.jsp" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
 							</div>
 						</li>
 					</ul>
@@ -304,7 +304,7 @@
 					<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 						<div class="offcanvas-header">
 							<div class="offcanvas-logo" id="offcanvasNavbarLabel">
-								<img src="images/dark-logo-1.svg" alt="">
+								<img src="User/images/dark-logo-1.svg" alt="">
 							</div>
 							<button type="button" class="close-btn" data-bs-dismiss="offcanvas" aria-label="Close">
 								<i class="uil uil-multiply"></i>
@@ -398,7 +398,7 @@
 								<div class="offer-item">								
 									<div class="offer-item-img">
 										<div class="gambo-overlay"></div>
-										<img src="images/banners/offer-1.jpg" alt="">
+										<img src="User/images/banners/offer-1.jpg" alt="">
 									</div>
 									<div class="offer-text-dt">
 										<div class="offer-top-text-banner">
@@ -414,7 +414,7 @@
 								<div class="offer-item">								
 									<div class="offer-item-img">
 										<div class="gambo-overlay"></div>
-										<img src="images/banners/offer-2.jpg" alt="">
+										<img src="User/images/banners/offer-2.jpg" alt="">
 									</div>
 									<div class="offer-text-dt">
 										<div class="offer-top-text-banner">
@@ -430,7 +430,7 @@
 								<div class="offer-item">								
 									<div class="offer-item-img">
 										<div class="gambo-overlay"></div>
-										<img src="images/banners/offer-3.jpg" alt="">
+										<img src="User/images/banners/offer-3.jpg" alt="">
 									</div>
 									<div class="offer-text-dt">
 										<div class="offer-top-text-banner">
@@ -446,7 +446,7 @@
 								<div class="offer-item">								
 									<div class="offer-item-img">	
 										<div class="gambo-overlay"></div>
-										<img src="images/banners/offer-4.jpg" alt="">
+										<img src="User/images/banners/offer-4.jpg" alt="">
 									</div>
 									<div class="offer-text-dt">
 										<div class="offer-top-text-banner">
@@ -462,7 +462,7 @@
 								<div class="offer-item">								
 									<div class="offer-item-img">
 										<div class="gambo-overlay"></div>
-										<img src="images/banners/offer-5.jpg" alt="">
+										<img src="User/images/banners/offer-5.jpg" alt="">
 									</div>
 									<div class="offer-text-dt">
 										<div class="offer-top-text-banner">
@@ -497,7 +497,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-1.svg" alt="">
+										<img src="User/images/category/icon-1.svg" alt="">
 									</div>
 									<h4>Vegetables & Fruits</h4>
 								</a>
@@ -505,7 +505,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-2.svg" alt="">
+										<img src="User/images/category/icon-2.svg" alt="">
 									</div>
 									<h4> Grocery & Staples </h4>
 								</a>
@@ -513,7 +513,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-3.svg" alt="">
+										<img src="User/images/category/icon-3.svg" alt="">
 									</div>
 									<h4> Dairy & Eggs </h4>
 								</a>
@@ -521,7 +521,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-4.svg" alt="">
+										<img src="User/images/category/icon-4.svg" alt="">
 									</div>
 									<h4> Beverages </h4>
 								</a>
@@ -529,7 +529,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-5.svg" alt="">
+										<img src="User/images/category/icon-5.svg" alt="">
 									</div>
 									<h4> Snacks </h4>
 								</a>
@@ -537,7 +537,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-6.svg" alt="">
+										<img src="User/images/category/icon-6.svg" alt="">
 									</div>
 									<h4> Home Care </h4>
 								</a>
@@ -545,7 +545,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-7.svg" alt="">
+										<img src="User/images/category/icon-7.svg" alt="">
 									</div>
 									<h4> Noodles & Sauces </h4>
 								</a>
@@ -553,7 +553,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-8.svg" alt="">
+										<img src="User/images/category/icon-8.svg" alt="">
 									</div>
 									<h4> Personal Care </h4>
 								</a>
@@ -561,7 +561,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-9.svg" alt="">
+										<img src="User/images/category/icon-9.svg" alt="">
 									</div>
 									<h4> Pet Care </h4>
 								</a>
@@ -569,7 +569,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-10.svg" alt="">
+										<img src="User/images/category/icon-10.svg" alt="">
 									</div>
 									<h4> Meat & Seafood </h4>
 								</a>
@@ -577,7 +577,7 @@
 							<div class="item">
 								<a href="shop_grid.jsp" class="category-item">
 									<div class="cate-img">
-										<img src="images/category/icon-11.svg" alt="">
+										<img src="User/images/category/icon-11.svg" alt="">
 									</div>
 									<h4> Electronics </h4>
 								</a>
@@ -606,7 +606,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-1.jpg" alt="">
+										<img src="User/images/product/img-1.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">6% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -630,7 +630,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-2.jpg" alt="">
+										<img src="User/images/product/img-2.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">2% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -654,7 +654,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-3.jpg" alt="">
+										<img src="User/images/product/img-3.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">5% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -678,7 +678,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-4.jpg" alt="">
+										<img src="User/images/product/img-4.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">3% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -702,7 +702,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-5.jpg" alt="">
+										<img src="User/images/product/img-5.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">2% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -726,7 +726,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-6.jpg" alt="">
+										<img src="User/images/product/img-6.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">2% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -750,7 +750,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-7.jpg" alt="">
+										<img src="User/images/product/img-7.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">1% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -774,7 +774,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-8.jpg" alt="">
+										<img src="User/images/product/img-8.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">3% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -815,17 +815,17 @@
 					</div>
 					<div class="col-lg-4 col-md-6">
 						<a href="#" class="best-offer-item">
-							<img src="images/best-offers/offer-1.jpg" alt="">
+							<img src="User/images/best-offers/offer-1.jpg" alt="">
 						</a>
 					</div>
 					<div class="col-lg-4 col-md-6">
 						<a href="#" class="best-offer-item">
-							<img src="images/best-offers/offer-2.jpg" alt="">
+							<img src="User/images/best-offers/offer-2.jpg" alt="">
 						</a>
 					</div>
 					<div class="col-lg-4 col-md-6">
 						<a href="#" class="best-offer-item offr-none">
-							<img src="images/best-offers/offer-3.jpg" alt="">
+							<img src="User/images/best-offers/offer-3.jpg" alt="">
 							<div class="cmtk_dt">
 								<div class="product_countdown-timer offer-counter-text" data-countdown="2022/08/09"></div>
 							</div>
@@ -833,7 +833,7 @@
 					</div>
 					<div class="col-md-12">
 						<a href="#" class="code-offer-item">
-							<img src="images/best-offers/offer-4.jpg" alt="">
+							<img src="User/images/best-offers/offer-4.jpg" alt="">
 						</a>
 					</div>
 				</div>
@@ -858,7 +858,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-11.jpg" alt="">
+										<img src="User/images/product/img-11.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">6% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -882,7 +882,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-12.jpg" alt="">
+										<img src="User/images/product/img-12.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">2% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -906,7 +906,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-13.jpg" alt="">
+										<img src="User/images/product/img-13.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">5% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -930,7 +930,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-1.jpg" alt="">
+										<img src="User/images/product/img-1.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">3% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -954,7 +954,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-5.jpg" alt="">
+										<img src="User/images/product/img-5.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">2% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -978,7 +978,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-6.jpg" alt="">
+										<img src="User/images/product/img-6.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">2% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1002,7 +1002,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-14.jpg" alt="">
+										<img src="User/images/product/img-14.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">1% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1026,7 +1026,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-3.jpg" alt="">
+										<img src="User/images/product/img-3.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">3% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1071,7 +1071,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-10.jpg" alt="">
+										<img src="User/images/product/img-10.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">New</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1095,7 +1095,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-9.jpg" alt="">
+										<img src="User/images/product/img-9.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">New</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1119,7 +1119,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-15.jpg" alt="">
+										<img src="User/images/product/img-15.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">5% off</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1143,7 +1143,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-11.jpg" alt="">
+										<img src="User/images/product/img-11.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">New</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1167,7 +1167,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-14.jpg" alt="">
+										<img src="User/images/product/img-14.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">New</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1191,7 +1191,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-2.jpg" alt="">
+										<img src="User/images/product/img-2.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">New</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1215,7 +1215,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">	
-										<img src="images/product/img-5.jpg" alt="">
+										<img src="User/images/product/img-5.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">New</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1239,7 +1239,7 @@
 							<div class="item">
 								<div class="product-item">
 									<a href="single_product_view.jsp" class="product-img">
-										<img src="images/product/img-6.jpg" alt="">
+										<img src="User/images/product/img-6.jpg" alt="">
 										<div class="product-absolute-options">
 											<span class="offer-badge-1">New</span>
 											<span class="like-icon" title="wishlist"></span>
@@ -1345,8 +1345,8 @@
 						<div class="second-row-item-app">
 							<h4>Download App</h4>
 							<ul>
-								<li><a href="#"><img class="download-btn mb-2" src="images/download-1.svg" alt=""></a></li>
-								<li><a href="#"><img class="download-btn mb-2" src="images/download-2.svg" alt=""></a></li>
+								<li><a href="#"><img class="download-btn mb-2" src="User/images/download-1.svg" alt=""></a></li>
+								<li><a href="#"><img class="download-btn mb-2" src="User/images/download-2.svg" alt=""></a></li>
 							</ul>
 						</div>
 						<div class="second-row-item-payment">
@@ -1354,19 +1354,19 @@
 							<div class="footer-payments">
 								<ul id="paypal-gateway" class="financial-institutes">
 									<li class="financial-institutes__logo">
-									  <img alt="Visa" title="Visa" src="images/footer-icons/pyicon-6.svg">
+									  <img alt="Visa" title="Visa" src="User/images/footer-icons/pyicon-6.svg">
 									</li>
 									<li class="financial-institutes__logo">
-									  <img alt="Visa" title="Visa" src="images/footer-icons/pyicon-1.svg">
+									  <img alt="Visa" title="Visa" src="User/images/footer-icons/pyicon-1.svg">
 									</li>
 									<li class="financial-institutes__logo">
-									  <img alt="MasterCard" title="MasterCard" src="images/footer-icons/pyicon-2.svg">
+									  <img alt="MasterCard" title="MasterCard" src="User/images/footer-icons/pyicon-2.svg">
 									</li>
 									<li class="financial-institutes__logo">
-									  <img alt="American Express" title="American Express" src="images/footer-icons/pyicon-3.svg">
+									  <img alt="American Express" title="American Express" src="User/images/footer-icons/pyicon-3.svg">
 									</li>
 									<li class="financial-institutes__logo">
-									  <img alt="Discover" title="Discover" src="images/footer-icons/pyicon-4.svg">
+									  <img alt="Discover" title="Discover" src="User/images/footer-icons/pyicon-4.svg">
 									</li>
 								</ul>
 							</div>
@@ -1408,14 +1408,14 @@
 	<!-- Footer End -->
 
 	<!-- Javascripts -->
-	<script src="js/jquery.min.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="vendor/bootstrap-select/js/bootstrap-select.min.js"></script>	
-	<script src="vendor/OwlCarousel/owl.carousel.js"></script>
-	<script src="js/jquery.countdown.min.js"></script>
-	<script src="js/custom.js"></script>
-	<script src="js/offset_overlay.js"></script>
-	<script src="js/night-mode.js"></script>
+	<script src="User/js/jquery.min.js"></script>
+	<script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>	
+	<script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
+	<script src="User/js/jquery.countdown.min.js"></script>
+	<script src="User/js/custom.js"></script>
+	<script src="User/js/offset_overlay.js"></script>
+	<script src="User/js/night-mode.js"></script>
 	
 	
 </body>

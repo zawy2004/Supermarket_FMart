@@ -54,17 +54,40 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
-            String code = request.getParameter("code1") + request.getParameter("code2") +
-                          request.getParameter("code3") + request.getParameter("code4");
-            HttpSession session = request.getSession();
-            String verifyCode = (String) session.getAttribute("verifyCode");
-            Timestamp codeTime = (Timestamp) session.getAttribute("verifyCodeTime");
-            if (verifyCode == null || !verifyCode.equals(code) || 
-                (codeTime != null && new Timestamp(System.currentTimeMillis()).after(new Timestamp(codeTime.getTime() + 15 * 60 * 1000)))) {
-                request.setAttribute("error", "Mã xác minh không hợp lệ hoặc đã hết hạn (15 phút).");
-                forwardToJsp(request, response, "/User/sign_up.jsp");
-                return;
-            }
+           // Lấy mã OTP nhập từ client
+           String code = request.getParameter("code1") + request.getParameter("code2")
+        + request.getParameter("code3") + request.getParameter("code4");
+
+           // Lấy mã OTP và thời gian tạo từ session
+             HttpSession session = request.getSession();
+             String verifyCode = (String) session.getAttribute("verifyCode");
+             Timestamp codeTime = (Timestamp) session.getAttribute("verifyCodeTime");
+
+             // Debug log
+              System.out.println("OTP nhập: " + code);
+              System.out.println("OTP session: " + verifyCode);
+              System.out.println("SessionID: " + session.getId());
+
+             boolean validOTP = true;
+             String errorOTP = null;
+ 
+             if (verifyCode == null) {
+            validOTP = false;
+            errorOTP = "Bạn chưa gửi mã xác thực hoặc đã hết hạn, hãy nhấn Gửi lại!";
+       } else if (!verifyCode.equals(code)) {
+            validOTP = false;
+            errorOTP = "Mã xác minh không đúng, hãy kiểm tra lại mã gửi về email.";
+      } else if (codeTime != null && new Timestamp(System.currentTimeMillis()).after(new Timestamp(codeTime.getTime() + 15 * 60 * 1000))) {
+            validOTP = false;
+            errorOTP = "Mã xác minh đã hết hạn, hãy nhấn Gửi lại!";
+}
+
+if (!validOTP) {
+    request.setAttribute("error", errorOTP);
+    forwardToJsp(request, response, "/User/sign_up.jsp");
+    return;
+}
+
 
             if (!ValidationUtil.isValidEmail(email)) {
                 request.setAttribute("error", "Email không hợp lệ.");
@@ -121,7 +144,8 @@ public class RegisterServlet extends HttpServlet {
             user.setIsActive(true);
             user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             user.setLoginType("Email"); // Thêm giá trị cho LoginType
-
+            user.setUsername(email);           // Username lấy từ email
+            user.setAuthProvider("Local"); 
             if (userDAO.existsByEmail(email)) {
                 request.setAttribute("error", "Email đã tồn tại.");
                 forwardToJsp(request, response, "/User/sign_up.jsp");
@@ -131,7 +155,9 @@ public class RegisterServlet extends HttpServlet {
             if (userDAO.save(user)) {
                 session.removeAttribute("verifyCode");
                 session.setAttribute("user", user);
-                response.sendRedirect(request.getContextPath() + "/User/index.jsp");
+                response.setContentType("application/json");
+                response.getWriter().write("{\"success\": true}");
+
             } else {
                 request.setAttribute("error", "Đăng ký thất bại do lỗi database.");
                 forwardToJsp(request, response, "/User/sign_up.jsp");
@@ -143,7 +169,6 @@ public class RegisterServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-
     private void forwardToJsp(HttpServletRequest request, HttpServletResponse response, String jspPath)
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher(jspPath);

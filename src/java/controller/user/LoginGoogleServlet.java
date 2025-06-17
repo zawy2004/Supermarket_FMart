@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.ServletContext;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.json.JSONObject;
@@ -25,21 +24,20 @@ public class LoginGoogleServlet extends HttpServlet {
     private static final String AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
     private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
+    private static final String CLIENT_ID = "549548859496-abt5dfb1krnhv8lc1vnblaf92tojn0eh.apps.googleusercontent.com";
+    private static final String CLIENT_SECRET = "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";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        ServletContext context = getServletContext();
         String code = request.getParameter("code");
-        String clientId = context.getInitParameter("google.clientId");
-        String clientSecret = context.getInitParameter("google.clientSecret");
         String redirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() 
                 + request.getContextPath() + "/User/login-google"; // Đảm bảo khớp với JSP
         System.out.println("Generated Redirect URI: " + redirectUri); // Thêm log
 
         if (code == null || code.isEmpty()) {
-            String authUrl = AUTH_URL + "?client_id=" + clientId 
+            String authUrl = AUTH_URL + "?client_id=" + CLIENT_ID 
                     + "&redirect_uri=" + redirectUri 
                     + "&response_type=code"
                     + "&scope=email profile"
@@ -54,8 +52,8 @@ public class LoginGoogleServlet extends HttpServlet {
             String tokenResponse = Request.Post(TOKEN_URL)
                     .bodyForm(Form.form()
                             .add("code", code)
-                            .add("client_id", clientId)
-                            .add("client_secret", clientSecret)
+                            .add("client_id", CLIENT_ID)
+                            .add("client_secret", CLIENT_SECRET)
                             .add("redirect_uri", redirectUri)
                             .add("grant_type", "authorization_code")
                             .build())
@@ -64,7 +62,7 @@ public class LoginGoogleServlet extends HttpServlet {
             JSONObject tokenJson = new JSONObject(tokenResponse);
             if (!tokenJson.has("access_token")) {
                 System.out.println("Token Response Error: " + tokenResponse); // Log lỗi chi tiết
-                throw new IOException("Không tìm thấy access_token: " + tokenResponse);
+throw new IOException("Không tìm thấy access_token: " + tokenResponse);
             }
             String accessToken = tokenJson.getString("access_token");
 
@@ -108,13 +106,13 @@ public class LoginGoogleServlet extends HttpServlet {
             // Lưu thông tin vào session và chuyển hướng
             session.setAttribute("userEmail", email);
             session.setAttribute("userFullName", fullName);
-            response.sendRedirect(request.getContextPath() + "/User/index.jsp"); // Chuyển hướng đúng
+            response.sendRedirect(request.getContextPath() + "User/home"); // Chuyển hướng đúng
 
         } catch (IOException e) {
             e.printStackTrace(); // In stack trace chi tiết
             request.setAttribute("errorMessage", "Đăng nhập Google thất bại: " + e.getMessage());
             request.getRequestDispatcher("/User/sign_in.jsp").forward(request, response); // Sửa đường dẫn
-        }
+}
     }
 
     @Override
