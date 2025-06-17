@@ -91,18 +91,24 @@
                             </div>
                             <div class="col-lg-5 col-md-6">
                                 <div class="bulk-section mt-30">
-                                    <div class="search-by-name-input">
-                                        <input type="text" class="form-control" placeholder="Search">
-                                    </div>
-                                    <div class="input-group">
-                                        <select id="category" name="category" class="form-control">
-                                            <option selected>Active</option>
-                                            <option value="1">Inactive</option>
+                                    <form action="ProductServlet" method="get" class="form-inline" style="gap: 8px;">
+                                        <input type="hidden" name="action" value="list" />
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="keyword"
+                                            placeholder="Search by name, SKU, brand..."
+                                            value="${param.keyword != null ? param.keyword : ''}"
+                                            style="min-width: 160px;"
+                                            />
+                                        <select name="categoryId" class="form-control" style="min-width: 120px;">
+                                            <option value="">All Categories</option>
+                                            <c:forEach var="cat" items="${categories}">
+                                                <option value="${cat.categoryID}" <c:if test="${param.categoryId == cat.categoryID}">selected</c:if>>${cat.categoryName}</option>
+                                            </c:forEach>
                                         </select>
-                                        <div class="input-group-append">
-                                            <button class="status-btn hover-btn" type="submit">Search Area</button>
-                                        </div>
-                                    </div>
+                                        <button class="status-btn hover-btn btn btn-primary" type="submit">Search</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

@@ -30,6 +30,8 @@ public class ProductServlet extends HttpServlet {
         try {
             if (action == null) {
                 handleProductList(request, response);
+            } else if ("list".equals(action)) {
+                handleProductList(request, response);
             } else if ("view".equals(action)) {
                 handleViewProduct(request, response);
             } else if ("edit".equals(action)) {
@@ -61,9 +63,8 @@ public class ProductServlet extends HttpServlet {
 
     private void handleProductList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Phân trang
         int page = 1;
-        int pageSize = 5; // Tùy chỉnh số sản phẩm/trang
+        int pageSize = 5;
         String pageParam = request.getParameter("page");
         if (pageParam != null) {
             try {
@@ -77,16 +78,28 @@ public class ProductServlet extends HttpServlet {
         }
         int offset = (page - 1) * pageSize;
 
-        // Lấy sản phẩm theo trang
-        List<Product> products = ProductDAO.getProductsByPage(offset, pageSize); // Cần viết hàm này ở DAO
-        int totalProducts = ProductDAO.getTotalProducts(); // Cần viết hàm này ở DAO
+        // Nhận filter từ form
+        String keyword = request.getParameter("keyword");
+        String categoryId = request.getParameter("categoryId");
+
+        List<Product> products;
+        int totalProducts;
+
+        if ((keyword != null && !keyword.isEmpty()) || (categoryId != null && !categoryId.isEmpty())) {
+            products = ProductDAO.searchProductsPaged(keyword, categoryId, offset, pageSize);
+            totalProducts = ProductDAO.countSearchProducts(keyword, categoryId);
+        } else {
+            products = ProductDAO.getProductsByPage(offset, pageSize);
+            totalProducts = ProductDAO.getTotalProducts();
+        }
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
         request.setAttribute("products", products);
         request.setAttribute("page", page);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("keyword", keyword);
+        request.setAttribute("categoryId", categoryId);
 
-        // Lấy category
         List<Category> categories = CategoryDAO.getAllCategories();
         request.setAttribute("categories", categories);
 
