@@ -75,10 +75,29 @@ public class User {
 
     public String getLoginType() { return loginType; }
     public void setLoginType(String loginType) { this.loginType = loginType; }
-
-    public String getAuthProvider() { return authProvider; }
+public String getAuthProvider() { return authProvider; }
     public void setAuthProvider(String authProvider) { this.authProvider = authProvider; }
 
     public String getExternalID() { return externalID; }
     public void setExternalID(String externalID) { this.externalID = externalID; }
+    // Thêm phương thức này vào class User.java
+
+@Override
+public String toString() {
+    return "User{" +
+            "userId=" + userId +
+            ", username='" + username + '\'' +
+            ", email='" + email + '\'' +
+            ", fullName='" + fullName + '\'' +
+            ", phoneNumber='" + phoneNumber + '\'' +
+            ", address='" + address + '\'' +
+            ", dateOfBirth=" + dateOfBirth +
+            ", gender='" + gender + '\'' +
+            ", roleId=" + roleId +
+            ", isActive=" + isActive +
+            ", createdDate=" + createdDate +
+            ", authProvider='" + authProvider + '\'' +
+            ", externalID='" + externalID + '\'' +
+            '}';
+}
 }

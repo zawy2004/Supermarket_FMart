@@ -1,5 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+<%@ page import="model.User" %>
+<%
+    User user = (User) session.getAttribute("user");
+%>
 
 	
 <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/index.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 11:59:29 GMT -->
@@ -12,11 +16,11 @@
 		<title>FMart - Index</title>
 		
 		<!-- Favicon Icon -->
-		<link rel="icon" type="image/png" href="images/fav.png">
+		<link rel="icon" type="image/png" href="User/images/fav.png">
 		
 		<!-- Stylesheets -->
 		<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-		<link href='vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
+		<link href='User/vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
 		<link href="User/css/style.css" rel="stylesheet">
 		<link href="User/css/responsive.css" rel="stylesheet">
 		<link href="User/css/night-mode.css" rel="stylesheet">
@@ -264,30 +268,39 @@
 							<a href="dashboard_my_wishlist.jsp" class="option_links" title="Wishlist"><i class='uil uil-heart icon_wishlist'></i><span class="noti_count1">3</span></a>
 						</li>	
 						<li class="dropdown account-dropdown">
-							<a href="#" class="opts_account" role="button" id="accountClick" data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
-								<img src="User/images/avatar/img-5.jpg" alt="">
-								<span class="user__name">David My</span>
-								<i class="uil uil-angle-down"></i>
-							</a>
-							<div class="dropdown-menu dropdown-menu-account dropdown-menu-end" aria-labelledby="accountClick" data-bs-popper="none">
-								<div class="night_mode_switch__btn">
-									<a href="#" id="night-mode" class="btn-night-mode">
-										<i class="uil uil-moon"></i> Night mode
-										<span class="btn-night-mode-switch">
-											<span class="uk-switch-button"></span>
-										</span>
-									</a>
-								</div>	
-								<a href="dashboard_overview.jsp" class="channel_item"><i class="uil uil-apps icon__1"></i>Dashbaord</a>								
-								<a href="dashboard_my_orders.jsp" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
-								<a href="dashboard_my_wishlist.jsp" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
-								<a href="dashboard_my_wallet.jsp" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
-								<a href="dashboard_my_addresses.jsp" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
-								<a href="offers.jsp" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>
-								<a href="faq.jsp" class="channel_item"><i class="uil uil-info-circle icon__1"></i>Faq</a>
-								<a href="User/sign_in.jsp" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
-							</div>
-						</li>
+    <a href="#" class="opts_account" role="button" id="accountClick" data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="User/images/avatar/img-5.jpg" alt="">
+        <span class="user__name">
+            <% if (user != null) { %>
+                <%= user.getFullName() %>
+            <% } else { %>
+                <a href="User/sign_in.jsp" style="color: #333; text-decoration: none;">Sign In</a>
+            <% } %>
+        </span>
+        <i class="uil uil-angle-down"></i>
+    </a>
+    <% if (user != null) { %>
+        <div class="dropdown-menu dropdown-menu-account dropdown-menu-end" aria-labelledby="accountClick" data-bs-popper="none">
+            <div class="night_mode_switch__btn">
+                <a href="#" id="night-mode" class="btn-night-mode">
+                    <i class="uil uil-moon"></i> Night mode
+                    <span class="btn-night-mode-switch">
+                        <span class="uk-switch-button"></span>
+                    </span>
+                </a>
+            </div>
+            <a href="User/dashboard_overview.jsp" class="channel_item"><i class="uil uil-apps icon__1"></i>Dashboard</a>
+            <a href="User/dashboard_my_orders.jsp" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
+            <a href="User/dashboard_my_wishlist.jsp" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
+            <a href="User/dashboard_my_wallet.jsp" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
+            <a href="User/dashboard_my_addresses.jsp" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
+            <a href="User/offers.jsp" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>
+            <a href="User/faq.jsp" class="channel_item"><i class="uil uil-info-circle icon__1"></i>Faq</a>
+            <a href="User/sign_in.jsp" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
+        </div>
+    <% } %>
+</li>
+
 					</ul>
 				</div>
 			</div>
@@ -333,12 +346,12 @@
 										Blog
 									</a>
 									<ul class="dropdown-menu dropdown-submenu">
-										<li><a class="dropdown-item" href="our_blog.jsp">Our Blog</a></li>
-										<li><a class="dropdown-item" href="blog_no_sidebar.jsp">Our Blog Two No Sidebar</a></li>
-										<li><a class="dropdown-item" href="blog_left_sidebar.jsp">Our Blog with Left Sidebar</a></li>
-										<li><a class="dropdown-item" href="blog_right_sidebar.jsp">Our Blog with Right Sidebar</a></li>
-										<li><a class="dropdown-item" href="blog_detail_view.jsp">Blog Detail View</a></li>
-										<li><a class="dropdown-item" href="blog_left_sidebar_single_view.jsp">Blog Detail View with Sidebar</a></li>
+										<li><a class="dropdown-item" href="User/our_blog.jsp">Our Blog</a></li>
+										<li><a class="dropdown-item" href="User/blog_no_sidebar.jsp">Our Blog Two No Sidebar</a></li>
+										<li><a class="dropdown-item" href="User/blog_left_sidebar.jsp">Our Blog with Left Sidebar</a></li>
+										<li><a class="dropdown-item" href="User/blog_right_sidebar.jsp">Our Blog with Right Sidebar</a></li>
+										<li><a class="dropdown-item" href="User/blog_detail_view.jsp">Blog Detail View</a></li>
+										<li><a class="dropdown-item" href="User/blog_left_sidebar_single_view.jsp">Blog Detail View with Sidebar</a></li>
 									</ul>
 								</li>
 								<li class="nav-item dropdown">
@@ -1316,13 +1329,13 @@
 						<div class="second-row-item">
 							<h4>Useful Links</h4>
 							<ul>
-								<li><a href="about_us.jsp">About US</a></li>
-								<li><a href="shop_grid.jsp">Featured Products</a></li>
-								<li><a href="offers.jsp">Offers</a></li>
-								<li><a href="our_blog.jsp">Blog</a></li>
-								<li><a href="faq.jsp">Faq</a></li>
-								<li><a href="career.jsp">Careers</a></li>
-								<li><a href="contact_us.jsp">Contact Us</a></li>
+								<li><a href="User/about_us.jsp">About US</a></li>
+								<li><a href="User/shop_grid.jsp">Featured Products</a></li>
+								<li><a href="User/offers.jsp">Offers</a></li>
+								<li><a href="User/our_blog.jsp">Blog</a></li>
+								<li><a href="User/faq.jsp">Faq</a></li>
+								<li><a href="User/career.jsp">Careers</a></li>
+								<li><a href="User/contact_us.jsp">Contact Us</a></li>
 							</ul>
 						</div>
 					</div>

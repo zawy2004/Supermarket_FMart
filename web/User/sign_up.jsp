@@ -25,6 +25,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Set max date for date of birth to today
+            var today = new Date().toISOString().split('T')[0];
+            $('input[name="dob"]').attr('max', today);
+
             // Validation functions
             function validateEmail(email) {
                 const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,152 +41,296 @@
             }
 
             function validateFullName(name) {
-                const re = /^[a-zA-Z\s]+$/;
-                return re.test(name.trim());
+                const re = /^[a-zA-ZÀ-Ỹà-ỹ\s]+$/;
+                return re.test(name.trim()) && name.trim().length > 0;
             }
 
             function validateAddress(address) {
-                const re = /^[a-zA-Z0-9\s]+$/;
-                return re.test(address.trim());
+                const re = /^[a-zA-ZÀ-Ỹà-ỹ0-9\s]+$/;
+                return re.test(address.trim()) && address.trim().length > 0;
             }
 
             function validatePassword(password) {
                 return password.length >= 6 && /[A-Za-z]/.test(password) && /\d/.test(password);
             }
 
+            function validateDateOfBirth(dob) {
+                var today = new Date();
+                var birthDate = new Date(dob);
+                return birthDate <= today;
+            }
+
+            function showError(element, message) {
+                element.addClass("is-invalid").removeClass("is-valid");
+                element.next(".invalid-feedback").remove();
+                element.after('<div class="invalid-feedback">' + message + '</div>');
+            }
+
+            function showSuccess(element) {
+                element.removeClass("is-invalid").addClass("is-valid");
+                element.next(".invalid-feedback").remove();
+            }
+
             // Real-time validation
             $("#emailaddress").on("input", function() {
                 if (!validateEmail($(this).val())) {
-                    $(this).addClass("is-invalid").removeClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
-                    $(this).after('<div class="invalid-feedback">Please enter a valid email address.</div>');
+                    showError($(this), "Please enter a valid email address.");
                 } else {
-                    $(this).removeClass("is-invalid").addClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
+                    showSuccess($(this));
                 }
             });
 
             $("#phone").on("input", function() {
                 if (!validatePhone($(this).val())) {
-                    $(this).addClass("is-invalid").removeClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
-                    $(this).after('<div class="invalid-feedback">Phone must start with 0 and be 10 digits.</div>');
+                    showError($(this), "Phone must start with 0 and be 10 digits.");
                 } else {
-                    $(this).removeClass("is-invalid").addClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
+                    showSuccess($(this));
                 }
             });
 
             $("#fullname").on("input", function() {
                 if (!validateFullName($(this).val())) {
-                    $(this).addClass("is-invalid").removeClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
-                    $(this).after('<div class="invalid-feedback">Full name must contain only letters and spaces.</div>');
+                    showError($(this), "Full name must contain only letters and spaces.");
                 } else {
-                    $(this).removeClass("is-invalid").addClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
+                    showSuccess($(this));
                 }
             });
 
             $("#address").on("input", function() {
                 if (!validateAddress($(this).val())) {
-                    $(this).addClass("is-invalid").removeClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
-                    $(this).after('<div class="invalid-feedback">Address must contain only letters, numbers, and spaces.</div>');
+                    showError($(this), "Address must contain only letters, numbers, and spaces.");
                 } else {
-                    $(this).removeClass("is-invalid").addClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
+                    showSuccess($(this));
                 }
             });
 
             $("#password").on("input", function() {
                 if (!validatePassword($(this).val())) {
-                    $(this).addClass("is-invalid").removeClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
-                    $(this).after('<div class="invalid-feedback">Password must be at least 6 characters with letters and numbers.</div>');
+                    showError($(this), "Password must be at least 6 characters with letters and numbers.");
                 } else {
-                    $(this).removeClass("is-invalid").addClass("is-valid");
-                    $(this).next(".invalid-feedback").remove();
+                    showSuccess($(this));
                 }
             });
 
-            // Send verification code
-            $("#sendCode").click(function(e) {
-                e.preventDefault();
-                var email = $("#emailaddress").val();
-                if (!validateEmail(email)) {
-                    alert("Please enter a valid email address before sending code.");
-                    return;
+            $('input[name="dob"]').on("change", function() {
+                if (!validateDateOfBirth($(this).val())) {
+                    showError($(this), "Date of birth cannot be in the future.");
+                } else {
+                    showSuccess($(this));
                 }
-                $.ajax({
-                    url: "${pageContext.request.contextPath}/SendVerificationCodeServlet",
-                    type: "POST",
-                    data: { emailaddress: email },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        alert(data.message);
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Error sending verification code: " + error + "\nStatus: " + status + "\nResponse: " + xhr.responseText);
-                    }
-                });
             });
+
+            // Auto move to next OTP input
+            $('.otp-input').on('input', function() {
+                if (this.value.length == this.maxLength) {
+                    $(this).next('.otp-input').focus();
+                }
+            });
+
+                // Send verification code
+                $("#continueToOTP").click(function(e) {
+                    e.preventDefault();
+                    
+                    // Validate all fields
+                    var isValid = true;
+                    var email = $("#emailaddress").val();
+                    var phone = $("#phone").val();
+                    var fullname = $("#fullname").val();
+                    var address = $("#address").val();
+                    var password = $("#password").val();
+                    var dob = $('input[name="dob"]').val();
+                    var gender = $('select[name="gender"]').val();
+
+                    if (!validateEmail(email)) {
+                        showError($("#emailaddress"), "Please enter a valid email address.");
+                        isValid = false;
+                    }
+
+                    if (!validatePhone(phone)) {
+                        showError($("#phone"), "Phone must start with 0 and be 10 digits.");
+                        isValid = false;
+                    }
+
+                    if (!validateFullName(fullname)) {
+                        showError($("#fullname"), "Full name must contain only letters and spaces.");
+                        isValid = false;
+                    }
+
+                    if (!validateAddress(address)) {
+                        showError($("#address"), "Address must contain only letters, numbers, and spaces.");
+                        isValid = false;
+                    }
+
+                    if (!validatePassword(password)) {
+                        showError($("#password"), "Password must be at least 6 characters with letters and numbers.");
+                        isValid = false;
+                    }
+
+                    if (!validateDateOfBirth(dob)) {
+                        showError($('input[name="dob"]'), "Date of birth cannot be in the future.");
+                        isValid = false;
+                    }
+
+                    if (!gender) {
+                        alert("Please select your gender.");
+                        isValid = false;
+                    }
+
+                    if (!isValid) {
+                        alert("Please fix all validation errors before continuing.");
+                        return;
+                    }
+
+                    // Send OTP
+                    $("#continueToOTP").prop('disabled', true).text('Sending...');
+                    
+                    $.ajax({
+                        url: "${pageContext.request.contextPath}/SendVerificationCodeServlet",
+                        type: "POST",
+                        data: { emailaddress: email },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status === "success") {
+                                // Hide user info form and show OTP form
+                                $("#userInfoStep").hide();
+                                $("#otpStep").show();
+                                $("#stepTitle").text("Email Verification");
+                                alert(data.message);
+                            } else {
+                                alert("Error: " + data.message);
+                            }
+                        },
+                        error: function(xhr) {
+                            try {
+                                var response = JSON.parse(xhr.responseText);
+                                alert("Error: " + response.message);
+                                
+                                // Nếu đạt giới hạn, hiện nút reset
+                                if (response.message.includes("quá nhiều lần")) {
+                                    showResetOption();
+                                }
+                            } catch (e) {
+                                alert("Error sending verification code. Please try again.");
+                            }
+                        },
+                        complete: function() {
+                            $("#continueToOTP").prop('disabled', false).text('Sign Up Now');
+                        }
+                    });
+                });
+
+                // Function to show reset option
+                function showResetOption() {
+                    if ($("#resetCounterBtn").length === 0) {
+                        $("#continueToOTP").after('<button type="button" id="resetCounterBtn" class="btn btn-warning mt-2 w-100">Reset Counter & Try Again</button>');
+                    }
+                }
+
+                // Reset OTP counter
+                $(document).on("click", "#resetCounterBtn", function(e) {
+                    e.preventDefault();
+                    
+                    $(this).prop('disabled', true).text('Resetting...');
+                    
+                    $.ajax({
+                        url: "${pageContext.request.contextPath}/ResetOTPCounterServlet",
+                        type: "POST",
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status === "success") {
+                                alert(data.message);
+                                $("#resetCounterBtn").remove();
+                            } else {
+                                alert("Error: " + data.message);
+                            }
+                        },
+                        error: function(xhr) {
+                            alert("Error resetting counter. Please try again.");
+                        },
+                        complete: function() {
+                            $("#resetCounterBtn").prop('disabled', false).text('Reset Counter & Try Again');
+                        }
+                    });
+                });
 
             // Resend verification code
             $("#resendCode").click(function(e) {
                 e.preventDefault();
                 var email = $("#emailaddress").val();
-                if (!validateEmail(email)) {
-                    alert("Please enter a valid email address before resending code.");
-                    return;
-                }
+                
+                $("#resendCode").prop('disabled', true).text('Sending...');
+                
                 $.ajax({
                     url: "${pageContext.request.contextPath}/SendVerificationCodeServlet",
                     type: "POST",
                     data: { emailaddress: email },
-                    success: function(response) {
-                        var data = JSON.parse(response);
+                    dataType: "json",
+                    success: function(data) {
                         alert(data.message);
                     },
-                    error: function(xhr, status, error) {
-                        alert("Error resending verification code: " + error + "\nStatus: " + status + "\nResponse: " + xhr.responseText);
+                    error: function(xhr) {
+                        var response = JSON.parse(xhr.responseText);
+                        alert("Error resending verification code: " + response.message);
+                    },
+                    complete: function() {
+                        $("#resendCode").prop('disabled', false).text('Resend Code');
                     }
                 });
-            });      
+            });
 
-    $(document).on("submit", "#registerForm", function(e) {
-        e.preventDefault();
-        var code = $("#code1").val() + $("#code2").val() + $("#code3").val() + $("#code4").val();
-        var formData = $(this).serialize() + "&verificationCode=" + code;
+            // Go back to user info
+            $("#backToUserInfo").click(function(e) {
+                e.preventDefault();
+                $("#otpStep").hide();
+                $("#userInfoStep").show();
+                $("#stepTitle").text("Sign Up");
+                // Clear OTP inputs
+                $(".otp-input").val("");
+            });
 
-        $.ajax({
-            url: "${pageContext.request.contextPath}/register",
-            type: "POST",
-            data: formData,
-            success: function(response, status, xhr) {
-                var contentType = xhr.getResponseHeader("Content-Type") || "";
-                if (contentType.indexOf("application/json") >= 0) {
-                    // Backend trả về JSON (đăng ký thành công)
-                    var data = typeof response === "string" ? JSON.parse(response) : response;
-                    if (data.success) {
-                        window.location.href = "${pageContext.request.contextPath}/home";
-                    } else {
-                        alert("Registration failed!");
-                    }
-                } else {
-                    // Backend trả về HTML (có lỗi validate/OTP) → render lại trang lỗi
-                    document.open();
-                    document.write(response);
-                    document.close();
+            // Final registration with OTP
+            $("#finalRegister").click(function(e) {
+                e.preventDefault();
+                
+                var code = $("#code1").val() + $("#code2").val() + $("#code3").val() + $("#code4").val();
+                
+                if (code.length !== 4 || !/^\d{4}$/.test(code)) {
+                    alert("Please enter a complete 4-digit verification code.");
+                    return;
                 }
-            },
-            error: function(xhr) {
-                alert("Registration failed: " + xhr.status + " - " + xhr.statusText);
-            }
-        });
-    });
-    });
 
+                $("#finalRegister").prop('disabled', true).text('Registering...');
+
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/register",
+                    type: "POST",
+                    data: $("#registerForm").serialize(),
+                    success: function(response, status, xhr) {
+                        var contentType = xhr.getResponseHeader("Content-Type") || "";
+                        if (contentType.indexOf("application/json") >= 0) {
+                            var data = typeof response === "string" ? JSON.parse(response) : response;
+                            if (data.success) {
+                                alert("Registration successful! Redirecting to home page...");
+                                window.location.href = "${pageContext.request.contextPath}/home";
+                            } else {
+                                alert("Registration failed: " + data.message);
+                            }
+                        } else {
+                            // Backend returned HTML (validation errors)
+                            document.open();
+                            document.write(response);
+                            document.close();
+                        }
+                    },
+                    error: function(xhr) {
+                        alert("Registration failed: " + xhr.status + " - " + xhr.statusText);
+                    },
+                    complete: function() {
+                        $("#finalRegister").prop('disabled', false).text('Complete Registration');
+                    }
+                });
+            });
+        });
     </script>
     <style>
         .is-invalid {
@@ -195,6 +343,43 @@
             color: #dc3545;
             font-size: 0.875em;
             margin-top: 0.25rem;
+        }
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 18px;
+            margin: 0 5px;
+        }
+        .step-container {
+            display: none;
+        }
+        #userInfoStep {
+            display: block;
+        }
+        #otpStep {
+            display: none;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            margin-right: 10px;
+        }
+        .gap-2 {
+            gap: 10px;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+            color: white;
         }
     </style>
 </head>
@@ -211,62 +396,79 @@
                             </div>
                             <div class="form-dt">
                                 <div class="form-inpts checout-address-step">
-                                    <form action="${pageContext.request.contextPath}/home" method="post"
-                                        <div class="form-title"><h6>Sign Up</h6></div>
+                                    <form id="registerForm" action="${pageContext.request.contextPath}/register" method="post">
+                                        <div class="form-title"><h6 id="stepTitle">Sign Up</h6></div>
 
-                                        <div class="form-group pos_rel mb-3">
-                                            <input type="text" id="fullname" name="fullname" placeholder="Full Name" class="form-control lgn_input" value="David My" required>
-                                            <i class="uil uil-user-circle lgn_icon"></i>
+                                        <!-- Step 1: User Information -->
+                                        <div id="userInfoStep" class="step-container">
+                                            <div class="form-group pos_rel mb-3">
+                                                <input type="text" id="fullname" name="fullname" placeholder="Full Name" class="form-control lgn_input" required>
+                                                <i class="uil uil-user-circle lgn_icon"></i>
+                                            </div>
+
+                                            <div class="form-group pos_rel mb-3">
+                                                <input type="email" id="emailaddress" name="emailaddress" placeholder="Email Address" class="form-control lgn_input" required>
+                                                <i class="uil uil-envelope lgn_icon"></i>
+                                            </div>
+
+                                            <div class="form-group pos_rel mb-3">
+                                                <input type="text" id="phone" name="phone" placeholder="Phone Number" class="form-control lgn_input" required>
+                                                <i class="uil uil-mobile-android-alt lgn_icon"></i>
+                                            </div>
+
+                                            <div class="form-group pos_rel mb-3">
+                                                <input type="text" id="address" name="address" placeholder="Address" class="form-control lgn_input" required>
+                                                <i class="uil uil-location-point lgn_icon"></i>
+                                            </div>
+
+                                            <div class="form-group pos_rel mb-3">
+                                                <input type="date" name="dob" class="form-control lgn_input" required>
+                                                <i class="uil uil-calendar-alt lgn_icon"></i>
+                                            </div>
+
+                                            <div class="form-group pos_rel mb-3">
+                                                <select name="gender" class="form-control lgn_input" required>
+                                                    <option value="">Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                                <i class="uil uil-user lgn_icon"></i>
+                                            </div>
+
+                                            <div class="form-group pos_rel mb-3">
+                                                <input type="password" id="password" name="password" placeholder="Password" class="form-control lgn_input" required>
+                                                <i class="uil uil-padlock lgn_icon"></i>
+                                            </div>
+
+                                            <button type="button" id="continueToOTP" class="login-btn hover-btn">Sign Up Now</button>
                                         </div>
 
-                                        <div class="form-group pos_rel mb-3">
-                                            <input type="email" id="emailaddress" name="emailaddress" placeholder="Email Address" class="form-control lgn_input" value="ewi042650@gmail.com" required>
-                                            <i class="uil uil-envelope lgn_icon"></i>
-                                        </div>
+                                        <!-- Step 2: OTP Verification -->
+                                        <div id="otpStep" class="step-container">
+                                            <div class="text-center mb-4">
+                                                <p>We've sent a verification code to your email address. Please enter it below:</p>
+                                            </div>
 
-                                        <div class="form-group pos_rel mb-3">
-                                            <input type="text" id="phone" name="phone" placeholder="Phone Number" class="form-control lgn_input" value="0774454307" required>
-                                            <i class="uil uil-mobile-android-alt lgn_icon"></i>
-                                        </div>
+                                            <div class="form-group pos_rel mb-4">
+                                                <label class="control-label mb-3">Verification Code</label>
+                                                <div class="d-flex justify-content-center mb-3">
+                                                    <input type="text" id="code1" name="code1" class="form-control otp-input" maxlength="1" required>
+                                                    <input type="text" id="code2" name="code2" class="form-control otp-input" maxlength="1" required>
+                                                    <input type="text" id="code3" name="code3" class="form-control otp-input" maxlength="1" required>
+                                                    <input type="text" id="code4" name="code4" class="form-control otp-input" maxlength="1" required>
+                                                </div>
+                                                
+                                                <div class="text-center mb-3">
+                                                    <a href="#" id="resendCode" class="text-primary">Resend Code</a>
+                                                </div>
+                                            </div>
 
-                                        <div class="form-group pos_rel mb-3">
-                                            <input type="text" id="address" name="address" placeholder="Address" class="form-control lgn_input" value="da nang" required>
-                                            <i class="uil uil-location-point lgn_icon"></i>
+                                            <div class="d-flex gap-2">
+                                                <button type="button" id="backToUserInfo" class="btn btn-back flex-fill">Back</button>
+                                                <button type="button" id="finalRegister" class="login-btn hover-btn flex-fill">Complete Registration</button>
+                                            </div>
                                         </div>
-
-                                        <div class="form-group pos_rel mb-3">
-                                            <input type="date" name="dob" class="form-control lgn_input" value="2004-06-26" required>
-                                            <i class="uil uil-calendar-alt lgn_icon"></i>
-                                        </div>
-
-                                        <div class="form-group pos_rel mb-3">
-                                            <select name="gender" class="form-control lgn_input" required>
-                                                <option value="">Select Gender</option>
-                                                <option value="Male" selected>Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="Other">Other</option>
-                                            </select>
-                                            <i class="uil uil-user lgn_icon"></i>
-                                        </div>
-
-                                        <div class="form-group pos_rel mb-3">
-                                            <label class="control-label">Verification Code</label>
-                                            <ul class="code-alrt-inputs signup-code-list">
-                                                <li><input type="text" id="code1" name="code1" class="form-control input-md" maxlength="1" required></li>
-                                                <li><input type="text" id="code2" name="code2" class="form-control input-md" maxlength="1" required></li>
-                                                <li><input type="text" id="code3" name="code3" class="form-control input-md" maxlength="1" required></li>
-                                                <li><input type="text" id="code4" name="code4" class="form-control input-md" maxlength="1" required></li>
-                                                <li><a class="chck-btn hover-btn code-btn145" id="sendCode" href="#">Send</a></li>
-                                                <li><a class="chck-btn hover-btn code-btn145" id="resendCode" href="#">Resend Code</a></li>
-                                            </ul>
-                                        </div>
-
-                                        <div class="form-group pos_rel mb-3">
-                                            <input type="password" id="password" name="password" placeholder="Password" class="form-control lgn_input" value="Password123" required>
-                                            <i class="uil uil-padlock lgn_icon"></i>
-                                        </div>
-
-                                        <button class="login-btn hover-btn" type="submit">Sign Up Now</button>
                                     </form>
                                 </div>
                                 <div class="signup-link">
@@ -282,6 +484,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Display error message if any -->
+    <% if (request.getAttribute("error") != null) { %>
+        <script>
+            alert("<%= request.getAttribute("error") %>");
+        </script>
+    <% } %>
 
     <!-- JS scripts -->
     <script src="User/js/jquery.min.js"></script>
