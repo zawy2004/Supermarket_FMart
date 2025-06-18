@@ -472,7 +472,7 @@
                                     </form>
                                 </div>
                                 <div class="signup-link">
-                                    <p>Already have an account? <a href="sign_in.jsp">Sign In Now</a></p>
+                                    <p>Already have an account? <a href="login">Sign In Now</a></p>
                                 </div>
                             </div>
                         </div>

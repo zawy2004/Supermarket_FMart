@@ -4,36 +4,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Database configuration class to manage connection to the Fmart database.
- * @author thanh
- */
+
 public class DatabaseConfig {
-<<<<<<< HEAD
-    private static final String URL = "jdbc:sqlserver://DEMO\\ABC123;databaseName=Fmart;encrypt=false";
+
+    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=Fmart;encrypt=false";
     private static final String USER = "sa";
     private static final String PASSWORD = "1234";
-=======
-    // Database connection parameters
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=Fmart;encrypt=true;trustServerCertificate=true";
-    private static final String USER = "sa"; // Thay bằng username SQL Server của bạn
-    private static final String PASSWORD = "123"; // Thay bằng password SQL Server của bạn
->>>>>>> Login-Register
 
-    // Singleton connection instance
+
     private static Connection connection = null;
 
-    /**
-     * Private constructor to prevent instantiation
-     */
     private DatabaseConfig() {
     }
 
-    /**
-     * Establishes and returns a connection to the Fmart database.
-     * @return Connection object
-     * @throws SQLException if a database access error occurs
-     */
     public static synchronized Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
