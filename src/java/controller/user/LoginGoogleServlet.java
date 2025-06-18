@@ -11,24 +11,16 @@ import org.apache.http.client.fluent.Request;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import config.DatabaseConfig;
+import config.OAuthConfig;
 import dao.UserDAO;
 import model.User;
 
 @WebServlet("/User/login-google")
 public class LoginGoogleServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final String AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
-    private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
-    private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
-    private static final String CLIENT_ID = "549548859496-abt5dfb1krnhv8lc1vnblaf92tojn0eh.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "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";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -44,10 +36,18 @@ public class LoginGoogleServlet extends HttpServlet {
 
         // Nếu chưa có code, redirect để lấy authorization code
         if (code == null || code.isEmpty()) {
-            String authUrl = AUTH_URL + "?client_id=" + CLIENT_ID 
+            // Kiểm tra Google OAuth có được config chưa
+            if (!OAuthConfig.isGoogleConfigured()) {
+                request.setAttribute("errorMessage", 
+                    "Google OAuth is not configured properly. Please update CLIENT_ID and CLIENT_SECRET in OAuthConfig.java.");
+                request.getRequestDispatcher("/User/sign_in.jsp").forward(request, response);
+                return;
+            }
+            
+            String authUrl = OAuthConfig.GOOGLE_AUTH_URL + "?client_id=" + OAuthConfig.GOOGLE_CLIENT_ID 
                     + "&redirect_uri=" + redirectUri 
                     + "&response_type=code"
-                    + "&scope=email profile"
+                    + "&scope=" + OAuthConfig.GOOGLE_SCOPE
                     + "&access_type=offline"
                     + "&prompt=consent";
             System.out.println("Redirecting to: " + authUrl);
@@ -58,11 +58,11 @@ public class LoginGoogleServlet extends HttpServlet {
         try {
             // Bước 1: Lấy access token
             System.out.println("Step 1: Getting access token...");
-            String tokenResponse = Request.Post(TOKEN_URL)
+            String tokenResponse = Request.Post(OAuthConfig.GOOGLE_TOKEN_URL)
                     .bodyForm(Form.form()
                             .add("code", code)
-                            .add("client_id", CLIENT_ID)
-                            .add("client_secret", CLIENT_SECRET)
+                            .add("client_id", OAuthConfig.GOOGLE_CLIENT_ID)
+                            .add("client_secret", OAuthConfig.GOOGLE_CLIENT_SECRET)
                             .add("redirect_uri", redirectUri)
                             .add("grant_type", "authorization_code")
                             .build())
@@ -79,7 +79,7 @@ public class LoginGoogleServlet extends HttpServlet {
 
             // Bước 2: Lấy thông tin user từ Google
             System.out.println("Step 2: Getting user info...");
-            String userInfoResponse = Request.Get(USER_INFO_URL)
+            String userInfoResponse = Request.Get(OAuthConfig.GOOGLE_USER_INFO_URL)
                     .addHeader("Authorization", "Bearer " + accessToken)
                     .execute().returnContent().asString();
 

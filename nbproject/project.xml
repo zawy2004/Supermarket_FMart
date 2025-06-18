@@ -13,9 +13,6 @@
                     <file>${file.reference.mssql-jdbc-12.8.1.jre11.jar}</file>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.commons-logging-1.2.jar}</file>
-                </library>
-                <library dirs="200">
                     <file>${file.reference.fluent-hc-4.5.14.jar}</file>
                 </library>
                 <library dirs="200">
@@ -41,10 +38,6 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.jakarta.activation-2.0.1.jar}</file>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.commons-logging-1.2.jar-1}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
                     <file>${file.reference.fluent-hc-4.5.14.jar-1}</file>
@@ -100,6 +93,14 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.jstl-3.0.1.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.httpclient-4.5.5.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.commons-logging-1.2.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

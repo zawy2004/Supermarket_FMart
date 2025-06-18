@@ -13,19 +13,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import config.OAuthConfig;
 import dao.UserDAO;
 import model.User;
 
 @WebServlet("/User/login-facebook")
 public class LoginFacebookServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final String AUTH_URL = "https://www.facebook.com/v18.0/dialog/oauth";
-    private static final String TOKEN_URL = "https://graph.facebook.com/v18.0/oauth/access_token";
-    private static final String USER_INFO_URL = "https://graph.facebook.com/me?fields=id,name,email,picture";
-    
-    // THÔNG TIN APP FACEBOOK - ĐÃ CẬP NHẬT
-    private static final String CLIENT_ID = "632448446522489"; // Facebook App ID
-    private static final String CLIENT_SECRET = "836d6a17118dd20a7763450ba4635a91"; // Facebook App Secret
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -61,19 +55,19 @@ public class LoginFacebookServlet extends HttpServlet {
 
         // Nếu chưa có code, redirect để lấy authorization code
         if (code == null || code.isEmpty()) {
-            // Kiểm tra App ID có phải placeholder không
-            if ("YOUR_FACEBOOK_APP_ID".equals(CLIENT_ID) || "632448446522489".equals(CLIENT_ID)) {
+            // Kiểm tra Facebook có được config chưa
+            if (!OAuthConfig.isFacebookConfigured()) {
                 request.setAttribute("errorMessage", 
-                    "Facebook App is not configured properly. Please update CLIENT_ID and CLIENT_SECRET in LoginFacebookServlet.java with real Facebook App credentials.");
+                    "Facebook App is not configured properly. Please update CLIENT_ID and CLIENT_SECRET in OAuthConfig.java with real Facebook App credentials.");
                 request.getRequestDispatcher("/User/sign_in.jsp").forward(request, response);
                 return;
             }
             
             String state = String.valueOf(System.currentTimeMillis()); // CSRF protection
-            String authUrl = AUTH_URL 
-                    + "?client_id=" + CLIENT_ID 
+            String authUrl = OAuthConfig.FACEBOOK_AUTH_URL 
+                    + "?client_id=" + OAuthConfig.FACEBOOK_CLIENT_ID 
                     + "&redirect_uri=" + java.net.URLEncoder.encode(redirectUri, "UTF-8")
-                    + "&scope=" + java.net.URLEncoder.encode("email,public_profile", "UTF-8")
+                    + "&scope=" + java.net.URLEncoder.encode(OAuthConfig.FACEBOOK_SCOPE, "UTF-8")
                     + "&response_type=code"
                     + "&state=" + state;
             
@@ -82,11 +76,10 @@ public class LoginFacebookServlet extends HttpServlet {
             return;
         }
 
-        // Kiểm tra App credentials một lần nữa (chỉ kiểm tra placeholder)
-        if ("YOUR_FACEBOOK_APP_ID".equals(CLIENT_ID) || "YOUR_FACEBOOK_APP_SECRET".equals(CLIENT_SECRET)
-            || "632448446522489".equals(CLIENT_ID) || "836d6a17118dd20a7763450ba4635a91".equals(CLIENT_SECRET)) {
+        // Kiểm tra App credentials một lần nữa
+        if (!OAuthConfig.isFacebookConfigured()) {
             request.setAttribute("errorMessage", 
-                "Facebook App credentials are not configured. Please set real CLIENT_ID and CLIENT_SECRET from your Facebook App.");
+                "Facebook App credentials are not configured. Please set real CLIENT_ID and CLIENT_SECRET in OAuthConfig.java.");
             request.getRequestDispatcher("/User/sign_in.jsp").forward(request, response);
             return;
         }
@@ -94,13 +87,13 @@ public class LoginFacebookServlet extends HttpServlet {
         try {
             // Bước 1: Lấy access token
             System.out.println("Step 1: Getting access token...");
-            String tokenRequestUrl = TOKEN_URL 
-                    + "?client_id=" + CLIENT_ID 
+            String tokenRequestUrl = OAuthConfig.FACEBOOK_TOKEN_URL 
+                    + "?client_id=" + OAuthConfig.FACEBOOK_CLIENT_ID 
                     + "&redirect_uri=" + java.net.URLEncoder.encode(redirectUri, "UTF-8")
-                    + "&client_secret=" + CLIENT_SECRET 
+                    + "&client_secret=" + OAuthConfig.FACEBOOK_CLIENT_SECRET 
                     + "&code=" + code;
             
-            System.out.println("Token request URL: " + tokenRequestUrl.replace(CLIENT_SECRET, "***SECRET***"));
+            System.out.println("Token request URL: " + tokenRequestUrl.replace(OAuthConfig.FACEBOOK_CLIENT_SECRET, "***SECRET***"));
             
             String tokenResponse = Request.Get(tokenRequestUrl)
                     .connectTimeout(10000)
@@ -141,7 +134,7 @@ public class LoginFacebookServlet extends HttpServlet {
 
             // Bước 2: Lấy thông tin user từ Facebook
             System.out.println("Step 2: Getting user info...");
-            String userInfoUrl = USER_INFO_URL + "&access_token=" + accessToken;
+            String userInfoUrl = OAuthConfig.FACEBOOK_USER_INFO_URL + "&access_token=" + accessToken;
             String userInfoResponse = Request.Get(userInfoUrl)
                     .connectTimeout(10000)
                     .socketTimeout(10000)

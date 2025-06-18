@@ -31,6 +31,26 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        // Kiểm tra có thông báo success từ reset password không
+        HttpSession session = request.getSession();
+        String loginSuccessMessage = (String) session.getAttribute("loginSuccessMessage");
+        if (loginSuccessMessage != null) {
+            request.setAttribute("successMessage", loginSuccessMessage);
+            session.removeAttribute("loginSuccessMessage");
+        }
+        
+        // Kiểm tra có Remember Me cookie không
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("rememberedEmail".equals(cookie.getName())) {
+                    request.setAttribute("rememberedEmail", cookie.getValue());
+                    break;
+                }
+            }
+        }
+        
         // Chuyển hướng đến trang đăng nhập
         RequestDispatcher dispatcher = request.getRequestDispatcher("/User/sign_in.jsp");
         if (dispatcher != null) {
@@ -100,6 +120,9 @@ public class LoginServlet extends HttpServlet {
             if (user == null) {
                 System.out.println("User not found: " + loginIdentifier);
                 request.setAttribute("errorMessage", "Tài khoản không tồn tại.");
+                
+                // Thêm gợi ý forgot password nếu user không tồn tại
+                request.setAttribute("showForgotPassword", true);
                 forwardToLogin(request, response);
                 return;
             }
@@ -125,6 +148,11 @@ public class LoginServlet extends HttpServlet {
             if (!PasswordUtil.verifyPassword(password, user.getPasswordHash())) {
                 System.out.println("Password verification failed for: " + loginIdentifier);
                 request.setAttribute("errorMessage", "Mật khẩu không đúng.");
+                
+                // Thêm gợi ý forgot password nếu sai mật khẩu
+                request.setAttribute("showForgotPassword", true);
+                request.setAttribute("suggestedEmail", user.getEmail()); // Để pre-fill vào form forgot password
+                
                 forwardToLogin(request, response);
                 return;
             }
@@ -136,6 +164,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user);
             session.setAttribute("userEmail", user.getEmail());
             session.setAttribute("userFullName", user.getFullName());
+            session.setAttribute("userId", user.getUserId());
             session.setAttribute("loginType", "Local");
 
             // Cập nhật last login date
@@ -151,12 +180,28 @@ public class LoginServlet extends HttpServlet {
                 emailCookie.setHttpOnly(true);
                 response.addCookie(emailCookie);
                 System.out.println("Remember Me cookie set for: " + user.getEmail());
+            } else {
+                // Xóa Remember Me cookie nếu user không chọn remember
+                Cookie emailCookie = new Cookie("rememberedEmail", "");
+                emailCookie.setMaxAge(0);
+                emailCookie.setPath("/");
+                response.addCookie(emailCookie);
             }
+
+            // Xóa các session liên quan đến forgot password (nếu có)
+            clearForgotPasswordSession(session);
 
             System.out.println("=== Login Process Completed Successfully ===");
 
-            // Chuyển hướng về trang chủ
-            response.sendRedirect(request.getContextPath() + "/home");
+            // Kiểm tra có redirect URL không (từ filter authentication)
+            String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+            if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                session.removeAttribute("redirectAfterLogin");
+                response.sendRedirect(redirectUrl);
+            } else {
+                // Chuyển hướng về trang chủ
+                response.sendRedirect(request.getContextPath() + "/home");
+            }
 
         } catch (Exception e) {
             System.err.println("Login error: " + e.getMessage());
@@ -179,9 +224,23 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
+    private void clearForgotPasswordSession(HttpSession session) {
+        // Xóa tất cả thông tin liên quan đến forgot password
+        session.removeAttribute("resetToken");
+        session.removeAttribute("resetTokenTime");
+        session.removeAttribute("resetEmail");
+        session.removeAttribute("resetAttempts");
+        session.removeAttribute("resetFirstAttemptTime");
+        session.removeAttribute("resendAttempts");
+        session.removeAttribute("codeVerified");
+        session.removeAttribute("verifyCode");
+        session.removeAttribute("verifyCodeTime");
+        session.removeAttribute("sendAttempts");
+    }
+
     private void forwardToLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/User/sign_in.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("User/sign_in.jsp");
         if (dispatcher != null) {
             dispatcher.forward(request, response);
         } else {

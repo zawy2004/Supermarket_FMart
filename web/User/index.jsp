@@ -274,7 +274,7 @@
             <% if (user != null) { %>
                 <%= user.getFullName() %>
             <% } else { %>
-                <a href="User/sign_in.jsp" style="color: #333; text-decoration: none;">Sign In</a>
+                <a href="login" style="color: #333; text-decoration: none;">Sign In</a>
             <% } %>
         </span>
         <i class="uil uil-angle-down"></i>
@@ -333,7 +333,7 @@
 							</div>
 							<ul class="navbar-nav justify-content-start flex-grow-1 pe_5">
 								<li class="nav-item">
-									<a class="nav-link active" aria-current="page" href="index.jsp">Home</a>
+									<a class="nav-link active" aria-current="page" href="home">Home</a>
 								</li>
 								<li class="nav-item">
 									<a class="nav-link" href="shop_grid.jsp">New Products</a>
@@ -368,8 +368,8 @@
 										<li><a class="dropdown-item" href="order_placed.jsp">Order Placed</a></li>
 										<li><a class="dropdown-item" href="bill.jsp">Bill Slip</a></li>
 										<li><a class="dropdown-item" href="job_detail_view.jsp">Job Detail View</a></li>
-										<li><a class="dropdown-item" href="sign_in.jsp">Sign In</a></li>
-										<li><a class="dropdown-item" href="sign_up.jsp">Sign Up</a></li>
+										<li><a class="dropdown-item" href="login">Sign In</a></li>
+										<li><a class="dropdown-item" href="register">Sign Up</a></li>
 										<li><a class="dropdown-item" href="forgot_password.jsp">Forgot Password</a></li>
 									</ul>
 								</li>
