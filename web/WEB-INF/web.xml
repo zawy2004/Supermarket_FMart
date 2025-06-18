@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                              http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <!-- Cấu hình Servlet cho ProductServlet (nếu có) -->
     <servlet>
@@ -18,35 +17,4 @@
         <servlet-name>CategoryServlet</servlet-name>
         <url-pattern>/CategoryServlet</url-pattern>
     </servlet-mapping>
-=======
-<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
-    <servlet>
-        <servlet-name>SendVerificationCodeServlet</servlet-name>
-        <servlet-class>controller.user.SendVerificationCodeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SendVerificationCodeServlet</servlet-name>
-        <url-pattern>/SendVerificationCodeServlet</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>controller.user.HomeServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/home</url-pattern>
-    </servlet-mapping>
-
-    <!-- Welcome file configuration -->
-    <welcome-file-list>
-        <welcome-file>home</welcome-file>
-    </welcome-file-list>
-    
-    <!-- Session Configuration (Optional, adjust as needed) -->
-    <session-config>
-        <session-timeout>10</session-timeout> <!-- Session timeout in minutes -->
-    </session-config>
-
->>>>>>> Login-Register
 </web-app>

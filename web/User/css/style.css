@@ -6429,15 +6429,15 @@ textarea {
 
 .sign-logo {
     width: 100%;
-    text-align: center;
+	text-align: center;
 }
 
 .sign-logo img {
-    width: 200px;
+    width: 150px;
 }
 
 .form-dt {
-    margin-top: 0px !important;
+    margin-top: 50px;
     border: 1px solid #efefef;
 	position: relative;
 	border-radius: 10px;
