@@ -171,18 +171,17 @@ public class ProductDAO {
         return count;
     }
 
-    public static List<Product> getProductsByCategory(Integer categoryID) throws SQLException {
-    List<Product> list = new ArrayList<>();
-    String sql = "SELECT * FROM Products WHERE IsActive=1 AND CategoryID=?";
-    try (Connection con = DatabaseConfig.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setInt(1, categoryID);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            list.add(extractProductFromResultSet(rs));
+    public static List<Product> getProductsByCategory(int categoryId) throws SQLException {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE CategoryID = ?";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(extractProductFromResultSet(rs));
+            }
         }
+        return list;
     }
-    return list;
-}
 
 }
