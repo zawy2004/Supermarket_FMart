@@ -110,4 +110,25 @@ public class CategoryDAO {
             e.printStackTrace();
         }
     }
+    public static List<Category> getAllActiveCategories() throws SQLException {
+    List<Category> list = new ArrayList<>();
+    String sql = "SELECT * FROM Categories WHERE IsActive=1 ORDER BY DisplayOrder ASC, CategoryName ASC";
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            list.add(new Category(
+                    rs.getInt("CategoryID"),
+                    rs.getString("CategoryName"),
+                    rs.getString("Description"),
+                    rs.getInt("ParentCategoryID"),
+                    rs.getString("ImageUrl"),
+                    rs.getBoolean("IsActive"),
+                    rs.getTimestamp("CreatedDate"),
+                    rs.getInt("DisplayOrder")
+            ));
+        }
+    }
+    return list;
+}
 }

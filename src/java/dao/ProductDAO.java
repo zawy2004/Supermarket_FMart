@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
+
     // Dùng đúng tên bảng, tên trường (chữ hoa/thường tuỳ DBMS)
     private static final String TABLE = "Products";
 
@@ -41,9 +42,7 @@ public class ProductDAO {
     public static List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE;
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
                 products.add(product);
@@ -58,8 +57,7 @@ public class ProductDAO {
     public static Product getProductById(int productID) {
         Product product = null;
         String sql = "SELECT * FROM " + TABLE + " WHERE productID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productID);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -74,10 +72,9 @@ public class ProductDAO {
 
     // 4. Thêm sản phẩm mới
     public static void addProduct(Product product) {
-        String sql = "INSERT INTO " + TABLE + " (productName, sku, categoryID, supplierID, description, unit, costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated, weight, dimensions, expiryDays, brand, origin) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO " + TABLE + " (productName, sku, categoryID, supplierID, description, unit, costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated, weight, dimensions, expiryDays, brand, origin) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, product.getProductName());
             stmt.setString(2, product.getSku());
             stmt.setInt(3, product.getCategoryID());
@@ -105,8 +102,7 @@ public class ProductDAO {
     // 5. Cập nhật sản phẩm
     public static void updateProduct(Product product) {
         String sql = "UPDATE " + TABLE + " SET productName = ?, sku = ?, categoryID = ?, supplierID = ?, description = ?, unit = ?, costPrice = ?, sellingPrice = ?, minStockLevel = ?, isActive = ?, lastUpdated = ?, weight = ?, dimensions = ?, expiryDays = ?, brand = ?, origin = ? WHERE productID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, product.getProductName());
             stmt.setString(2, product.getSku());
             stmt.setInt(3, product.getCategoryID());
@@ -133,8 +129,7 @@ public class ProductDAO {
     // 6. Xoá sản phẩm
     public static void deleteProduct(int productID) {
         String sql = "DELETE FROM " + TABLE + " WHERE productID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productID);
             stmt.executeUpdate();
             System.out.println("Sản phẩm đã được xóa: ID = " + productID);
@@ -147,8 +142,7 @@ public class ProductDAO {
     public static List<Product> getProductsByPage(int offset, int pageSize) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE + " ORDER BY productID DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, offset);
             ps.setInt(2, pageSize);
             try (ResultSet rs = ps.executeQuery()) {
@@ -167,9 +161,7 @@ public class ProductDAO {
     public static int getTotalProducts() {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM " + TABLE;
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 count = rs.getInt(1);
             }
@@ -178,4 +170,19 @@ public class ProductDAO {
         }
         return count;
     }
+
+    public static List<Product> getProductsByCategory(Integer categoryID) throws SQLException {
+    List<Product> list = new ArrayList<>();
+    String sql = "SELECT * FROM Products WHERE IsActive=1 AND CategoryID=?";
+    try (Connection con = DatabaseConfig.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, categoryID);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            list.add(extractProductFromResultSet(rs));
+        }
+    }
+    return list;
+}
+
 }

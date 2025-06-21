@@ -21,6 +21,7 @@ public class Product {
     private int expiryDays;
     private String brand;
     private String origin;
+    
 
     // Constructors, Getters, and Setters...
 

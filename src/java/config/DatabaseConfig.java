@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class DatabaseConfig {
 
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=Fmart;encrypt=false";
+    private static final String URL = "jdbc:sqlserver://DEMO\\ABC123;databaseName=Fmart1;encrypt=false";
     private static final String USER = "sa";
     private static final String PASSWORD = "1234";
 
