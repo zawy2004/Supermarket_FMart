@@ -1,12 +1,17 @@
 package dao;
 
+import static com.sun.tools.attach.VirtualMachine.list;
 import config.DatabaseConfig;
+import static java.nio.file.Files.list;
 import model.Product;
 
 import java.sql.*;
 import java.util.ArrayList;
+import static java.util.Arrays.sort;
+import static java.util.Collections.list;
 import java.util.List;
-
+import static mssql.googlecode.concurrentlinkedhashmap.Weighers.list;
+import model.Category;
 public class ProductDAO {
 
     // Dùng đúng tên bảng, tên trường (chữ hoa/thường tuỳ DBMS)
@@ -39,10 +44,13 @@ public class ProductDAO {
     }
 
     // 2. Lấy tất cả sản phẩm
-    public static List<Product> getAllProducts() {
+     public static List<Product> getAllProducts(String sort) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE;
-        try (Connection conn = DatabaseConfig.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        String orderBy = buildOrderBy(sort);
+        String sql = "SELECT * FROM " + TABLE + orderBy;
+        try (Connection conn = DatabaseConfig.getConnection(); 
+             Statement stmt = conn.createStatement(); 
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
                 products.add(product);
@@ -171,17 +179,41 @@ public class ProductDAO {
         return count;
     }
 
-    public static List<Product> getProductsByCategory(int categoryId) throws SQLException {
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Products WHERE CategoryID = ?";
-        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, categoryId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                list.add(extractProductFromResultSet(rs));
+     public static List<Product> getProductsByCategory(int catId, String sort) {
+        List<Product> products = new ArrayList<>();
+        String orderBy = buildOrderBy(sort);
+        String sql = "SELECT * FROM " + TABLE + " WHERE categoryID = ?" + orderBy;
+        try (Connection conn = DatabaseConfig.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, catId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    products.add(extractProductFromResultSet(rs));
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return list;
+        return products;
+    }
+    private static String buildOrderBy(String sort) {
+        if (sort == null) return "";
+        switch (sort) {
+            case "price_asc":
+                return " ORDER BY sellingPrice ASC";
+            case "price_desc":
+                return " ORDER BY sellingPrice DESC";
+            case "alphabetical":
+                return " ORDER BY productName ASC";
+            case "saving_desc":
+                return " ORDER BY (costPrice - sellingPrice) DESC";
+            case "saving_asc":
+                return " ORDER BY (costPrice - sellingPrice) ASC";
+            case "off_desc":
+                return " ORDER BY ((costPrice - sellingPrice)/costPrice) DESC";
+            default:
+                return "";
+        }
     }
 
 }

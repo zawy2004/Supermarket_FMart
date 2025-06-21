@@ -29,13 +29,13 @@
                 <div class="filter-items">
                     <div class="filtr-cate-title"><h4>Categories</h4></div>
                     <div class="filter-item-body scrollstyle_4">
-                        <ul class="cte-select">
+                        <ul class="cte-select" style="max-height:400px;overflow-y:auto;">
                             <li>
                                 <a href="shop_grid" <c:if test="${empty currentCatId}">class="fw-bold text-success"</c:if>>Tất cả</a>
                                 </li>
                             <c:forEach var="cat" items="${categories}">
                                 <li>
-                                    <a href="shop_grid?cat=${cat.categoryID}" 
+                                    <a href="shop_grid?cat=${cat.categoryID}"
                                        <c:if test="${cat.categoryID == currentCatId}">class="fw-bold text-success"</c:if>>
                                         ${cat.categoryName}
                                     </a>
@@ -91,14 +91,14 @@
                                 </div>
                                 <a href="#" class="filter-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter" aria-controls="offcanvasFilter">Filters</a>
                                 <div class="product-sort main-form">
-                                    <select class="selectpicker" data-width="25%">
-                                        <option value="0">Popularity</option>
-                                        <option value="1">Price - Low to High</option>
-                                        <option value="2">Price - High to Low</option>
-                                        <option value="3">Alphabetical</option>
-                                        <option value="4">Saving - High to Low</option>
-                                        <option value="5">Saving - Low to High</option>
-                                        <option value="6">% Off - High to Low</option>
+                                    <select class="selectpicker" data-width="25%"id="sort-select">
+                                        <option value="popularity">Popularity</option>
+                                        <option value="price_asc">Price - Low to High</option>
+                                        <option value="price_desc">Price - High to Low</option>
+                                        <option value="alphabetical">Alphabetical</option>
+                                        <option value="saving_desc">Saving - High to Low</option>
+                                        <option value="saving_asc">Saving - Low to High</option>
+                                        <option value="off_desc">% Off - High to Low</option>
                                     </select>
                                 </div>
                             </div>
@@ -153,6 +153,15 @@
         <!-- Footer -->
         <jsp:include page="footer.jsp"/>
         <!-- JS -->
+        <script>
+            document.getElementById('sort-select').addEventListener('change', function () {
+                let sort = this.value;
+                let params = new URLSearchParams(window.location.search);
+                params.set('sort', sort);
+                window.location.search = params.toString();
+            });
+        </script>
+
         <script src="User/js/jquery.min.js"></script>
         <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
