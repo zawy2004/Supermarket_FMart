@@ -3,8 +3,11 @@ package dao;
 import model.User;
 import config.DatabaseConfig;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO {
+
     public UserDAO() {
         // Test connection during initialization
         try (Connection testConn = DatabaseConfig.getConnection()) {
@@ -20,16 +23,15 @@ public class UserDAO {
     }
 
     public boolean save(User user) {
-        String sql = "INSERT INTO Users " +
-                "(Username, Email, PasswordHash, FullName, PhoneNumber, Address, DateOfBirth, Gender, RoleID, IsActive, CreatedDate, " +
-                "LastLoginDate, ProfileImageUrl, StudentID, Department, AuthProvider, ExternalID) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users "
+                + "(Username, Email, PasswordHash, FullName, PhoneNumber, Address, DateOfBirth, Gender, RoleID, IsActive, CreatedDate, "
+                + "LastLoginDate, ProfileImageUrl, StudentID, Department, AuthProvider, ExternalID) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         System.out.println("Executing SQL: " + sql);
         System.out.println("User data: " + user.toString());
 
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             String username = user.getUsername() != null ? user.getUsername() : user.getEmail();
             if (username == null || username.trim().isEmpty()) {
                 System.err.println("Username/Email cannot be null or empty");
@@ -108,8 +110,7 @@ public class UserDAO {
 
     private boolean verifyUserSaved(int userId) {
         String sql = "SELECT COUNT(*) FROM Users WHERE UserID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, userId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -127,8 +128,7 @@ public class UserDAO {
 
     public boolean existsByEmail(String email) {
         String sql = "SELECT COUNT(*) FROM Users WHERE Email = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -146,8 +146,7 @@ public class UserDAO {
 
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM Users WHERE Email = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -182,8 +181,7 @@ public class UserDAO {
 
     public boolean updateUserPassword(int userId, String hashedPassword) {
         String sql = "UPDATE Users SET PasswordHash = ? WHERE UserID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, hashedPassword);
             pstmt.setInt(2, userId);
             int rowsAffected = pstmt.executeUpdate();
@@ -217,4 +215,241 @@ public class UserDAO {
     public void close() {
         System.out.println("UserDAO close called - no connection to close as connections are managed by DatabaseConfig");
     }
+
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT u.*, r.RoleName\n"
+                + "FROM Users u\n"
+                + "LEFT JOIN Roles r ON u.RoleID = r.RoleID";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    public User getUserById(int userId) {
+        String query = "SELECT u.*, r.RoleName "
+                + "FROM Users u "
+                + "LEFT JOIN Roles r ON u.RoleID = r.RoleID "
+                + "WHERE u.UserID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToUser(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setUserId(rs.getInt("UserID"));
+        user.setUsername(rs.getString("Username"));
+        user.setEmail(rs.getString("Email"));
+        user.setPasswordHash(rs.getString("PasswordHash"));
+        user.setFullName(rs.getString("FullName"));
+        user.setPhoneNumber(rs.getString("PhoneNumber"));
+        user.setAddress(rs.getString("Address"));
+        user.setDateOfBirth(rs.getDate("DateOfBirth"));
+        user.setGender(rs.getString("Gender"));
+        user.setRoleId(rs.getInt("RoleID"));
+        user.setIsActive(rs.getBoolean("IsActive"));
+        user.setCreatedDate(rs.getTimestamp("CreatedDate"));
+        user.setLastLoginDate(rs.getTimestamp("LastLoginDate"));
+        user.setProfileImageUrl(rs.getString("ProfileImageUrl"));
+        user.setStudentId(rs.getString("StudentID"));
+        user.setDepartment(rs.getString("Department"));
+        user.setAuthProvider(rs.getString("AuthProvider"));
+        user.setExternalID(rs.getString("ExternalID"));
+        user.setRoleName(rs.getString("RoleName"));
+
+        user.setLoginType(null); // Có thể set sau nếu cần
+        return user;
+    }
+
+    public boolean updateUser(User user) {
+        String sql = "UPDATE Users SET "
+                + "FullName = ?, Email = ?, PhoneNumber = ?, Address = ?, Gender = ?, "
+                + "DateOfBirth = ?, RoleID = ?, IsActive = ? "
+                + "WHERE UserID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user.getFullName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPhoneNumber());
+            ps.setString(4, user.getAddress());
+            ps.setString(5, user.getGender());
+            ps.setDate(6, user.getDateOfBirth());
+            ps.setInt(7, user.getRoleId());
+            ps.setBoolean(8, user.isActive());
+            ps.setInt(9, user.getUserId());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean deleteUser(int userId) {
+        String sql = "DELETE FROM Users WHERE UserID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public List<User> getUsersByPage(int offset, int pageSize) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT u.*, r.RoleName "
+                + "FROM Users u "
+                + "LEFT JOIN Roles r ON u.RoleID = r.RoleID "
+                + "ORDER BY u.UserID "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, offset);
+            ps.setInt(2, pageSize);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    public int getTotalUsers() {
+        String query = "SELECT COUNT(*) FROM Users";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public List<User> searchUsers(String keyword, Integer roleID, int offset, int pageSize) {
+    List<User> users = new ArrayList<>();
+
+    StringBuilder sql = new StringBuilder(
+        "SELECT u.*, r.RoleName FROM Users u " +
+        "LEFT JOIN Roles r ON u.RoleID = r.RoleID WHERE 1=1 ");
+
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        sql.append("AND (u.FullName LIKE ? OR u.Email LIKE ?) ");
+    }
+
+    if (roleID != null) {
+        sql.append("AND u.RoleID = ? ");
+    }
+
+    sql.append("ORDER BY u.UserID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+        int index = 1;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            ps.setString(index++, "%" + keyword + "%");
+            ps.setString(index++, "%" + keyword + "%");
+        }
+
+        if (roleID != null) {
+            ps.setInt(index++, roleID);
+        }
+
+        ps.setInt(index++, offset);
+        ps.setInt(index++, pageSize);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            users.add(mapResultSetToUser(rs));
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return users;
+}
+    public int countSearchUsers(String keyword, Integer roleID) {
+    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Users WHERE 1=1 ");
+
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        sql.append("AND (FullName LIKE ? OR Email LIKE ?) ");
+    }
+
+    if (roleID != null) {
+        sql.append("AND RoleID = ? ");
+    }
+
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+        int index = 1;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            ps.setString(index++, "%" + keyword + "%");
+            ps.setString(index++, "%" + keyword + "%");
+        }
+
+        if (roleID != null) {
+            ps.setInt(index++, roleID);
+        }
+
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return 0;
+}
+
+
+
 }
