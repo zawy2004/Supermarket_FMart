@@ -29,7 +29,7 @@ public class ShopGridServlet extends HttpServlet {
                 products = ProductDAO.getProductsByCategory(catId, sort);
                 req.setAttribute("currentCatId", catId);
             } else {
-                products = ProductDAO.getAllProducts(sort);
+                products = ProductDAO.getAllProducts();
             }
             req.setAttribute("products", products);
         } catch (Exception e) {

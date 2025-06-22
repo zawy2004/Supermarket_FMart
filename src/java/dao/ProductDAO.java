@@ -44,10 +44,9 @@ public class ProductDAO {
     }
 
     // 2. Lấy tất cả sản phẩm
-     public static List<Product> getAllProducts(String sort) {
+     public static List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        String orderBy = buildOrderBy(sort);
-        String sql = "SELECT * FROM " + TABLE + orderBy;
+        String sql = "SELECT * FROM " + TABLE;
         try (Connection conn = DatabaseConfig.getConnection(); 
              Statement stmt = conn.createStatement(); 
              ResultSet rs = stmt.executeQuery(sql)) {
