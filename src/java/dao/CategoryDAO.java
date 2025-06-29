@@ -110,4 +110,35 @@ public class CategoryDAO {
             e.printStackTrace();
         }
     }
+    public static List<Category> getActiveCategories() {
+    List<Category> categories = new ArrayList<>();
+    String sql = "SELECT * FROM Categories WHERE isActive = 1 ORDER BY displayOrder"; // Đổi displayOrder nếu muốn
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+            Category c = new Category();
+            c.setCategoryID(rs.getInt("categoryID"));
+            c.setCategoryName(rs.getString("categoryName"));
+            c.setDescription(rs.getString("description"));
+          int parentId = rs.getInt("parentCategoryID");
+if (rs.wasNull()) {
+    c.setParentCategoryID(0); // hoặc -1, hoặc giá trị đặc biệt
+} else {
+    c.setParentCategoryID(parentId);
+}
+
+            c.setImageUrl(rs.getString("imageUrl"));
+            c.setIsActive(rs.getBoolean("isActive"));
+            c.setCreatedDate(rs.getDate("createdDate"));
+            c.setDisplayOrder(rs.getInt("displayOrder"));
+            // ...bổ sung các trường khác nếu có
+            categories.add(c);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return categories;
+}
+
 }

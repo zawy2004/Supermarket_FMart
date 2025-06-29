@@ -8,6 +8,11 @@ public class ShoppingCart {
     private int productID;
     private int quantity;
     private Date addedDate;
+    private String unit;
+    
+    private String productName;
+    private double sellingPrice;
+    private double costPrice;
 
     public ShoppingCart() {}
 
@@ -18,6 +23,39 @@ public class ShoppingCart {
         this.quantity = quantity;
         this.addedDate = addedDate;
     }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public double getSellingPrice() {
+        return sellingPrice;
+    }
+
+    public void setSellingPrice(double sellingPrice) {
+        this.sellingPrice = sellingPrice;
+    }
+
+    public double getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
+    }
+    
 
     public int getCartID() { return cartID; }
     public void setCartID(int cartID) { this.cartID = cartID; }

@@ -4,7 +4,8 @@
     <%
         User user = (User) session.getAttribute("user");
     %>
-<header class="header clearfix">
+<header class="header clearfix" >
+
     <div class="top-header-group">
         <div class="top-header">
             <div class="main_logo" id="logo">
@@ -60,7 +61,7 @@
                             <a href="User/dashboard_my_addresses.jsp" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
                             <a href="User/offers.jsp" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>
                             <a href="User/faq.jsp" class="channel_item"><i class="uil uil-info-circle icon__1"></i>Faq</a>
-                            <a href="User/sign_in.jsp" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
+                            <a href="login" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
                         </div>
                         <% } %>
                     </li>

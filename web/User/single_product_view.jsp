@@ -1,567 +1,386 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%> 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-﻿<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=9">
+    <meta name="description" content="FMart Supermarket">
+    <meta name="author" content="Your Team">
+    <title>FMart - ${product.productName}</title>
 
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/png" href="User/images/fav.png">
 
-    <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/single_product_view.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:01:19 GMT -->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, shrink-to-fit=9">
-        <meta name="description" content="Gambolthemes">
-        <meta name="author" content="Gambolthemes">		
-        <title>FMart - Single Product View</title>
+    <!-- Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='User/vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
+    <link href="User/css/style.css" rel="stylesheet">
+    <link href="User/css/responsive.css" rel="stylesheet">
+    <link href="User/css/night-mode.css" rel="stylesheet">
 
-        <!-- Favicon Icon -->
-        <link rel="icon" type="image/png" href="images/fav.png">
+    <!-- Vendor Stylesheets -->
+    <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
+    <link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+    <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 
-        <!-- Stylesheets -->
-        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-        <link href='vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/responsive.css" rel="stylesheet">
-        <link href="css/night-mode.css" rel="stylesheet">
+    <style>
+        .product-radio ul.kggrm-now li label {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .product-radio ul.kggrm-now li input:checked + label {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .stock-qty.out-of-stock {
+            color: red;
+        }
+        .toast-notification {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .quantity-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            background-color: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .quantity-input {
+            width: 70px;
+            padding: 6px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+        .quantity-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+        label[for="custom-quantity"] {
+            font-weight: 500;
+            color: #333;
+            margin: 0;
+        }
+        .wishlist-icon {
+            font-size: 28px;
+            margin-left: 10px;
+            vertical-align: middle;
+            cursor: pointer;
+            color: #ccc;
+            transition: all 0.3s ease;
+        }
+        .wishlist-icon.active {
+            color: #e91e63;
+        }
+        .wishlist-icon:hover {
+            color: #ff4081;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Search Model -->
+    <jsp:include page="search_model.jsp"></jsp:include>
+    <!-- Cart Sidebar Offcanvas -->
+    <jsp:include page="cart_sidebar.jsp"></jsp:include>
+    <!-- Header -->
+    <jsp:include page="header.jsp"></jsp:include>
 
-        <!-- Vendor Stylesheets -->
-        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
-
-    </head>
-
-    <body>
-        <!-- Category Model Start-->
-        <div class="header-cate-model main-gambo-model modal fade" id="category_model" tabindex="-1" role="dialog" aria-modal="false">
-            <div class="modal-dialog category-area" role="document">
-                <div class="category-area-inner">
-                    <div class="modal-header">
-                        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
-                            <i class="uil uil-multiply"></i>
-                        </button>
-                    </div>
-                    <div class="category-model-content modal-content"> 
-                        <div class="cate-header">
-                            <h4>Select Category</h4>
-                        </div>
-                        <ul class="category-by-cat">
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-1.svg" alt="">
-                                    </div>
-                                    <div class="text"> Fruits and Vegetables </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-2.svg" alt="">
-                                    </div>
-                                    <div class="text"> Grocery & Staples </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-3.svg" alt="">
-                                    </div>
-                                    <div class="text"> Dairy & Eggs </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-4.svg" alt="">
-                                    </div>
-                                    <div class="text"> Beverages </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-5.svg" alt="">
-                                    </div>
-                                    <div class="text"> Snacks </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-6.svg" alt="">
-                                    </div>
-                                    <div class="text"> Home Care </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-7.svg" alt="">
-                                    </div>
-                                    <div class="text"> Noodles & Sauces </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-8.svg" alt="">
-                                    </div>
-                                    <div class="text"> Personal Care </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="images/category/icon-9.svg" alt="">
-                                    </div>
-                                    <div class="text"> Pet Care </div>
-                                </a>
-                            </li>
-                        </ul>
-                        <a href="#" class="morecate-btn"><i class="uil uil-apps"></i>More Categories</a>
+    <!-- Body Start -->
+    <div class="wrapper">
+        <!-- Breadcrumb -->
+        <div class="gambo-Breadcrumb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+                                <c:if test="${not empty category}">
+                                    <li class="breadcrumb-item"><a href="shop?categoryId=${category.categoryID}">${category.categoryName}</a></li>
+                                </c:if>
+                                <li class="breadcrumb-item active" aria-current="page">${product.productName}</li>
+                            </ol>
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Category Model End-->
-        <!-- Search Model Start-->
-        <div id="search_model" class="header-cate-model main-gambo-model modal fade" tabindex="-1" role="dialog" aria-modal="false">
-            <div class="modal-dialog search-ground-area" role="document">
-                <div class="category-area-inner">
-                    <div class="modal-header">
-                        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
-                            <i class="uil uil-multiply"></i>
-                        </button>
-                    </div>
-                    <div class="category-model-content modal-content"> 
-                        <div class="search-header">
-                            <form action="#">
-                                <input type="search" placeholder="Search for products...">
-                                <button type="submit"><i class="uil uil-search"></i></button>
-                            </form>
-                        </div>
-                        <div class="search-by-cat">
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-1.svg" alt="">
-                                </div>
-                                <div class="text">
-                                    Fruits and Vegetables
-                                </div>
-                            </a>
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-2.svg" alt="">
-                                </div>
-                                <div class="text"> Grocery & Staples </div>
-                            </a>
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-3.svg" alt="">
-                                </div>
-                                <div class="text"> Dairy & Eggs </div>
-                            </a>
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-4.svg" alt="">
-                                </div>
-                                <div class="text"> Beverages </div>
-                            </a>
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-5.svg" alt="">
-                                </div>
-                                <div class="text"> Snacks </div>
-                            </a>
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-6.svg" alt="">
-                                </div>
-                                <div class="text"> Home Care </div>
-                            </a>
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-7.svg" alt="">
-                                </div>
-                                <div class="text"> Noodles & Sauces </div>
-                            </a>
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-8.svg" alt="">
-                                </div>
-                                <div class="text"> Personal Care </div>
-                            </a>
-                            <a href="#" class="single-cat">
-                                <div class="icon">
-                                    <img src="images/category/icon-9.svg" alt="">
-                                </div>
-                                <div class="text"> Pet Care </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Search Model End-->
-        <!-- Cart Sidebar Offcanvas Start-->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header bs-canvas-header side-cart-header p-3">
-                <div class="d-inline-block main-cart-title" id="offcanvasRightLabel">My Cart <span>(2 Items)</span></div>
-                <button type="button" class="close-btn" data-bs-dismiss="offcanvas" aria-label="Close">
-                    <i class="uil uil-multiply"></i>
-                </button>
-            </div>
-            <div class="offcanvas-body p-0">
-                <div class="cart-top-total p-4">
-                    <div class="cart-total-dil">
-                        <h4>FMart Super Market</h4>
-                        <span>$34</span>
-                    </div>
-                    <div class="cart-total-dil pt-2">
-                        <h4>Delivery Charges</h4>
-                        <span>$1</span>
-                    </div>
-                </div>
-                <div class="side-cart-items">
-                    <div class="cart-item">
-                        <div class="cart-product-img">
-                            <img src="images/product/img-1.jpg" alt="">
-                            <div class="offer-badge">6% OFF</div>
-                        </div>
-                        <div class="cart-text">
-                            <h4>Product Title Here</h4>
-                            <div class="cart-radio">
-                                <ul class="kggrm-now">
-                                    <li>
-                                        <input type="radio" id="a1" name="cart1">
-                                        <label for="a1">0.50</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a2" name="cart1">
-                                        <label for="a2">1kg</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a3" name="cart1">
-                                        <label for="a3">2kg</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a4" name="cart1">
-                                        <label for="a4">3kg</label>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="qty-group">
-                                <div class="quantity buttons_added">
-                                    <input type="button" value="-" class="minus minus-btn">
-                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                    <input type="button" value="+" class="plus plus-btn">
-                                </div>
-                                <div class="cart-item-price">$10 <span>$15</span></div>
-                            </div>
 
-                            <button type="button" class="cart-close-btn"><i class="uil uil-multiply"></i></button>
-                        </div>
-                    </div>
-                    <div class="cart-item">
-                        <div class="cart-product-img">
-                            <img src="images/product/img-2.jpg" alt="">
-                            <div class="offer-badge">6% OFF</div>
-                        </div>
-                        <div class="cart-text">
-                            <h4>Product Title Here</h4>
-                            <div class="cart-radio">
-                                <ul class="kggrm-now">
-                                    <li>
-                                        <input type="radio" id="a5" name="cart2">
-                                        <label for="a5">0.50</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a6" name="cart2">
-                                        <label for="a6">1kg</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a7" name="cart2">
-                                        <label for="a7">2kg</label>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="qty-group">
-                                <div class="quantity buttons_added">
-                                    <input type="button" value="-" class="minus minus-btn">
-                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                    <input type="button" value="+" class="plus plus-btn">
-                                </div>
-                                <div class="cart-item-price">$24 <span>$30</span></div>
-                            </div>	
-                            <button type="button" class="cart-close-btn"><i class="uil uil-multiply"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="offcanvas-footer">
-                <div class="cart-total-dil saving-total ">
-                    <h4>Total Saving</h4>
-                    <span>$11</span>
-                </div>
-                <div class="main-total-cart">
-                    <h2>Total</h2>
-                    <span>$35</span>
-                </div>
-                <div class="checkout-cart">
-                    <a href="#" class="promo-code">Have a promocode?</a>
-                    <a href="checkout.jsp" class="cart-checkout-btn hover-btn">Proceed to Checkout</a>
-                </div>
-            </div>
-        </div>	
-        <!-- Cart Sidebar Offcanvas End-->
-        <!-- Header Start -->
-      <jsp:include page="header.jsp"></jsp:include>
-        <!-- Header End -->
-        <!-- Body Start -->
-        <div class="wrapper">
-            <div class="gambo-Breadcrumb">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="shop_grid.jsp">Vegetables & Fruits</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Product Title</li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="all-product-grid">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="product-dt-view">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4">
-                                        <div id="sync1" class="owl-carousel owl-theme">
-                                            <div class="item">
-                                                <img src="images/product/big-1.jpg" alt="">
-                                            </div>
-                                            <div class="item">
-                                                <img src="images/product/big-2.jpg" alt="">
-                                            </div>
-                                            <div class="item">
-                                                <img src="images/product/big-3.jpg" alt="">
-                                            </div>
-                                            <div class="item">
-                                                <img src="images/product/big-4.jpg" alt="">
-                                            </div>
-                                        </div>
-                                        <div id="sync2" class="owl-carousel owl-theme">
-                                            <div class="item">
-                                                <img src="images/product/big-1.jpg" alt="">
-                                            </div>
-                                            <div class="item">
-                                                <img src="images/product/big-2.jpg" alt="">
-                                            </div>
-                                            <div class="item">
-                                                <img src="images/product/big-3.jpg" alt="">
-                                            </div>
-                                            <div class="item">
-                                                <img src="images/product/big-4.jpg" alt="">
-                                            </div>
-                                        </div>
+        <!-- Product Detail -->
+        <div class="all-product-grid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product-dt-view">
+                            <div class="row">
+                                <!-- Product Images -->
+                                <div class="col-lg-4 col-md-4">
+                                    <div id="sync1" class="owl-carousel owl-theme">
+                                        <c:choose>
+                                            <c:when test="${not empty productImages}">
+                                                <c:forEach var="image" items="${productImages}">
+                                                    <div class="item">
+                                                        <img src="http://localhost:8080/Supermarket_FMart/User/${image.imageUrl}" alt="${image.altText}">
+                                                        <!-- Debug -->
+                                                        <p style="display: none;">Debug: Image URL = ${image.imageUrl}, ProductID = ${image.productID}</p>
+                                                    </div>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="item">
+                                                    <img src="images/product/default.jpg" alt="Default Product Image">
+                                                    <p style="display: none;">Debug: No images found for ProductID = ${product.productID}</p>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
-                                    <div class="col-lg-8 col-md-8">
-                                        <div class="product-dt-right">
-                                            <h2>Grape Fruit Turkey</h2>
-                                            <div class="no-stock">
-                                                <p class="pd-no">Product No.<span>12345</span></p>
-                                                <p class="stock-qty">Available<span>(Instock)</span></p>
-                                            </div>
-                                            <div class="product-radio">
-                                                <ul class="product-now">
-                                                    <li>
-                                                        <input type="radio" id="p1" name="product1">
-                                                        <label for="p1">500g</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="p2" name="product1">
-                                                        <label for="p2">1kg</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="p3" name="product1">
-                                                        <label for="p3">2kg</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="p4" name="product1">
-                                                        <label for="p4">3kg</label>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <p class="pp-descp">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vulputate, purus at tempor blandit, nulla felis dictum eros, sed volutpat odio sapien id lectus. Cras mollis massa ac congue posuere. Fusce viverra mauris vel magna pretium aliquet. Nunc tincidunt, velit id tempus tristique, velit dolor hendrerit nibh, at scelerisque neque mauris sed ex.</p>
-                                            <div class="product-group-dt">
-                                                <ul>
-                                                    <li><div class="main-price color-discount">Discount Price<span>$15</span></div></li>
-                                                    <li><div class="main-price mrp-price">MRP Price<span>$18</span></div></li>
-                                                </ul>
-                                                <ul class="gty-wish-share">
-                                                    <li>
-                                                        <div class="qty-product">
-                                                            <div class="quantity buttons_added">
-                                                                <input type="button" value="-" class="minus minus-btn">
-                                                                <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                                <input type="button" value="+" class="plus plus-btn">
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li><span class="like-icon save-icon" title="wishlist"></span></li>
-                                                </ul>
-                                                <ul class="ordr-crt-share">
-                                                    <li><button class="add-cart-btn hover-btn"><i class="uil uil-shopping-cart-alt"></i>Add to Cart</button></li>
-                                                    <li><button class="order-btn hover-btn">Order Now</button></li>
-                                                </ul>
-                                            </div>
-                                            <div class="pdp-details">
-                                                <ul>
-                                                    <li>
-                                                        <div class="pdp-group-dt">
-                                                            <div class="pdp-icon"><i class="uil uil-usd-circle"></i></div>
-                                                            <div class="pdp-text-dt">
-                                                                <span>Lowest Price Guaranteed</span>
-                                                                <p>Get difference refunded if you find it cheaper anywhere else.</p>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="pdp-group-dt">
-                                                            <div class="pdp-icon"><i class="uil uil-cloud-redo"></i></div>
-                                                            <div class="pdp-text-dt">
-                                                                <span>Easy Returns & Refunds</span>
-                                                                <p>Return products at doorstep and get refund in seconds.</p>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                    <div id="sync2" class="owl-carousel owl-theme">
+                                        <c:choose>
+                                            <c:when test="${not empty productImages}">
+                                                <c:forEach var="image" items="${productImages}">
+                                                    <div class="item">
+                                                        <img src="http://localhost:8080/Supermarket_FMart/User/${image.imageUrl}" alt="${image.altText}">
+                                                    </div>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="item">
+                                                    <img src="images/product/default.jpg" alt="Default Product Image">
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
+                                <!-- Product Details -->
+                                <div class="col-lg-8 col-md-8">
+                                    <div class="product-dt-right">
+                                        <h2>${product.productName}</h2>
+                                        <div class="no-stock">
+                                            <p class="pd-no">Product No.<span>${product.sku}</span></p>
+                                            <p class="stock-qty ${product.minStockLevel > 0 ? '' : 'out-of-stock'}">
+                                                ${product.minStockLevel > 0 ? 'Available (In Stock)' : 'Out of Stock'}
+                                            </p>
+                                        </div>
+                                        <!-- Unit Selection -->
+                                        <div class="product-radio">
+                                            <ul class="product-now">
+                                                <li>
+                                                    <input type="radio" id="unit1" name="unit" value="${product.unit}" checked>
+                                                    <label for="unit1">${product.unit}</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <p class="pp-descp">${product.description}</p>
+                                        <div class="product-group-dt">
+                                            <ul>
+                                                <li>
+                                                    <div class="main-price color-discount">Price
+                                                        <span id="product-price" class="price-value">$<fmt:formatNumber value="${product.sellingPrice}" maxFractionDigits="2"/></span>
+                                                    </div>
+                                                </li>
+                                                <c:if test="${product.costPrice > 0 && product.sellingPrice < product.costPrice}">
+                                                    <li>
+                                                        <div class="main-price mrp-price">MRP Price
+                                                            <span>$<fmt:formatNumber value="${product.costPrice}" maxFractionDigits="2"/></span>
+                                                        </div>
+                                                    </li>
+                                                </c:if>
+                                            </ul>
+                                            <ul class="gty-wish-share">
+                                                <li>
+                                                    <div class="qty-product">
+                                                        <div class="quantity buttons_added">
+                                                            <input type="button" value="-" class="minus">
+                                                            <input type="number" step="1" name="quantity" value="1" class="input-text qty text" min="1" id="quantity-input">
+                                                            <input type="button" value="+" class="plus">
+                                                        </div>
+                                                        <div class="quantity-input-container">
+                                                            <label for="custom-quantity">Enter Quantity:</label>
+                                                            <input type="number" id="custom-quantity" class="quantity-input" min="1" value="1">
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <ul class="ordr-crt-share">
+                                                <c:if test="${product.minStockLevel > 0}">
+                                                    <li><button class="add-cart-btn hover-btn" onclick="addToCart(${product.productID})">
+                                                        <i class="uil uil-shopping-cart-alt"></i>Add to Cart
+                                                    </button></li>
+                                                    <li><button class="order-btn hover-btn" onclick="orderNow(${product.productID})">
+                                                        Order Now
+                                                    </button></li>
+                                                </c:if>
+                                                <c:if test="${product.minStockLevel <= 0}">
+                                                    <li><button class="add-cart-btn hover-btn disabled" disabled>Out of Stock</button></li>
+                                                </c:if>
+                                            </ul>
+                                            <div class="wishlist-container" style="margin-top: 10px; text-align: right;">
+                                                <span class="wishlist-icon save-icon ${isInWishlist ? 'active' : ''}" 
+                                                      title="wishlist" 
+                                                      onclick="addToWishlist(${product.productID})"><i class="fas fa-heart"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="pdp-details">
+                                            <ul>
+                                                <li>
+                                                    <div class="pdp-group-dt">
+                                                        <div class="pdp-icon"><i class="uil uil-usd-circle"></i></div>
+                                                        <div class="pdp-text-dt">
+                                                            <span>Lowest Price Guaranteed</span>
+                                                            <p>Get difference refunded if you find it cheaper anywhere else.</p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="pdp-group-dt">
+                                                        <div class="pdp-icon"><i class="uil uil-cloud-redo"></i></div>
+                                                        <div class="pdp-text-dt">
+                                                            <span>Easy Returns & Refunds</span>
+                                                            <p>Return products at doorstep and get refund in seconds.</p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- Additional Product Info -->
+                                        <div class="pdp-details">
+                                            <ul>
+                                                <li>
+                                                    <div class="pdp-group-dt">
+                                                        <div class="pdp-icon"><i class="uil uil-box"></i></div>
+                                                        <div class="pdp-text-dt">
+                                                            <span>Weight</span>
+                                                            <p>${product.weight} ${product.unit}</p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <c:if test="${not empty product.dimensions}">
+                                                    <li>
+                                                        <div class="pdp-group-dt">
+                                                            <div class="pdp-icon"><i class="uil uil-ruler"></i></div>
+                                                            <div class="pdp-text-dt">
+                                                                <span>Dimensions</span>
+                                                                <p>${product.dimensions}</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </c:if>
+                                                <c:if test="${product.expiryDays > 0}">
+                                                    <li>
+                                                        <div class="pdp-group-dt">
+                                                            <div class="pdp-icon"><i class="uil uil-clock"></i></div>
+                                                            <div class="pdp-text-dt">
+                                                                <span>Expiry Days</span>
+                                                                <p>${product.expiryDays} days</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </c:if>
+                                                <c:if test="${not empty product.brand}">
+                                                    <li>
+                                                        <div class="pdp-group-dt">
+                                                            <div class="pdp-icon"><i class="uil uil-tag"></i></div>
+                                                            <div class="pdp-text-dt">
+                                                                <span>Brand</span>
+                                                                <p>${product.brand}</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </c:if>
+                                                <c:if test="${not empty product.origin}">
+                                                    <li>
+                                                        <div class="pdp-group-dt">
+                                                            <div class="pdp-icon"><i class="uil uil-globe"></i></div>
+                                                            <div class="pdp-text-dt">
+                                                                <span>Origin</span>
+                                                                <p>${product.origin}</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </c:if>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- Related and Featured Products -->
                     <div class="row">
+                        <!-- Related Products -->
                         <div class="col-lg-4 col-md-12">
                             <div class="pdpt-bg">
                                 <div class="pdpt-title">
                                     <h4>More Like This</h4>
                                 </div>
                                 <div class="pdpt-body scrollstyle_4">
-                                    <div class="cart-item border_radius">
-                                        <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/single_product_view.jsp" class="cart-product-img">
-                                            <img src="images/product/img-6.jpg" alt="">
-                                            <div class="offer-badge">4% OFF</div>
-                                        </a>
-                                        <div class="cart-text">
-                                            <h4>Product Title Here</h4>
-                                            <div class="cart-radio">
-                                                <ul class="kggrm-now">
-                                                    <li>
-                                                        <input type="radio" id="k1" name="cart1">
-                                                        <label for="k1">0.50</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="k2" name="cart1">
-                                                        <label for="k2">1kg</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="k3" name="cart1">
-                                                        <label for="k3">2kg</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="k4" name="cart1">
-                                                        <label for="k4">3kg</label>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="qty-group">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
+                                    <c:set var="currentCategoryId" value="${product.categoryID}" />
+                                    <c:forEach var="relatedProduct" items="${relatedProducts}">
+                                        <c:if test="${relatedProduct.categoryID == currentCategoryId && relatedProduct.productID != product.productID}">
+                                            <div class="cart-item border_radius">
+                                                <a href="single_product?productId=${relatedProduct.productID}" class="cart-product-img">
+                                                    <img src="${relatedProductImages[relatedProduct.productID]}" alt="${relatedProduct.productName}">
+                                                    <p style="display: none;">Debug: Image URL = ${relatedProductImages[relatedProduct.productID]}, ProductID = ${relatedProduct.productID}</p>
+                                                    <c:if test="${relatedProduct.costPrice > 0 && relatedProduct.sellingPrice < relatedProduct.costPrice}">
+                                                        <c:set var="discount" value="${((relatedProduct.costPrice - relatedProduct.sellingPrice) / relatedProduct.costPrice) * 100}"/>
+                                                        <div class="offer-badge"><fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% OFF</div>
+                                                    </c:if>
+                                                </a>
+                                                <div class="cart-text">
+                                                    <h4>${relatedProduct.productName}</h4>
+                                                    <div class="cart-radio">
+                                                        <ul class="kggrm-now">
+                                                            <li>
+                                                                <input type="radio" id="r${relatedProduct.productID}" name="cart${relatedProduct.productID}" checked>
+                                                                <label for="r${relatedProduct.productID}">${relatedProduct.unit}</label>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="qty-group">
+                                                        <div class="quantity buttons_added">
+                                                            <input type="button" value="-" class="minus">
+                                                            <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
+                                                            <input type="button" value="+" class="plus">
+                                                        </div>
+                                                        <div class="cart-item-price">
+                                                            $<fmt:formatNumber value="${relatedProduct.sellingPrice}" maxFractionDigits="2"/>
+                                                            <c:if test="${relatedProduct.costPrice > 0 && relatedProduct.sellingPrice < relatedProduct.costPrice}">
+                                                                <span>$<fmt:formatNumber value="${relatedProduct.costPrice}" maxFractionDigits="2"/></span>
+                                                            </c:if>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="cart-item-price">$12 <span>$15</span></div>
                                             </div>
+                                        </c:if>
+                                    </c:forEach>
+                                    <c:if test="${empty relatedProducts || fn:length(relatedProducts) == 0}">
+                                        <div class="text-center p-4">
+                                            <p class="text-muted">No similar products found.</p>
                                         </div>
-                                    </div>
-                                    <div class="cart-item border_radius">
-                                        <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/single_product_view.jsp" class="cart-product-img">
-                                            <img src="images/product/img-2.jpg" alt="">
-                                            <div class="offer-badge">6% OFF</div>
-                                        </a>
-                                        <div class="cart-text">
-                                            <h4>Product Title Here</h4>
-                                            <div class="cart-radio">
-                                                <ul class="kggrm-now">
-                                                    <li>
-                                                        <input type="radio" id="k5" name="cart2">
-                                                        <label for="k5">0.50</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="k6" name="cart2">
-                                                        <label for="k6">1kg</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="k7" name="cart2">
-                                                        <label for="k7">2kg</label>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="qty-group">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <div class="cart-item-price">$24 <span>$30</span></div>
-                                            </div>	
-                                        </div>
-                                    </div>
-                                    <div class="cart-item border_radius">
-                                        <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/single_product_view.jsp" class="cart-product-img">
-                                            <img src="images/product/img-5.jpg" alt="">
-                                        </a>
-                                        <div class="cart-text">
-                                            <h4>Product Title Here</h4>
-                                            <div class="cart-radio">
-                                                <ul class="kggrm-now">
-                                                    <li>
-                                                        <input type="radio" id="k8" name="cart3">
-                                                        <label for="k8">0.50</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="k9" name="cart3">
-                                                        <label for="k9">1kg</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="radio" id="k10" name="cart3">
-                                                        <label for="k10">1.50kg</label>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="qty-group">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <div class="cart-item-price">$15</div>
-                                            </div>	
-                                        </div>
-                                    </div>	
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
+                        <!-- Product Details -->
                         <div class="col-lg-8 col-md-12">
                             <div class="pdpt-bg">
                                 <div class="pdpt-title">
@@ -571,246 +390,83 @@
                                     <div class="pdct-dts-1">
                                         <div class="pdct-dt-step">
                                             <h4>Description</h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere nunc in condimentum maximus. Integer interdum sem sollicitudin, porttitor felis in, mollis quam. Nunc gravida erat eu arcu interdum eleifend. Cras tortor velit, dignissim sit amet hendrerit sed, ultricies eget est. Donec eget urna sed metus dignissim cursus.</p>
+                                            <p>${product.description}</p>
                                         </div>
-                                        <div class="pdct-dt-step">
-                                            <h4>Benefits</h4>
-                                            <div class="product_attr">
-                                                Aliquam nec nulla accumsan, accumsan nisl in, rhoncus sapien.<br>
-                                                In mollis lorem a porta congue.<br>
-                                                Sed quis neque sit amet nulla maximus dignissim id mollis urna.<br>
-                                                Cras non libero at lorem laoreet finibus vel et turpis.<br>
-                                                Mauris maximus ligula at sem lobortis congue.<br>
+                                        <c:if test="${not empty product.brand}">
+                                            <div class="pdct-dt-step">
+                                                <h4>Brand</h4>
+                                                <div class="product_attr">${product.brand}</div>
                                             </div>
-                                        </div>
-                                        <div class="pdct-dt-step">
-                                            <h4>How to Use</h4>
-                                            <div class="product_attr">
-                                                The peeled, orange segments can be added to the daily fruit bowl, and its juice is a refreshing drink.
+                                        </c:if>
+                                        <c:if test="${not empty product.origin}">
+                                            <div class="pdct-dt-step">
+                                                <h4>Origin</h4>
+                                                <div class="product_attr">${product.origin}</div>
                                             </div>
-                                        </div>
+                                        </c:if>
                                         <div class="pdct-dt-step">
                                             <h4>Seller</h4>
-                                            <div class="product_attr">
-                                                FMartlthemes Pvt Ltd, Sks Nagar, Near Mbd Mall, Ludhana, 141001
-                                            </div>
+                                            <div class="product_attr">${product.supplierID}</div>
                                         </div>
-                                        <div class="pdct-dt-step">
-                                            <h4>Disclaimer</h4>
-                                            <p>Phasellus efficitur eu ligula consequat ornare. Nam et nisl eget magna aliquam consectetur. Aliquam quis tristique lacus. Donec eget nibh et quam maximus rutrum eget ut ipsum. Nam fringilla metus id dui sollicitudin, sit amet maximus sapien malesuada.</p>
-                                        </div>
-                                    </div>			
-                                </div>					
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- Featured Products Start -->
-            <div class="section145">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="main-title-tt">
-                                <div class="main-title-left">
-                                    <span>For You</span>
-                                    <h2>Top Featured Products</h2>
-                                </div>
-                                <a href="#" class="see-more-btn">See All</a>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="owl-carousel featured-slider owl-theme">
-                                <div class="item">
-                                    <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="images/product/img-1.jpg" alt="">
-                                            <div class="product-absolute-options">
-                                                <span class="offer-badge-1">6% off</span>
-                                                <span class="like-icon" title="wishlist"></span>
-                                            </div>
-                                        </a>
-                                        <div class="product-text-dt">
-                                            <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$12 <span>$15</span></div>
-                                            <div class="qty-cart">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <span class="cart-icon"><i class="uil uil-shopping-cart-alt"></i></span>
-                                            </div>
+                    <!-- Featured Products -->
+                    <div class="section145">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="main-title-tt">
+                                        <div class="main-title-left">
+                                            <span>For You</span>
+                                            <h2>Top Featured Products</h2>
                                         </div>
+                                        <a href="shop" class="see-more-btn">See All</a>
                                     </div>
                                 </div>
-                                <div class="item">
-                                    <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="images/product/img-2.jpg" alt="">
-                                            <div class="product-absolute-options">
-                                                <span class="offer-badge-1">2% off</span>
-                                                <span class="like-icon" title="wishlist"></span>
-                                            </div>
-                                        </a>
-                                        <div class="product-text-dt">
-                                            <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$10 <span>$13</span></div>
-                                            <div class="qty-cart">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
+                                <div class="col-md-12">
+                                    <div class="owl-carousel featured-slider owl-theme">
+                                        <c:forEach var="featuredProduct" items="${featuredProducts}">
+                                            <div class="item">
+                                                <div class="product-item">
+                                                    <a href="single_product?productId=${featuredProduct.productID}" class="product-img">
+                                                        <img src="${featuredProductImages[featuredProduct.productID]}" alt="${featuredProduct.productName}">
+                                                        <p style="display: none;">Debug: Image URL = ${featuredProductImages[featuredProduct.productID]}, ProductID = ${featuredProduct.productID}</p>
+                                                        <div class="product-absolute-options">
+                                                            <c:if test="${featuredProduct.costPrice > 0 && featuredProduct.sellingPrice < featuredProduct.costPrice}">
+                                                                <c:set var="discount" value="${((featuredProduct.costPrice - featuredProduct.sellingPrice) / featuredProduct.costPrice) * 100}"/>
+                                                                <div class="offer-badge"><fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% OFF</div>
+                                                            </c:if>
+                                                            <span class="wishlist-icon" title="wishlist" onclick="addToWishlist(${featuredProduct.productID})"><i class="fas fa-heart"></i></span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="product-text-dt">
+                                                        <p>${featuredProduct.minStockLevel > 0 ? 'Available (In Stock)' : '<span class="text-danger">Out of Stock</span>'}</p>
+                                                        <h4>${featuredProduct.productName}</h4>
+                                                        <div class="product-price">
+                                                            $<fmt:formatNumber value="${featuredProduct.sellingPrice}" maxFractionDigits="2"/>
+                                                            <c:if test="${featuredProduct.costPrice > 0 && featuredProduct.sellingPrice < featuredProduct.costPrice}">
+                                                                <span>$<fmt:formatNumber value="${featuredProduct.costPrice}" maxFractionDigits="2"/></span>
+                                                            </c:if>
+                                                        </div>
+                                                        <div class="qty-cart">
+                                                            <c:if test="${featuredProduct.minStockLevel > 0}">
+                                                                <div class="quantity buttons_added">
+                                                                    <input type="button" value="-" class="minus">
+                                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
+                                                                    <input type="button" value="+" class="plus">
+                                                                </div>
+                                                                <span class="cart-icon" onclick="addToCart(${featuredProduct.productID})">
+                                                                    <i class="uil uil-shopping-cart-alt"></i>
+                                                                </span>
+                                                            </c:if>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <span class="cart-icon"><i class="uil uil-shopping-cart-alt"></i></span>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="images/product/img-3.jpg" alt="">
-                                            <div class="product-absolute-options">
-                                                <span class="offer-badge-1">5% off</span>
-                                                <span class="like-icon" title="wishlist"></span>
-                                            </div>
-                                        </a>
-                                        <div class="product-text-dt">
-                                            <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$5 <span>$8</span></div>
-                                            <div class="qty-cart">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <span class="cart-icon"><i class="uil uil-shopping-cart-alt"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="images/product/img-4.jpg" alt="">
-                                            <div class="product-absolute-options">
-                                                <span class="offer-badge-1">3% off</span>
-                                                <span class="like-icon" title="wishlist"></span>
-                                            </div>
-                                        </a>
-                                        <div class="product-text-dt">
-                                            <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$15 <span>$20</span></div>
-                                            <div class="qty-cart">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <span class="cart-icon"><i class="uil uil-shopping-cart-alt"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="images/product/img-5.jpg" alt="">
-                                            <div class="product-absolute-options">
-                                                <span class="offer-badge-1">2% off</span>
-                                                <span class="like-icon" title="wishlist"></span>
-                                            </div>
-                                        </a>
-                                        <div class="product-text-dt">
-                                            <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$9 <span>$10</span></div>
-                                            <div class="qty-cart">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <span class="cart-icon"><i class="uil uil-shopping-cart-alt"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="images/product/img-6.jpg" alt="">
-                                            <div class="product-absolute-options">
-                                                <span class="offer-badge-1">2% off</span>
-                                                <span class="like-icon" title="wishlist"></span>
-                                            </div>
-                                        </a>
-                                        <div class="product-text-dt">
-                                            <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$7 <span>$8</span></div>
-                                            <div class="qty-cart">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <span class="cart-icon"><i class="uil uil-shopping-cart-alt"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="images/product/img-7.jpg" alt="">
-                                            <div class="product-absolute-options">
-                                                <span class="offer-badge-1">1% off</span>
-                                                <span class="like-icon" title="wishlist"></span>
-                                            </div>
-                                        </a>
-                                        <div class="product-text-dt">
-                                            <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$6.95 <span>$7</span></div>
-                                            <div class="qty-cart">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <span class="cart-icon"><i class="uil uil-shopping-cart-alt"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="images/product/img-8.jpg" alt="">
-                                            <div class="product-absolute-options">
-                                                <span class="offer-badge-1">3% off</span>
-                                                <span class="like-icon" title="wishlist"></span>
-                                            </div>
-                                        </a>
-                                        <div class="product-text-dt">
-                                            <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$8 <span>$10</span></div>
-                                            <div class="qty-cart">
-                                                <div class="quantity buttons_added">
-                                                    <input type="button" value="-" class="minus minus-btn">
-                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                    <input type="button" value="+" class="plus plus-btn">
-                                                </div>
-                                                <span class="cart-icon"><i class="uil uil-shopping-cart-alt"></i></span>
-                                            </div>
-                                        </div>
+                                        </c:forEach>
                                     </div>
                                 </div>
                             </div>
@@ -818,26 +474,288 @@
                     </div>
                 </div>
             </div>
-            <!-- Featured Products End -->
         </div>
         <!-- Body End -->
-        <!-- Footer Start -->
-  <jsp:include page="footer.jsp"></jsp:include>
-        <!-- Footer End -->
+
+        <!-- Footer -->
+        <jsp:include page="footer.jsp"></jsp:include>
 
         <!-- Javascripts -->
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-        <script src="vendor/OwlCarousel/owl.carousel.js"></script>
-        <script src="js/jquery.countdown.min.js"></script>
-        <script src="js/custom.js"></script>
-        <script src="js/product.thumbnail.slider.js"></script>
-        <script src="js/offset_overlay.js"></script>
-        <script src="js/night-mode.js"></script>
+        <script src="User/js/jquery.min.js"></script>
+        <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+        <script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
+        <script src="User/js/jquery.countdown.min.js"></script>
+        <!-- Comment tạm thời để kiểm tra -->
+        <!-- <script src="User/js/custom.js"></script> -->
+        <script src="User/js/product.thumbnail.slider.js"></script>
+        <script src="User/js/offset_overlay.js"></script>
+        <script src="User/js/night-mode.js"></script>
 
+        <script>
+            // Check if user is logged in via AJAX
+            function isUserLoggedIn(callback) {
+                $.ajax({
+                    url: 'checkLogin',
+                    type: 'GET',
+                    success: function(response) {
+                        console.log('CheckLogin response:', response);
+                        callback(response.loggedIn);
+                    },
+                    error: function(xhr) {
+                        console.error('CheckLogin error:', xhr.responseText);
+                        callback(false);
+                    }
+                });
+            }
 
-    </body>
+            // Update price based on quantity
+            function updatePrice(quantityInput) {
+                const quantity = parseInt(quantityInput.value) || 1;
+                const basePrice = parseFloat('${product.sellingPrice}'); // Giá gốc từ JSP
+                const totalPrice = basePrice * quantity;
+                document.getElementById('product-price').textContent = '$' + totalPrice.toFixed(2);
+            }
 
-    <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/single_product_view.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:01:20 GMT -->
+            // Synchronize quantity inputs
+            function syncQuantities() {
+                const qtyInput = document.getElementById('quantity-input');
+                const customQtyInput = document.getElementById('custom-quantity');
+                if (qtyInput && customQtyInput) {
+                    const value = parseInt(qtyInput.value) || 1;
+                    customQtyInput.value = value;
+                    updatePrice(qtyInput);
+                }
+            }
+
+            // Update quantity from custom input in real-time
+            function updateQuantityFromInput() {
+                const customQtyInput = document.getElementById('custom-quantity');
+                const qtyInput = document.getElementById('quantity-input');
+                let newValue = parseInt(customQtyInput.value) || 1;
+                if (newValue < 1) newValue = 1;
+                if (newValue > ${product.minStockLevel}) newValue = ${product.minStockLevel}; // Giới hạn theo tồn kho
+                qtyInput.value = newValue;
+                customQtyInput.value = newValue;
+                updatePrice(qtyInput);
+            }
+
+            // Quantity Controls with custom logic
+            document.addEventListener('click', function(e) {
+                const qtyInput = document.getElementById('quantity-input');
+                const customQtyInput = document.getElementById('custom-quantity');
+                if (!qtyInput || !customQtyInput) return;
+
+                let currentValue = parseInt(qtyInput.value) || 1;
+
+                if (e.target.classList.contains('plus')) {
+                    if (currentValue < ${product.minStockLevel}) {
+                        currentValue += 1; // Tăng 1 đơn vị
+                        qtyInput.value = currentValue;
+                        customQtyInput.value = currentValue;
+                    }
+                }
+                if (e.target.classList.contains('minus')) {
+                    if (currentValue > 1) {
+                        currentValue -= 1; // Giảm 1 đơn vị
+                        qtyInput.value = currentValue;
+                        customQtyInput.value = currentValue;
+                    }
+                }
+                updatePrice(qtyInput); // Cập nhật giá
+                syncQuantities(); // Đồng bộ hóa giá trị
+            });
+
+            // Real-time update for custom quantity input
+            document.getElementById('custom-quantity').addEventListener('input', function() {
+                updateQuantityFromInput();
+            });
+
+            // Add to Cart with AJAX and update cart dynamically
+            function addToCart(productId) {
+                isUserLoggedIn(function(loggedIn) {
+                    if (!loggedIn) {
+                        showNotification('Please log in to add items to cart!', 'error');
+                        window.location.href = 'login';
+                        return;
+                    }
+                    const quantityInput = document.getElementById('quantity-input');
+                    const quantity = parseInt(quantityInput.value) || 1;
+                    const unit = document.querySelector('input[name="unit"]:checked').value;
+
+                    $.ajax({
+                        url: 'cart',
+                        type: 'POST',
+                        data: {
+                            action: 'add',
+                            productId: productId,
+                            quantity: quantity,
+                            unit: unit
+                        },
+                        success: function(response) {
+                            showNotification('Added ' + quantity + ' item(s) to cart!', 'success');
+                            // Cập nhật giỏ hàng động
+                            $.ajax({
+                                url: 'cart',
+                                type: 'GET',
+                                success: function(cartData) {
+                                    $('#cartSidebar').html(cartData); // Cập nhật nội dung giỏ hàng
+                                },
+                                error: function(xhr) {
+                                    console.error('Error updating cart: ', xhr.responseText);
+                                }
+                            });
+                        },
+                        error: function(xhr) {
+                            showNotification('Error adding to cart: ' + xhr.responseText, 'error');
+                        }
+                    });
+                });
+            }
+
+            // Order Now
+            function orderNow(productId) {
+                isUserLoggedIn(function(loggedIn) {
+                    if (!loggedIn) {
+                        showNotification('Please log in to place an order!', 'error');
+                        window.location.href = 'login';
+                        return;
+                    }
+                    const quantityInput = document.getElementById('quantity-input');
+                    const quantity = parseInt(quantityInput.value) || 1;
+                    const unit = document.querySelector('input[name="unit"]:checked').value;
+
+                    window.location.href = 'checkout?productId=' + productId + '&quantity=' + quantity + '&unit=' + unit;
+                });
+            }
+
+            // Add to Wishlist
+            function addToWishlist(productId) {
+                isUserLoggedIn(function(loggedIn) {
+                    if (!loggedIn) {
+                        showNotification('Please log in to add to wishlist!', 'error');
+                        window.location.href = 'login';
+                        return;
+                    }
+                    const heartIcon = event.target;
+                    const isActive = heartIcon.classList.contains('active');
+
+                    $.ajax({
+                        url: 'wishlist',
+                        type: 'POST',
+                        data: {
+                            action: isActive ? 'remove' : 'add',
+                            productId: productId
+                        },
+                        success: function(response) {
+                            if (isActive) {
+                                heartIcon.classList.remove('active');
+                                showNotification('Removed from wishlist', 'info');
+                            } else {
+                                heartIcon.classList.add('active');
+                                showNotification('Added to wishlist!', 'success');
+                            }
+                        },
+                        error: function(xhr) {
+                            showNotification('Error updating wishlist: ' + xhr.responseText, 'error');
+                        }
+                    });
+                });
+            }
+
+            // Show Notification
+            function showNotification(message, type) {
+                const existingNotifications = document.querySelectorAll('.toast-notification');
+                existingNotifications.forEach(notif => notif.remove());
+
+                const notification = document.createElement('div');
+                const alertType = type === 'success' ? 'success' : type === 'info' ? 'info' : 'danger';
+                notification.className = 'alert alert-' + alertType + ' alert-dismissible fade show toast-notification';
+                notification.style.cssText = 'top: 10px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+
+                const icon = type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-circle';
+                notification.innerHTML = 
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" style="position: absolute; top: 5px; right: 10px;"></button>' + // Di chuyển nút X
+                    '<i class="fas fa-' + icon + ' me-2"></i>' + 
+                    message;
+
+                document.body.appendChild(notification);
+
+                setTimeout(function() {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 3000);
+            }
+
+            // Initialize Owl Carousel
+            $(document).ready(function() {
+                const sync1 = $("#sync1");
+                const sync2 = $("#sync2");
+                const slidesPerPage = 4;
+                const syncedSecondary = true;
+
+                sync1.owlCarousel({
+                    items: 1,
+                    slideSpeed: 3000,
+                    nav: true,
+                    autoplay: false,
+                    dots: true,
+                    loop: true,
+                    responsiveRefreshRate: 200,
+                    navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>']
+                }).on('changed.owl.carousel', syncPosition);
+
+                sync2.on('initialized.owl.carousel', function() {
+                    sync2.find(".owl-item").eq(0).addClass("current");
+                }).owlCarousel({
+                    items: slidesPerPage,
+                    dots: true,
+                    nav: true,
+                    smartSpeed: 200,
+                    slideSpeed: 500,
+                    slideBy: slidesPerPage,
+                    responsiveRefreshRate: 100,
+                    navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>']
+                }).on('changed.owl.carousel', syncPosition2);
+
+                function syncPosition(el) {
+                    const count = el.item.count - 1;
+                    let current = Math.round(el.item.index - (el.item.count / 2) - .5);
+                    if (current < 0) {
+                        current = count;
+                    }
+                    if (current > count) {
+                        current = 0;
+                    }
+                    sync2.find(".owl-item").removeClass("current").eq(current).addClass("current");
+                    const onscreen = sync2.find('.owl-item.active').length - 1;
+                    const start = sync2.find('.owl-item.active').first().index();
+                    const end = sync2.find('.owl-item.active').last().index();
+                    if (current > end) {
+                        sync2.data('owl.carousel').to(current, 100, true);
+                    }
+                    if (current < start) {
+                        sync2.data('owl.carousel').to(current - onscreen, 100, true);
+                    }
+                }
+
+                function syncPosition2(el) {
+                    if (syncedSecondary) {
+                        const number = el.item.index;
+                        sync1.data('owl.carousel').to(number, 100, true);
+                    }
+                }
+
+                sync2.on("click", ".owl-item", function(e) {
+                    e.preventDefault();
+                    const number = $(this).index();
+                    sync1.data('owl.carousel').to(number, 300, true);
+                });
+            });
+
+            // Initial price update
+            updatePrice(document.getElementById('quantity-input'));
+        </script>
+</body>
 </html>

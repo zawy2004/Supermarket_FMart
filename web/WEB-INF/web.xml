@@ -43,8 +43,9 @@
     
     <!-- Session Configuration (Optional, adjust as needed) -->
     <session-config>
-        <session-timeout>10</session-timeout> <!-- Session timeout in minutes -->
+        <session-timeout>30</session-timeout> <!-- Session timeout in minutes -->
     </session-config>
-
+    
+    
 
 </web-app>

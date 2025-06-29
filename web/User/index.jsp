@@ -46,7 +46,7 @@
                         </div>
                         <ul class="category-by-cat">
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=1" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-1.svg" alt="">
                                     </div>
@@ -54,7 +54,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=2" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-2.svg" alt="">
                                     </div>
@@ -62,7 +62,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=3" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-3.svg" alt="">
                                     </div>
@@ -70,7 +70,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=4" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-4.svg" alt="">
                                     </div>
@@ -78,7 +78,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=5" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-5.svg" alt="">
                                     </div>
@@ -86,7 +86,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=6" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-6.svg" alt="">
                                     </div>
@@ -94,7 +94,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=7" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-7.svg" alt="">
                                     </div>
@@ -102,7 +102,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=8" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-8.svg" alt="">
                                     </div>
@@ -110,11 +110,27 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="single-cat-item">
+                                <a href="shop?categoryId=9" class="single-cat-item">
                                     <div class="icon">
                                         <img src="User/images/category/icon-9.svg" alt="">
                                     </div>
                                     <div class="text"> Pet Care </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="shop?categoryId=10" class="single-cat-item">
+                                    <div class="icon">
+                                        <img src="User/images/category/icon-10.svg" alt="">
+                                    </div>
+                                    <div class="text"> Meat & Seafood </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="shop?categoryId=11" class="single-cat-item">
+                                    <div class="icon">
+                                        <img src="User/images/category/icon-11.svg" alt="">
+                                    </div>
+                                    <div class="text"> Electronics </div>
                                 </a>
                             </li>
                         </ul>
@@ -258,7 +274,7 @@
                                                 <div class="top-text-1">Buy More & Save More</div>
                                                 <span>Fresh Vegetables</span>
                                             </div>
-                                            <a href="shop_grid.jsp" class="Offer-shop-btn hover-btn">Shop Now</a>
+                                            <a href="shop" class="Offer-shop-btn hover-btn">Shop Now</a>
                                         </div>
                                     </div>
                                 </div>
@@ -274,7 +290,7 @@
                                                 <div class="top-text-1">Buy More & Save More</div>
                                                 <span>Fresh Fruits</span>
                                             </div>
-                                            <a href="shop_grid.jsp" class="Offer-shop-btn hover-btn">Shop Now</a>
+                                            <a href="shop" class="Offer-shop-btn hover-btn">Shop Now</a>
                                         </div>
                                     </div>
                                 </div>
@@ -290,7 +306,7 @@
                                                 <div class="top-text-1">Hot Deals on New Items</div>
                                                 <span>Daily Essentials Eggs & Dairy</span>
                                             </div>
-                                            <a href="shop_grid.jsp" class="Offer-shop-btn hover-btn">Shop Now</a>
+                                            <a href="shop" class="Offer-shop-btn hover-btn">Shop Now</a>
                                         </div>
                                     </div>
                                 </div>
@@ -306,7 +322,7 @@
                                                 <div class="top-text-1">Buy More & Save More</div>
                                                 <span>Beverages</span>
                                             </div>
-                                            <a href="shop_grid.jsp" class="Offer-shop-btn hover-btn">Shop Now</a>
+                                            <a href="shop" class="Offer-shop-btn hover-btn">Shop Now</a>
                                         </div>
                                     </div>
                                 </div>
@@ -322,7 +338,7 @@
                                                 <div class="top-text-1">Buy More & Save More</div>
                                                 <span>Nuts & Snacks</span>
                                             </div>
-                                            <a href="shop_grid.jsp" class="Offer-shop-btn hover-btn">Shop Now</a>
+                                            <a href="shop" class="Offer-shop-btn hover-btn">Shop Now</a>
                                         </div>
                                     </div>
                                 </div>
@@ -347,7 +363,7 @@
                         <div class="col-md-12">
                             <div class="owl-carousel cate-slider owl-theme">
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                   <a href="shop?categoryId=1" class="category-item">  <!-- cho Vegetables & Fruits -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-1.svg" alt="">
                                         </div>
@@ -355,7 +371,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                   <a href="shop?categoryId=2" class="category-item">  <!-- cho Grocery & Staples -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-2.svg" alt="">
                                         </div>
@@ -363,7 +379,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                    <a href="shop?categoryId=3" class="category-item">  <!-- cho Dairy & Eggs -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-3.svg" alt="">
                                         </div>
@@ -371,7 +387,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                    <a href="shop?categoryId=4" class="category-item">  <!-- cho Beverages -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-4.svg" alt="">
                                         </div>
@@ -379,7 +395,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                    <a href="shop?categoryId=5" class="category-item">  <!-- cho Snacks -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-5.svg" alt="">
                                         </div>
@@ -387,7 +403,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                    <a href="shop?categoryId=6" class="category-item">  <!-- cho Home Care -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-6.svg" alt="">
                                         </div>
@@ -395,7 +411,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                   <a href="shop?categoryId=7" class="category-item">  <!-- cho Noodles & Sauces -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-7.svg" alt="">
                                         </div>
@@ -403,7 +419,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                    <a href="shop?categoryId=8" class="category-item">  <!-- cho Personal Care -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-8.svg" alt="">
                                         </div>
@@ -411,7 +427,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                    <a href="shop?categoryId=9" class="category-item">  <!-- cho Pet Care -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-9.svg" alt="">
                                         </div>
@@ -419,7 +435,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                    <a href="shop?categoryId=10" class="category-item"> <!-- cho Meat & Seafood -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-10.svg" alt="">
                                         </div>
@@ -427,7 +443,7 @@
                                     </a>
                                 </div>
                                 <div class="item">
-                                    <a href="shop_grid.jsp" class="category-item">
+                                    <a href="shop?categoryId=11" class="category-item"> <!-- cho Electronics -->
                                         <div class="cate-img">
                                             <img src="User/images/category/icon-11.svg" alt="">
                                         </div>

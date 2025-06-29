@@ -135,7 +135,12 @@ public class LoginGoogleServlet extends HttpServlet {
                     user.setProfileImageUrl(picture);
                 }
                 
-                // Có thể thêm method update trong UserDAO nếu cần
+                // Cập nhật tên nếu trống
+                if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+                    user.setFullName(fullName);
+                }
+                
+                // Cập nhật user trong database (nếu cần)
                 System.out.println("User info updated");
             }
 
@@ -145,6 +150,7 @@ public class LoginGoogleServlet extends HttpServlet {
             session.setAttribute("userEmail", email);
             session.setAttribute("userFullName", fullName);
             session.setAttribute("loginType", "Google");
+            session.setAttribute("userId", user.getUserId()); // Thêm dòng này để đồng bộ với LoginFacebookServlet
             
             System.out.println("Session created successfully");
             System.out.println("=== Google OAuth Success ===");

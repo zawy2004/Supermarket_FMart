@@ -6,6 +6,7 @@ import model.Product;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.ProductImage;
 
 public class ProductDAO {
     // Dùng đúng tên bảng, tên trường (chữ hoa/thường tuỳ DBMS)
@@ -178,4 +179,212 @@ public class ProductDAO {
         }
         return count;
     }
+    // Thêm các method này vào cuối class ProductDAO.java hiện có
+
+    // 9. Lấy sản phẩm theo category ID
+    public static List<Product> getProductsByCategory(int categoryID) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE + " WHERE categoryID = ? AND isActive = 1 ORDER BY productName";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Product product = extractProductFromResultSet(rs);
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // 10. Tìm kiếm sản phẩm theo từ khóa
+    public static List<Product> searchProducts(String keyword) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE + " WHERE isActive = 1 AND " +
+                    "(productName LIKE ? OR description LIKE ? OR brand LIKE ?) " +
+                    "ORDER BY productName";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String searchPattern = "%" + keyword + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            stmt.setString(3, searchPattern);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Product product = extractProductFromResultSet(rs);
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // 11. Lấy sản phẩm featured (ví dụ: có giảm giá hoặc bán chạy)
+    public static List<Product> getFeaturedProducts(int limit) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 " +
+                    "AND costPrice > sellingPrice ORDER BY ((costPrice - sellingPrice) / costPrice) DESC";
+        try (Connection conn = DatabaseConfig.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Product product = extractProductFromResultSet(rs);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // 12. Lấy sản phẩm mới nhất
+    public static List<Product> getNewestProducts(int limit) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 " +
+                    "ORDER BY createdDate DESC";
+        try (Connection conn = DatabaseConfig.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Product product = extractProductFromResultSet(rs);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // 13. Lấy sản phẩm theo khoảng giá
+    public static List<Product> getProductsByPriceRange(double minPrice, double maxPrice) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE + " WHERE isActive = 1 " +
+                    "AND sellingPrice >= ? AND sellingPrice <= ? ORDER BY sellingPrice";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDouble(1, minPrice);
+            stmt.setDouble(2, maxPrice);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Product product = extractProductFromResultSet(rs);
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // 14. Đếm số sản phẩm theo category
+    public static int countProductsByCategory(int categoryID) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM " + TABLE + " WHERE categoryID = ? AND isActive = 1";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    // 15. Lấy sản phẩm có giảm giá
+    public static List<Product> getDiscountedProducts(int limit) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 " +
+                    "AND costPrice > 0 AND sellingPrice < costPrice " +
+                    "ORDER BY ((costPrice - sellingPrice) / costPrice) DESC";
+        try (Connection conn = DatabaseConfig.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Product product = extractProductFromResultSet(rs);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // 16. Lấy sản phẩm liên quan (cùng category, trừ sản phẩm hiện tại)
+    public static List<Product> getRelatedProducts(int productID, int limit) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT TOP " + limit + " p.* FROM " + TABLE + " p " +
+                    "JOIN " + TABLE + " current ON p.categoryID = current.categoryID " +
+                    "WHERE p.isActive = 1 AND p.productID != ? AND current.productID = ? " +
+                    "ORDER BY p.createdDate DESC";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productID);
+            stmt.setInt(2, productID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Product product = extractProductFromResultSet(rs);
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // 17. Lấy sản phẩm active
+    public static List<Product> getActiveProducts() {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE + " WHERE isActive = 1 ORDER BY productName";
+        try (Connection conn = DatabaseConfig.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Product product = extractProductFromResultSet(rs);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+    
+    public static List<ProductImage> getProductImagesByProductId(int productId) {
+    List<ProductImage> images = new ArrayList<>();
+    String sql = "SELECT * FROM ProductImages WHERE ProductID = ? ORDER BY DisplayOrder, IsMainImage DESC";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, productId);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ProductImage image = new ProductImage();
+                image.setImageID(rs.getInt("ImageID"));
+                image.setProductID(rs.getInt("ProductID"));
+                image.setImageUrl(rs.getString("ImageUrl"));
+                image.setAltText(rs.getString("AltText"));
+                image.setIsMainImage(rs.getBoolean("IsMainImage"));
+                image.setDisplayOrder(rs.getInt("DisplayOrder"));
+                image.setCreatedDate(rs.getDate("CreatedDate"));
+                images.add(image);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+        
+    return images;
+}
+     
+    
+    
+   
 }
