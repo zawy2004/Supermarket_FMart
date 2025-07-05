@@ -3,40 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/service/ShoppingCartService.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/dao/UserDAO.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/controller/user/CartServlet.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/controller/user/CheckLoginServlet.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/util/ValidationUtil.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/web/User/cart_sidebar.jsp</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/controller/user/CategoryServlet.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/web/User/single_product_view.jsp</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/controller/user/CheckoutServlet.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/controller/user/LoginServlet.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/service/WishlistService.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/util/DateUtil.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/model/Wishlist.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/controller/user/SingleProductServlet.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/filter/CharacterEncodingFilter.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/util/FileUploadUtil.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/controller/user/WishlistServlet.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/filter/LoggingFilter.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/config/OAuthConfig.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/filter/AuthenticationFilter.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/service/ProductService.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/web/WEB-INF/web.xml</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/web/User/index.jsp</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/dao/ProductDAO.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/model/ShoppingCart.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/dao/ShoppingCartDAO.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/dao/WishlistDAO.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/filter/AuthorizationFilter.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/util/Constants.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/service/CartService.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/service/CategoryService.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/src/java/util/PasswordUtil.java</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/web/User/js/custom.js</file>
-            <file>file:/D:/SWP/Supermarket_FMart/Supermarket_FMart/web/User/checkout.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/config/DatabaseConfig.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_my_addresses.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_overview.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/LoginGoogleServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/ProfileServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/index.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/header.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/UploadProfileImageServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/UserDAO.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/images/logoFM.png</file>
         </group>
     </open-files>
 </project-private>

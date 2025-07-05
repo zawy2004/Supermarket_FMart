@@ -449,6 +449,17 @@ public class UserDAO {
 
     return 0;
 }
+public void updateProfileImage(int userId, String imageUrl) {
+    String sql = "UPDATE Users SET profileImageUrl = ? WHERE userId = ?";
+    try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        ps.setString(1, imageUrl);
+        ps.setInt(2, userId);
+        ps.executeUpdate();
+        System.out.println("Cập nhật ảnh đại diện thành công cho userId=" + userId);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
 
 

@@ -1,9 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
- <%@ page import="model.User" %>
-    <%
-        User user = (User) session.getAttribute("user");
-    %>
+<%@ page import="model.User" %>
+<%
+    User user = (User) session.getAttribute("user");
+%>
 <header class="header clearfix" >
 
     <div class="top-header-group">
@@ -36,8 +36,8 @@
                         <a href="#" class="opts_account" role="button" id="accountClick" data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="User/images/avatar/img-5.jpg" alt="">
                             <span class="user__name">
-                                <% if (user != null) { %>
-                                <%= user.getFullName() %>
+                                <% if (user != null) {%>
+                                <%= user.getFullName()%>
                                 <% } else { %>
                                 <a href="login" style="color: #333; text-decoration: none;">Sign In</a>
                                 <% } %>
@@ -54,16 +54,19 @@
                                     </span>
                                 </a>
                             </div>
-                            <a href="User/dashboard_overview.jsp" class="channel_item"><i class="uil uil-apps icon__1"></i>Dashboard</a>
-                            <a href="User/dashboard_my_orders.jsp" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
-                            <a href="User/dashboard_my_wishlist.jsp" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
-                            <a href="User/dashboard_my_wallet.jsp" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
-                            <a href="User/dashboard_my_addresses.jsp" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
+                            <a href="profile?action=overview" class="channel_item">
+                                <i class="uil uil-apps icon__1"></i>Dashboard
+                            </a>
+
+                            <a href="profile?action=orders"" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
+                            <a href="profile?action=wishlist" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
+                            <a href="profile?action=wallet" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
+                            <a href="profile?action=addresses" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
                             <a href="User/offers.jsp" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>
                             <a href="User/faq.jsp" class="channel_item"><i class="uil uil-info-circle icon__1"></i>Faq</a>
                             <a href="login" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
                         </div>
-                        <% } %>
+                        <% }%>
                     </li>
 
                 </ul>
