@@ -225,7 +225,7 @@
                                                     <li><button class="add-cart-btn hover-btn" onclick="addToCart(${product.productID})">
                                                         <i class="uil uil-shopping-cart-alt"></i>Add to Cart
                                                     </button></li>
-                                                    <li><button class="order-btn hover-btn" onclick="orderNow(${product.productID})">
+                                                    <li><button class="order-btn hover-btn" onclick="orderNow(${product.productID}, '${product.productName}', ${product.sellingPrice})">
                                                         Order Now
                                                     </button></li>
                                                 </c:if>
@@ -614,7 +614,7 @@
             }
 
             // Order Now
-            function orderNow(productId) {
+            function orderNow(productId, productName, sellingPrice) {
                 isUserLoggedIn(function(loggedIn) {
                     if (!loggedIn) {
                         showNotification('Please log in to place an order!', 'error');
@@ -624,8 +624,9 @@
                     const quantityInput = document.getElementById('quantity-input');
                     const quantity = parseInt(quantityInput.value) || 1;
                     const unit = document.querySelector('input[name="unit"]:checked').value;
+                    const totalPrice = sellingPrice * quantity;
 
-                    window.location.href = 'checkout?productId=' + productId + '&quantity=' + quantity + '&unit=' + unit;
+                    window.location.href = 'checkout?productId=' + productId + '&productName=' + encodeURIComponent(productName) + '&quantity=' + quantity + '&unit=' + encodeURIComponent(unit) + '&sellingPrice=' + sellingPrice + '&totalPrice=' + totalPrice;
                 });
             }
 
@@ -675,7 +676,7 @@
 
                 const icon = type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-circle';
                 notification.innerHTML = 
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert" style="position: absolute; top: 5px; right: 10px;"></button>' + // Di chuyển nút X
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" style="position: absolute; top: 5px; right: 10px;"></button>' + 
                     '<i class="fas fa-' + icon + ' me-2"></i>' + 
                     message;
 

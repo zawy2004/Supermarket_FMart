@@ -354,6 +354,7 @@
     
     <!-- Header Start -->
     <jsp:include page="header.jsp"></jsp:include>
+    <jsp:include page="cart_sidebar.jsp"></jsp:include>
     <!-- Header End -->
     
     <!-- Body Start -->
