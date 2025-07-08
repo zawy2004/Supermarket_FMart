@@ -10,6 +10,8 @@ public class DispatchReceipt {
     private int createdBy;
     private String reference;
     private String notes;
+    private String supplierName;
+    private String warehouseName;
 
     public DispatchReceipt() {}
 
@@ -21,6 +23,22 @@ public class DispatchReceipt {
         this.createdBy = createdBy;
         this.reference = reference;
         this.notes = notes;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
     }
 
     public int getDispatchID() { return dispatchID; }

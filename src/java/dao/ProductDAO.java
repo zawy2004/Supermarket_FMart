@@ -178,4 +178,47 @@ public class ProductDAO {
         }
         return count;
     }
+    // Tìm kiếm sản phẩm theo tên hoặc SKU
+    public List<Product> searchProducts1(String searchKeyword) throws SQLException {
+        List<Product> productList = new ArrayList<>();
+        
+        // Chuẩn bị SQL với LIKE để tìm kiếm theo tên sản phẩm hoặc SKU
+        String sql = "SELECT * FROM Products WHERE ProductName LIKE ? OR SKU LIKE ?";
+        
+        try (Connection con = DatabaseConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            // Dùng % để tìm kiếm theo từ khóa
+            String searchPattern = "%" + searchKeyword + "%";
+            ps.setString(1, searchPattern);  // Tìm kiếm theo tên sản phẩm
+            ps.setString(2, searchPattern);  // Tìm kiếm theo SKU
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Product product = new Product();
+                    product.setProductID(rs.getInt("ProductID"));
+                    product.setProductName(rs.getString("ProductName"));
+                    product.setSku(rs.getString("SKU"));
+                    product.setCategoryID(rs.getInt("CategoryID"));
+                    product.setSupplierID(rs.getInt("SupplierID"));
+                    product.setDescription(rs.getString("Description"));
+                    product.setUnit(rs.getString("Unit"));
+                    product.setCostPrice(rs.getDouble("CostPrice"));
+                    product.setSellingPrice(rs.getDouble("SellingPrice"));
+                    product.setMinStockLevel(rs.getInt("MinStockLevel"));
+                    product.setIsActive(rs.getBoolean("IsActive"));
+                    product.setCreatedDate(rs.getDate("CreatedDate"));
+                    product.setLastUpdated(rs.getDate("LastUpdated"));
+                    product.setWeight(rs.getDouble("Weight"));
+                    product.setDimensions(rs.getString("Dimensions"));
+                    product.setExpiryDays(rs.getInt("ExpiryDays"));
+                    product.setBrand(rs.getString("Brand"));
+                    product.setOrigin(rs.getString("Origin"));
+                    productList.add(product);
+                }
+            }
+        }
+        
+        return productList;
+    }
+    
 }
