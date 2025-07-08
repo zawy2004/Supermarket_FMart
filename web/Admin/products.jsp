@@ -40,28 +40,7 @@
         </nav>
 
         <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <a class="nav-link" href="Admin/index.jsp">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
-                            </a>
-                            <a class="nav-link active" href="CategoryServlet">
-                                <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                                Categories
-                            </a>
-                            <a class="nav-link active" href="ProductServlet">
-                                <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                                Products
-                            </a>
-                            <!-- Add other navigation items as needed -->
-                        </div>
-                    </div>
-                </nav>
-            </div>
-
+            <jsp:include page="adminsidebar.jsp"></jsp:include>
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">

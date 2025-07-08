@@ -30,55 +30,7 @@
 
     <div id="layoutSidenav">
         <!-- Sidebar -->
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <a class="nav-link" href="index.jsp">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-newspaper"></i></div>
-                            Posts
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link sub_nav_link" href="posts.jsp">All Posts</a>
-                                <a class="nav-link sub_nav_link" href="add_post.jsp">Add New</a>
-                                <a class="nav-link sub_nav_link" href="post_categories.jsp">Categories</a>
-                                <a class="nav-link sub_nav_link" href="post_tags.jsp">Tags</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategories" aria-expanded="false" aria-controls="collapseCategories">
-                            <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                            Categories
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse show" id="collapseCategories" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link sub_nav_link" href="category.jsp">All Categories</a>
-                                <a class="nav-link sub_nav_link active" href="add_category.jsp">Add Category</a>
-                            </nav>
-                        </div>
-                        <!-- B?n có th? b? sung thêm các m?c sidebar khác n?u mu?n -->
-                        <a class="nav-link" href="orders.jsp">
-                            <div class="sb-nav-link-icon"><i class="fas fa-cart-arrow-down"></i></div>
-                            Orders
-                        </a>
-                        <a class="nav-link" href="customers.jsp">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Customers
-                        </a>
-                        <a class="nav-link" href="reports.jsp">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
-                            Reports
-                        </a>
-                    </div>
-                </div>
-            </nav>
-        </div>
+     <jsp:include page="adminsidebar.jsp"></jsp:include>
         <!-- Main content -->
         <div id="layoutSidenav_content">
             <main>

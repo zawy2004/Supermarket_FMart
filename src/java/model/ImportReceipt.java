@@ -8,7 +8,8 @@ public class ImportReceipt {
     private int warehouseID;
     private Date importDate;
     private String notes;
-
+    private String supplierName;
+    private String warehouseName;
     public ImportReceipt() {}
 
     public ImportReceipt(int importID, int supplierID, int warehouseID, Date importDate, String notes) {
@@ -29,4 +30,21 @@ public class ImportReceipt {
     public void setImportDate(Date importDate) { this.importDate = importDate; }
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+    
 }

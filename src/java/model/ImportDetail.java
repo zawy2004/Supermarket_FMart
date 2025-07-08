@@ -8,6 +8,7 @@ public class ImportDetail {
     private int productID;
     private int quantity;
     private double unitPrice;
+    private String productName;
 
     public ImportDetail() {}
 
@@ -29,4 +30,13 @@ public class ImportDetail {
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public double getUnitPrice() { return unitPrice; }
     public void setUnitPrice(double unitPrice) { this.unitPrice = unitPrice; }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
 }
