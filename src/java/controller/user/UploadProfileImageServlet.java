@@ -18,42 +18,44 @@ public class UploadProfileImageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        
+
         User user = (User) session.getAttribute("user");
-        
+
         Part filePart = request.getPart("avatarFile");
         if (filePart != null && filePart.getSize() > 0) {
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            
-            // đường dẫn uploads trong webapp
+
+            // Tạo thư mục uploads trong webapp nếu chưa tồn tại
             String uploadPath = getServletContext().getRealPath("/uploads");
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
-            
+
+            // lưu file
             String savedFilePath = uploadPath + File.separator + fileName;
             filePart.write(savedFilePath);
-            
-            // update DB
+
+            // cập nhật DB
             String relativePath = "uploads/" + fileName;
-            user.setProfileImageUrl(relativePath);
-            new UserDAO().updateProfileImage(user.getUserId(), relativePath);
-            
-            // cập nhật session luôn
-            session.setAttribute("user", user);
-            
+            UserDAO dao = new UserDAO();
+            dao.updateProfileImage(user.getUserId(), relativePath);
+
+            // reload user từ DB để session luôn khớp
+            User updatedUser = dao.getUserById(user.getUserId());
+            session.setAttribute("user", updatedUser);
+
             System.out.println("Upload thành công: " + savedFilePath);
         } else {
             System.out.println("Không có file được chọn");
         }
-        
+
         response.sendRedirect(request.getContextPath() + "/profile?action=overview");
     }
 }

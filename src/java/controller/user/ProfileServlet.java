@@ -57,7 +57,42 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // nếu sau này cần update thông tin user
+
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String action = request.getParameter("action");
+
+        if ("updateAddress".equals(action)) {
+            String newAddress = request.getParameter("address");
+
+            if (newAddress != null && newAddress.trim().length() >= 10) {
+                user.setAddress(newAddress);
+
+                // ✅ GỌI DAO để cập nhật vào DB
+                dao.UserDAO userDAO = new dao.UserDAO();
+                userDAO.updateAddress(user.getUserId(), newAddress);
+
+                // ✅ Cập nhật lại session từ DB (đảm bảo đồng bộ)
+                User updatedUser = userDAO.getUserById(user.getUserId());
+                session.setAttribute("user", updatedUser);
+
+                request.setAttribute("success", "Address updated successfully.");
+            } else {
+                request.setAttribute("error", "Address must be at least 10 characters.");
+            }
+
+            request.setAttribute("user", session.getAttribute("user")); // đảm bảo đúng user mới
+            request.getRequestDispatcher("User/dashboard_my_addresses.jsp").forward(request, response);
+            return;
+        }
+
         doGet(request, response);
     }
+
 }

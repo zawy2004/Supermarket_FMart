@@ -1,6 +1,6 @@
-
 package controller.user;
 
+import dao.WishlistDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -45,7 +45,7 @@ public class SingleProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Lấy productId từ URL
+            // lấy productId từ URL
             String productIdStr = request.getParameter("productId");
             int productId = 0;
             try {
@@ -54,63 +54,59 @@ public class SingleProductServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 System.err.println("Invalid productId: " + productIdStr);
                 request.setAttribute("error", "Invalid product ID");
-                request.getRequestDispatcher("/User/error.jsp").forward(request, response);
+                request.getRequestDispatcher("User/error.jsp").forward(request, response);
                 return;
             }
             
-            // Lấy thông tin sản phẩm
+            // lấy thông tin sản phẩm
             Product product = productService.getProductById(productId);
             if (product == null || !product.isIsActive()) {
                 System.err.println("Product not found or inactive: " + productId);
                 request.setAttribute("error", "Product not found or inactive");
-                request.getRequestDispatcher("/User/error.jsp").forward(request, response);
+                request.getRequestDispatcher("User/error.jsp").forward(request, response);
                 return;
             }
             
-            // Lấy danh mục của sản phẩm
+            // lấy danh mục
             Category category = categoryService.getCategoryById(product.getCategoryID());
             
-            // Lấy danh sách hình ảnh sản phẩm
+            // lấy danh sách hình ảnh
             List<ProductImage> productImages = productService.getProductImagesByProductId(productId);
             System.out.println("Images for ProductID " + productId + ": " + productImages.size());
             
-            // Lấy sản phẩm liên quan
+            // sản phẩm liên quan
             List<Product> relatedProducts = productService.getRelatedProducts(productId, 4);
             
-            // Lấy sản phẩm nổi bật
+            // sản phẩm nổi bật
             List<Product> featuredProducts = productService.getFeaturedProducts(8);
             
-            // Lấy hình ảnh cho sản phẩm nổi bật và liên quan
+            // load hình ảnh cho featured + related
             Map<Integer, String> featuredProductImages = new HashMap<>();
             Map<Integer, String> relatedProductImages = new HashMap<>();
             
-            // Hình ảnh cho sản phẩm nổi bật
             for (Product featured : featuredProducts) {
                 List<ProductImage> images = productService.getProductImagesByProductId(featured.getProductID());
-                String imageUrl = images.isEmpty() ? "images/product/default.jpg" : 
-                    images.stream()
-                          .filter(img -> img.isIsMainImage())
-                          .findFirst()
-                          .map(ProductImage::getImageUrl)
-                          .orElse(images.get(0).getImageUrl());
+                String imageUrl = images.isEmpty() ? "images/product/default.jpg"
+                        : images.stream()
+                                .filter(ProductImage::isIsMainImage)
+                                .findFirst()
+                                .map(ProductImage::getImageUrl)
+                                .orElse(images.get(0).getImageUrl());
                 featuredProductImages.put(featured.getProductID(), imageUrl);
-                System.out.println("Featured ProductID " + featured.getProductID() + ": Image URL = " + imageUrl);
             }
             
-            // Hình ảnh cho sản phẩm liên quan
             for (Product related : relatedProducts) {
                 List<ProductImage> images = productService.getProductImagesByProductId(related.getProductID());
-                String imageUrl = images.isEmpty() ? "images/product/default.jpg" : 
-                    images.stream()
-                          .filter(img -> img.isIsMainImage())
-                          .findFirst()
-                          .map(ProductImage::getImageUrl)
-                          .orElse(images.get(0).getImageUrl());
+                String imageUrl = images.isEmpty() ? "images/product/default.jpg"
+                        : images.stream()
+                                .filter(ProductImage::isIsMainImage)
+                                .findFirst()
+                                .map(ProductImage::getImageUrl)
+                                .orElse(images.get(0).getImageUrl());
                 relatedProductImages.put(related.getProductID(), imageUrl);
-                System.out.println("Related ProductID " + related.getProductID() + ": Image URL = " + imageUrl);
             }
             
-            // Lấy danh sách mặt hàng trong giỏ hàng
+            // giỏ hàng
             HttpSession session = request.getSession(false);
             Integer userId = (session != null) ? (Integer) session.getAttribute("userId") : null;
             System.out.println("SingleProductServlet: userId = " + userId);
@@ -136,10 +132,14 @@ public class SingleProductServlet extends HttpServlet {
                 }
             }
             
-            // Kiểm tra xem sản phẩm có trong danh sách yêu thích không
-            boolean isInWishlist = userId != null && cartService.isInWishlist(userId, productId);
+            // kiểm tra wishlist
+            boolean isInWishlist = false;
+            if (userId != null) {
+                WishlistDAO wishlistDAO = new WishlistDAO();
+                isInWishlist = wishlistDAO.isInWishlist(userId, productId);
+            }
             
-            // Set attributes
+            // set attributes
             request.setAttribute("product", product);
             request.setAttribute("category", category);
             request.setAttribute("productImages", productImages);
@@ -153,14 +153,14 @@ public class SingleProductServlet extends HttpServlet {
             request.setAttribute("deliveryCharge", deliveryCharge);
             request.setAttribute("isInWishlist", isInWishlist);
             
-            // Forward đến JSP
-            request.getRequestDispatcher("/User/single_product_view.jsp").forward(request, response);
+            // forward
+            request.getRequestDispatcher("User/single_product_view.jsp").forward(request, response);
             
         } catch (Exception e) {
             System.err.println("Error in SingleProductServlet doGet: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "System error: " + e.getMessage());
-            request.getRequestDispatcher("/User/error.jsp").forward(request, response);
+            request.getRequestDispatcher("User/error.jsp").forward(request, response);
         }
     }
 }

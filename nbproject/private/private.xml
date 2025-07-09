@@ -3,16 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/config/DatabaseConfig.java</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_my_addresses.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_overview.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/LoginGoogleServlet.java</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/ProfileServlet.java</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/index.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/header.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/UploadProfileImageServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/UserAddressServlet.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/UserDAO.java</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/images/logoFM.png</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_my_addresses.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/ProfileServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/config/DatabaseConfig.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/LoginGoogleServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/User.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/ContactServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/contact_us.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/header.jsp</file>
         </group>
     </open-files>
 </project-private>

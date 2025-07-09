@@ -450,13 +450,25 @@ public class UserDAO {
     return 0;
 }
 public void updateProfileImage(int userId, String imageUrl) {
-    String sql = "UPDATE Users SET profileImageUrl = ? WHERE userId = ?";
-    try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+    String sql = "UPDATE Users SET ProfileImageUrl = ? WHERE UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, imageUrl);
         ps.setInt(2, userId);
-        ps.executeUpdate();
-        System.out.println("Cập nhật ảnh đại diện thành công cho userId=" + userId);
+        int rows = ps.executeUpdate();
+        System.out.println("Cập nhật ảnh đại diện thành công: " + rows + " rows");
     } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+public void updateAddress(int userId, String address) {
+    String sql = "UPDATE Users SET Address = ? WHERE UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, address);
+        stmt.setInt(2, userId);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
         e.printStackTrace();
     }
 }

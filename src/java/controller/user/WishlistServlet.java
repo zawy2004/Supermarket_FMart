@@ -1,77 +1,83 @@
-
 package controller.user;
 
+import dao.WishlistDAO;
+import dao.ProductDAO;
+import dao.ProductImageDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Wishlist;
-import service.WishlistService;
-
+import jakarta.servlet.http.*;
+import model.User;
+import model.Product;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "WishlistServlet", urlPatterns = {"/wishlist"})
 public class WishlistServlet extends HttpServlet {
-    
-    private WishlistService wishlistService;
-    
+
+    private WishlistDAO wishlistDAO;
+
     @Override
     public void init() throws ServletException {
-        super.init();
-        wishlistService = new WishlistService();
+        wishlistDAO = new WishlistDAO();
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
-        
-        try {
-            HttpSession session = request.getSession(false);
-            Integer userId = (session != null) ? (Integer) session.getAttribute("userId") : null;
-            System.out.println("WishlistServlet: userId = " + userId);
-            
-            if (userId == null) {
-                out.print("{\"error\": \"User not logged in\"}");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-            
-            String action = request.getParameter("action");
-            String productIdStr = request.getParameter("productId");
-            
-            if (action == null || productIdStr == null) {
-                out.print("{\"error\": \"Missing parameters\"}");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                return;
-            }
-            
-            int productId = Integer.parseInt(productIdStr);
-            
-            if (action.equals("add")) {
-                Wishlist wishlistItem = new Wishlist();
-                wishlistItem.setUserID(userId);
-                wishlistItem.setProductID(productId);
-                wishlistItem.setAddedDate(new Date());
-                wishlistService.addToWishlist(wishlistItem);
-                out.print("{\"message\": \"Item added to wishlist successfully\"}");
-            } else if (action.equals("remove")) {
-                wishlistService.removeFromWishlist(userId, productId);
-                out.print("{\"message\": \"Item removed from wishlist successfully\"}");
-            } else {
-                out.print("{\"error\": \"Invalid action\"}");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            System.err.println("Error in WishlistServlet doPost: " + e.getMessage());
-            e.printStackTrace();
-            out.print("{\"error\": \"" + e.getMessage() + "\"}");
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().print("{\"message\":\"Please log in first.\"}");
+            return;
         }
+
+        int userId = user.getUserId();
+        String action = request.getParameter("action");
+        int productId = Integer.parseInt(request.getParameter("productId"));
+
+        if ("add".equals(action)) {
+            if (!wishlistDAO.isInWishlist(userId, productId)) {
+                wishlistDAO.addWishlistItem(userId, productId);
+            }
+            response.getWriter().print("{\"message\":\"Item added to wishlist\"}");
+        } else if ("remove".equals(action)) {
+            wishlistDAO.removeWishlistItem(userId, productId);
+            response.getWriter().print("{\"message\":\"Item removed from wishlist\"}");
+        } else {
+            response.getWriter().print("{\"message\":\"Invalid action\"}");
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        List<Product> wishlistItems = wishlistDAO.getWishlistProducts(user.getUserId());
+        Map<Integer, String> wishlistImages = new HashMap<>();
+
+        for (Product p : wishlistItems) {
+            String img = ProductImageDAO.getMainImageUrl(p.getProductID());
+            wishlistImages.put(p.getProductID(),
+                    img != null ? img : "images/product/default.jpg"
+            );
+        }
+
+        request.setAttribute("wishlistItems", wishlistItems);
+        request.setAttribute("wishlistImages", wishlistImages);
+
+        request.getRequestDispatcher("/User/dashboard_my_wishlist.jsp").forward(request, response);
     }
 }

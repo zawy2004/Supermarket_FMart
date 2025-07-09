@@ -21,7 +21,7 @@ public class Product {
     private int expiryDays;
     private String brand;
     private String origin;
-
+    private boolean isWishlisted;
     // Constructors, Getters, and Setters...
 
     public Product() {}
@@ -197,6 +197,13 @@ public class Product {
     public void setSKU(String string) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    public boolean isIsWishlisted() {
+    return isWishlisted;
+}
+
+public void setIsWishlisted(boolean isWishlisted) {
+    this.isWishlisted = isWishlisted;
+}
 
     
 }

@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 ﻿<!DOCTYPE html>
 <html lang="en">
-   <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/index.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 11:59:29 GMT -->
+
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -1153,5 +1153,4 @@
 
     </body>
 
-    <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/index.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:00:03 GMT -->
 </html>

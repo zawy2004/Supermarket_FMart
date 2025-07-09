@@ -9,6 +9,7 @@ import java.util.List;
 import model.ProductImage;
 
 public class ProductDAO {
+
     // Dùng đúng tên bảng, tên trường (chữ hoa/thường tuỳ DBMS)
     private static final String TABLE = "Products";
 
@@ -42,9 +43,7 @@ public class ProductDAO {
     public static List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE;
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
                 products.add(product);
@@ -59,8 +58,7 @@ public class ProductDAO {
     public static Product getProductById(int productID) {
         Product product = null;
         String sql = "SELECT * FROM " + TABLE + " WHERE productID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productID);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -75,10 +73,9 @@ public class ProductDAO {
 
     // 4. Thêm sản phẩm mới
     public static void addProduct(Product product) {
-        String sql = "INSERT INTO " + TABLE + " (productName, sku, categoryID, supplierID, description, unit, costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated, weight, dimensions, expiryDays, brand, origin) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO " + TABLE + " (productName, sku, categoryID, supplierID, description, unit, costPrice, sellingPrice, minStockLevel, isActive, createdDate, lastUpdated, weight, dimensions, expiryDays, brand, origin) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, product.getProductName());
             stmt.setString(2, product.getSku());
             stmt.setInt(3, product.getCategoryID());
@@ -106,8 +103,7 @@ public class ProductDAO {
     // 5. Cập nhật sản phẩm
     public static void updateProduct(Product product) {
         String sql = "UPDATE " + TABLE + " SET productName = ?, sku = ?, categoryID = ?, supplierID = ?, description = ?, unit = ?, costPrice = ?, sellingPrice = ?, minStockLevel = ?, isActive = ?, lastUpdated = ?, weight = ?, dimensions = ?, expiryDays = ?, brand = ?, origin = ? WHERE productID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, product.getProductName());
             stmt.setString(2, product.getSku());
             stmt.setInt(3, product.getCategoryID());
@@ -134,8 +130,7 @@ public class ProductDAO {
     // 6. Xoá sản phẩm
     public static void deleteProduct(int productID) {
         String sql = "DELETE FROM " + TABLE + " WHERE productID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productID);
             stmt.executeUpdate();
             System.out.println("Sản phẩm đã được xóa: ID = " + productID);
@@ -148,8 +143,7 @@ public class ProductDAO {
     public static List<Product> getProductsByPage(int offset, int pageSize) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE + " ORDER BY productID DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, offset);
             ps.setInt(2, pageSize);
             try (ResultSet rs = ps.executeQuery()) {
@@ -168,9 +162,7 @@ public class ProductDAO {
     public static int getTotalProducts() {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM " + TABLE;
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 count = rs.getInt(1);
             }
@@ -185,8 +177,7 @@ public class ProductDAO {
     public static List<Product> getProductsByCategory(int categoryID) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE + " WHERE categoryID = ? AND isActive = 1 ORDER BY productName";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, categoryID);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -203,11 +194,10 @@ public class ProductDAO {
     // 10. Tìm kiếm sản phẩm theo từ khóa
     public static List<Product> searchProducts(String keyword) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE + " WHERE isActive = 1 AND " +
-                    "(productName LIKE ? OR description LIKE ? OR brand LIKE ?) " +
-                    "ORDER BY productName";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM " + TABLE + " WHERE isActive = 1 AND "
+                + "(productName LIKE ? OR description LIKE ? OR brand LIKE ?) "
+                + "ORDER BY productName";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             String searchPattern = "%" + keyword + "%";
             stmt.setString(1, searchPattern);
             stmt.setString(2, searchPattern);
@@ -227,11 +217,9 @@ public class ProductDAO {
     // 11. Lấy sản phẩm featured (ví dụ: có giảm giá hoặc bán chạy)
     public static List<Product> getFeaturedProducts(int limit) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 " +
-                    "AND costPrice > sellingPrice ORDER BY ((costPrice - sellingPrice) / costPrice) DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 "
+                + "AND costPrice > sellingPrice ORDER BY ((costPrice - sellingPrice) / costPrice) DESC";
+        try (Connection conn = DatabaseConfig.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
                 products.add(product);
@@ -245,11 +233,9 @@ public class ProductDAO {
     // 12. Lấy sản phẩm mới nhất
     public static List<Product> getNewestProducts(int limit) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 " +
-                    "ORDER BY createdDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 "
+                + "ORDER BY createdDate DESC";
+        try (Connection conn = DatabaseConfig.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
                 products.add(product);
@@ -263,10 +249,9 @@ public class ProductDAO {
     // 13. Lấy sản phẩm theo khoảng giá
     public static List<Product> getProductsByPriceRange(double minPrice, double maxPrice) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE + " WHERE isActive = 1 " +
-                    "AND sellingPrice >= ? AND sellingPrice <= ? ORDER BY sellingPrice";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM " + TABLE + " WHERE isActive = 1 "
+                + "AND sellingPrice >= ? AND sellingPrice <= ? ORDER BY sellingPrice";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setDouble(1, minPrice);
             stmt.setDouble(2, maxPrice);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -285,8 +270,7 @@ public class ProductDAO {
     public static int countProductsByCategory(int categoryID) {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM " + TABLE + " WHERE categoryID = ? AND isActive = 1";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, categoryID);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -302,12 +286,10 @@ public class ProductDAO {
     // 15. Lấy sản phẩm có giảm giá
     public static List<Product> getDiscountedProducts(int limit) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 " +
-                    "AND costPrice > 0 AND sellingPrice < costPrice " +
-                    "ORDER BY ((costPrice - sellingPrice) / costPrice) DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        String sql = "SELECT TOP " + limit + " * FROM " + TABLE + " WHERE isActive = 1 "
+                + "AND costPrice > 0 AND sellingPrice < costPrice "
+                + "ORDER BY ((costPrice - sellingPrice) / costPrice) DESC";
+        try (Connection conn = DatabaseConfig.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
                 products.add(product);
@@ -321,12 +303,11 @@ public class ProductDAO {
     // 16. Lấy sản phẩm liên quan (cùng category, trừ sản phẩm hiện tại)
     public static List<Product> getRelatedProducts(int productID, int limit) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT TOP " + limit + " p.* FROM " + TABLE + " p " +
-                    "JOIN " + TABLE + " current ON p.categoryID = current.categoryID " +
-                    "WHERE p.isActive = 1 AND p.productID != ? AND current.productID = ? " +
-                    "ORDER BY p.createdDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT TOP " + limit + " p.* FROM " + TABLE + " p "
+                + "JOIN " + TABLE + " c ON p.categoryID = c.categoryID "
+                + "WHERE p.isActive = 1 AND p.productID != ? AND c.productID = ? "
+                + "ORDER BY p.createdDate DESC";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productID);
             stmt.setInt(2, productID);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -345,9 +326,7 @@ public class ProductDAO {
     public static List<Product> getActiveProducts() {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE + " WHERE isActive = 1 ORDER BY productName";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = DatabaseConfig.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
                 products.add(product);
@@ -357,34 +336,79 @@ public class ProductDAO {
         }
         return products;
     }
-    
+
     public static List<ProductImage> getProductImagesByProductId(int productId) {
-    List<ProductImage> images = new ArrayList<>();
-    String sql = "SELECT * FROM ProductImages WHERE ProductID = ? ORDER BY DisplayOrder, IsMainImage DESC";
-    try (Connection conn = DatabaseConfig.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, productId);
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                ProductImage image = new ProductImage();
-                image.setImageID(rs.getInt("ImageID"));
-                image.setProductID(rs.getInt("ProductID"));
-                image.setImageUrl(rs.getString("ImageUrl"));
-                image.setAltText(rs.getString("AltText"));
-                image.setIsMainImage(rs.getBoolean("IsMainImage"));
-                image.setDisplayOrder(rs.getInt("DisplayOrder"));
-                image.setCreatedDate(rs.getDate("CreatedDate"));
-                images.add(image);
+        List<ProductImage> images = new ArrayList<>();
+        String sql = "SELECT * FROM ProductImages WHERE ProductID = ? ORDER BY DisplayOrder, IsMainImage DESC";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ProductImage image = new ProductImage();
+                    image.setImageID(rs.getInt("ImageID"));
+                    image.setProductID(rs.getInt("ProductID"));
+                    image.setImageUrl(rs.getString("ImageUrl"));
+                    image.setAltText(rs.getString("AltText"));
+                    image.setIsMainImage(rs.getBoolean("IsMainImage"));
+                    image.setDisplayOrder(rs.getInt("DisplayOrder"));
+                    image.setCreatedDate(rs.getDate("CreatedDate"));
+                    images.add(image);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return images;
     }
-        
-    return images;
-}
-     
-    
-    
-   
+
+    public List<Product> getProductsForShopPage(Integer categoryId, String search, Integer userId) {
+        List<Product> products = new ArrayList<>();
+
+        String sql = "SELECT * FROM Products WHERE 1=1 ";
+        if (categoryId != null) {
+            sql += " AND CategoryID = ?";
+        }
+        if (search != null && !search.trim().isEmpty()) {
+            sql += " AND ProductName LIKE ?";
+        }
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            int idx = 1;
+            if (categoryId != null) {
+                stmt.setInt(idx++, categoryId);
+            }
+            if (search != null && !search.trim().isEmpty()) {
+                stmt.setString(idx++, "%" + search + "%");
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                WishlistDAO wishlistDAO = new WishlistDAO();
+                while (rs.next()) {
+                    Product product = new Product();
+                    product.setProductID(rs.getInt("ProductID"));
+                    product.setProductName(rs.getString("ProductName"));
+                    product.setSellingPrice(rs.getDouble("SellingPrice"));
+                    product.setCostPrice(rs.getDouble("CostPrice"));
+                    product.setDescription(rs.getString("Description"));
+                    product.setMinStockLevel(rs.getInt("MinStockLevel"));
+                    // ... gán thêm thuộc tính khác nếu cần
+
+                    if (userId != null) {
+                        product.setIsWishlisted(
+                                wishlistDAO.isInWishlist(userId, product.getProductID())
+                        );
+                    } else {
+                        product.setIsWishlisted(false);
+                    }
+
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
 }

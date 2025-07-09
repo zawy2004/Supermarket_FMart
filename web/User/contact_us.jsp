@@ -18,18 +18,18 @@
 
         <!-- Stylesheets -->
         <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-        <link href='vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/responsive.css" rel="stylesheet">
-        <link href="css/night-mode.css" rel="stylesheet">
-        <link href="css/step-wizard.css" rel="stylesheet">
+        <link href='User/vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
+        <link href="User/css/style.css" rel="stylesheet">
+        <link href="User/css/responsive.css" rel="stylesheet">
+        <link href="User/css/night-mode.css" rel="stylesheet">
+        <link href="User/css/step-wizard.css" rel="stylesheet">
 
         <!-- Vendor Stylesheets -->
-        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">	
+        <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">	
 
     </head>
 
@@ -318,36 +318,47 @@
         </div>	
         <!-- Cart Sidebar Offcanvas End-->
         <!-- Header Start -->
-       <jsp:include page="header.jsp"></jsp:include>
-        <!-- Header End -->
-        <!-- Body Start -->
-        <div class="wrapper">
-            <div class="gambo-Breadcrumb">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
-                                </ol>
-                            </nav>
+        <jsp:include page="header.jsp"></jsp:include>
+            <!-- Header End -->
+            <!-- Body Start -->
+            <div class="wrapper">
+                <div class="gambo-Breadcrumb">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+                                    </ol>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="all-product-grid">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <div class="contact-title">
-                                <h2>Submit customer service request</h2>
-                                <p>If you have a question about our service or have an issue to report, please send a request and we will get back to you as soon as possible.</p>
-                            </div>
+                <div class="all-product-grid">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="contact-title">
+                                    <h2>Submit customer service request</h2>
+                                    <p>If you have a question about our service or have an issue to report, please send a request and we will get back to you as soon as possible.</p>
+                                </div>
+                            <c:if test="${not empty success}">
+                                <div class="alert alert-success" role="alert" style="margin-top: 15px;">
+                                    ${success}
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty error}">
+                                <div class="alert alert-danger" role="alert" style="margin-top: 15px;">
+                                    ${error}
+                                </div>
+                            </c:if>
+
                         </div>					
                         <div class="col-lg-6 col-md-12">
                             <div class="contact-form">
-                                <form>
+                                <form action="${pageContext.request.contextPath}/contact" method="post">
                                     <div class="form-group mt-4">
                                         <label class="control-label">Full Name*</label>
                                         <div class="ui search focus">
@@ -388,16 +399,16 @@
                                     <div class="panel-heading" id="headingOne">
                                         <div class="panel-title">
                                             <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseOne" href="#" aria-expanded="false" aria-controls="collapseOne">
-                                                <i class="uil uil-location-point chck_icon"></i>Ludhiana
+                                                <i class="uil uil-location-point chck_icon"></i>TP. Hồ Chí Minh
                                             </a>
                                         </div>
                                     </div>
-                                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" data-bs-parent="#accordion0" style="">
+                                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            Ludhiana Head Office:<br>
-                                            #0000, St No. 0, Lorem ipsum dolor sit amet, Main road, Ludhiana,  Punjab<br>
-                                            Ludhiana- 141001<br>
-                                            <div class="color-pink">Tel: 0000-000-000</div>
+                                            Trụ Sở Chính TP. Hồ Chí Minh:<br>
+                                            Số 123, Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh<br>
+                                            TP. Hồ Chí Minh - 700000<br>
+                                            <div class="color-pink">Tel: 0900-123-456</div>
                                         </div>
                                     </div>
                                 </div>
@@ -405,16 +416,16 @@
                                     <div class="panel-heading" id="headingTwo">
                                         <div class="panel-title">
                                             <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo" href="#" aria-expanded="false" aria-controls="collapseTwo">
-                                                <i class="uil uil-location-point chck_icon"></i>Gurugram
+                                                <i class="uil uil-location-point chck_icon"></i>Hà Nội
                                             </a>
                                         </div>
                                     </div>
                                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            Gurugram Branch :<br>
-                                            #0000, St No. 0, Lorem ipsum dolor sit amet, Main road, Gurugram,  Haryana<br>
-                                            Gurugram- 141001<br>
-                                            <div class="color-pink">Tel: 0000-000-000</div>
+                                            Chi Nhánh Hà Nội:<br>
+                                            Số 456, Đường Hoàn Kiếm, Quận Hoàn Kiếm, Hà Nội<br>
+                                            Hà Nội - 100000<br>
+                                            <div class="color-pink">Tel: 0900-789-123</div>
                                         </div>
                                     </div>
                                 </div>
@@ -422,104 +433,53 @@
                                     <div class="panel-heading" id="headingThree">
                                         <div class="panel-title">
                                             <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" href="#" aria-expanded="false" aria-controls="collapseThree">
-                                                <i class="uil uil-location-point chck_icon"></i>New Delhi
+                                                <i class="uil uil-location-point chck_icon"></i>Đà Nẵng
                                             </a>
                                         </div>
                                     </div>
                                     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            New Delhi Branch :<br>
-                                            #0000, St No. 0, Lorem ipsum dolor sit amet, Main road, New Delhi<br>
-                                            New Delhi- 141001<br>
-                                            <div class="color-pink">Tel: 0000-000-000</div>
+                                            Chi Nhánh Đà Nẵng:<br>
+                                            Số 789, Đường Nguyễn Văn Linh, Quận Hải Châu, Đà Nẵng<br>
+                                            Đà Nẵng - 550000<br>
+                                            <div class="color-pink">Tel: 0900-456-789</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" id="headingfour">
+                                    <div class="panel-heading" id="headingFour">
                                         <div class="panel-title">
-                                            <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapsefour" href="#" aria-expanded="false" aria-controls="collapsefour">
-                                                <i class="uil uil-location-point chck_icon"></i>Bangaluru
+                                            <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFour" href="#" aria-expanded="false" aria-controls="collapseFour">
+                                                <i class="uil uil-location-point chck_icon"></i>Cần Thơ
                                             </a>
                                         </div>
                                     </div>
-                                    <div id="collapsefour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingfour" data-bs-parent="#accordion0">
+                                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            Bangaluru Branch :<br>
-                                            #0000, St No. 0, Lorem ipsum dolor sit amet, Main road, Bangaluru<br>
-                                            Bangaluru- 141001<br>
-                                            <div class="color-pink">Tel: 0000-000-000</div>
+                                            Chi Nhánh Cần Thơ:<br>
+                                            Số 101, Đường 3/2, Quận Ninh Kiều, Cần Thơ<br>
+                                            Cần Thơ - 900000<br>
+                                            <div class="color-pink">Tel: 0900-321-654</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" id="headingfive">
+                                    <div class="panel-heading" id="headingFive">
                                         <div class="panel-title">
-                                            <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapsefive" href="#" aria-expanded="false" aria-controls="collapsefive">
-                                                <i class="uil uil-location-point chck_icon"></i>Mumbai
+                                            <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive" href="#" aria-expanded="false" aria-controls="collapseFive">
+                                                <i class="uil uil-location-point chck_icon"></i>Hải Phòng
                                             </a>
                                         </div>
                                     </div>
-                                    <div id="collapsefive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingfive" data-bs-parent="#accordion0">
+                                    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            Mumbai Branch :<br>
-                                            #0000, St No. 0, Lorem ipsum dolor sit amet, Main road, Mumbai<br>
-                                            Mumbai- 141001<br>
-                                            <div class="color-pink">Tel: 0000-000-000</div>
+                                            Chi Nhánh Hải Phòng:<br>
+                                            Số 202, Đường Lạch Tray, Quận Ngô Quyền, Hải Phòng<br>
+                                            Hải Phòng - 180000<br>
+                                            <div class="color-pink">Tel: 0900-654-321</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" id="headingsix">
-                                        <div class="panel-title">
-                                            <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapsesix" href="#" aria-expanded="false" aria-controls="collapsesix">
-                                                <i class="uil uil-location-point chck_icon"></i>Hyderabad
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div id="collapsesix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingsix" data-bs-parent="#accordion0">
-                                        <div class="panel-body">
-                                            Hyderabad Branch :<br>
-                                            #0000, St No. 0, Lorem ipsum dolor sit amet, Main road, Hyderabad<br>
-                                            Hyderabad- 141001<br>
-                                            <div class="color-pink">Tel: 0000-000-000</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" id="headingseven">
-                                        <div class="panel-title">
-                                            <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseseven" href="#" aria-expanded="false" aria-controls="collapseseven">
-                                                <i class="uil uil-location-point chck_icon"></i>Kolkata
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div id="collapseseven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingseven" data-bs-parent="#accordion0">
-                                        <div class="panel-body">
-                                            Kolkata Branch :<br>
-                                            #0000, St No. 0, Lorem ipsum dolor sit amet, Main road, Kolkata<br>
-                                            Kolkata- 141001<br>
-                                            <div class="color-pink">Tel: 0000-000-000</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" id="headingeight">
-                                        <div class="panel-title">
-                                            <a class="collapsed" data-bs-toggle="collapse" data-bs-target="#collapseeight" href="#" aria-expanded="false" aria-controls="collapseeight">
-                                                <i class="uil uil-location-point chck_icon"></i>Chandigrah
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div id="collapseeight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingeight" data-bs-parent="#accordion0">
-                                        <div class="panel-body">
-                                            Chandigrah Branch :<br>
-                                            #0000, St No. 0, Lorem ipsum dolor sit amet, Main road, Chandigrah<br>
-                                            Chandigrah- 141001<br>
-                                            <div class="color-pink">Tel: 0000-000-000</div>
-                                        </div>
-                                    </div>
-                                </div>							
                             </div>
                         </div>
                     </div>
@@ -528,21 +488,20 @@
         </div>
         <!-- Body End -->
         <!-- Footer Start -->
-<jsp:include page="footer.jsp"></jsp:include>
+        <jsp:include page="footer.jsp"></jsp:include>
         <!-- Footer End -->
 
         <!-- Javascripts -->
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-        <script src="vendor/OwlCarousel/owl.carousel.js"></script>
-        <script src="js/custom.js"></script>
-        <script src="js/product.thumbnail.slider.js"></script>
-        <script src="js/offset_overlay.js"></script>
-        <script src="js/night-mode.js"></script>
+        <script src="User/js/jquery.min.js"></script>
+        <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+        <script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
+        <script src="User/js/custom.js"></script>
+        <script src="User/js/product.thumbnail.slider.js"></script>
+        <script src="User/js/offset_overlay.js"></script>
+        <script src="User/js/night-mode.js"></script>
 
 
     </body>
 
-    <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/contact_us.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:01:20 GMT -->
 </html>
