@@ -1,18 +1,21 @@
 package controller.admin;
 
 import dao.CategoryDAO;
+import dao.ProductDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import dao.ProductDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import model.Category;
 import model.Product;
+import model.ProductImage;
+import service.ProductService;
 
 public class ProductServlet extends HttpServlet {
 
@@ -94,6 +97,28 @@ public class ProductServlet extends HttpServlet {
         }
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
+        // ======= BỔ SUNG PHẦN LẤY ẢNH ĐẠI DIỆN =======
+        ProductService productService = new ProductService();
+        Map<Integer, String> productMainImages = new HashMap<>();
+        for (Product p : products) {
+            List<ProductImage> imgs = productService.getProductImagesByProductId(p.getProductID());
+            String imgUrl = "images/product/default.jpg"; // Đường dẫn ảnh mặc định
+            boolean foundMain = false;
+            for (ProductImage img : imgs) {
+                if (img.isIsMainImage()) {
+                    imgUrl = img.getImageUrl();
+                    foundMain = true;
+                    break;
+                }
+            }
+            if (!foundMain && imgs.size() > 0) {
+                imgUrl = imgs.get(0).getImageUrl();
+            }
+            productMainImages.put(p.getProductID(), imgUrl);
+        }
+        request.setAttribute("productMainImages", productMainImages);
+        // ==============================================
+
         request.setAttribute("products", products);
         request.setAttribute("page", page);
         request.setAttribute("totalPages", totalPages);
@@ -108,24 +133,39 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void handleViewProduct(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String productIdParam = request.getParameter("productId");
+        throws ServletException, IOException {
+    String productIdParam = request.getParameter("productId");
 
-        if (productIdParam != null && !productIdParam.isEmpty()) {
-            int productID = Integer.parseInt(productIdParam);
-            Product product = ProductDAO.getProductById(productID);
+    if (productIdParam != null && !productIdParam.isEmpty()) {
+        int productID = Integer.parseInt(productIdParam);
+        Product product = ProductDAO.getProductById(productID);
 
-            if (product != null) {
-                request.setAttribute("product", product);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/product_view.jsp");
-                dispatcher.forward(request, response);
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found.");
+        if (product != null) {
+            // ====== LẤY ẢNH CHÍNH SẢN PHẨM (giống ở products.jsp) =======
+            ProductService productService = new ProductService();
+            List<ProductImage> productImages = productService.getProductImagesByProductId(productID);
+            String mainImageUrl = "images/product/default.jpg";
+            if (productImages != null && !productImages.isEmpty()) {
+                ProductImage mainImage = productImages.stream()
+                        .filter(ProductImage::isIsMainImage)
+                        .findFirst()
+                        .orElse(productImages.get(0));
+                mainImageUrl = mainImage.getImageUrl();
             }
+            request.setAttribute("productMainImage", mainImageUrl);
+            // ===========================================================
+
+            request.setAttribute("product", product);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/product_view.jsp");
+            dispatcher.forward(request, response);
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID.");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found.");
         }
+    } else {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID.");
     }
+}
+
 
     private void handleEditProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -247,5 +287,4 @@ public class ProductServlet extends HttpServlet {
             return 0.0;
         }
     }
-
 }

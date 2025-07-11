@@ -131,7 +131,7 @@
                                                 <th>Created</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
-                                            </tr>
+                                            </tr>  
                                         </thead>
                                         <tbody>
                                             <c:forEach var="product" items="${products}">
@@ -140,9 +140,11 @@
                                                     <td>${product.productID}</td>
                                                     <td>
                                                         <div class="cate-img-5">
-                                                            <img src="Admin/images/product/img-1.jpg" alt="">
+                                                            <img src="Admin/${productMainImages[product.productID]}" alt="${product.productName}" style="max-width: 60px; max-height: 60px;">
                                                         </div>
                                                     </td>
+
+
                                                     <td>${product.productName}</td>
                                                     <td>
                                                         <c:forEach var="cat" items="${categories}">

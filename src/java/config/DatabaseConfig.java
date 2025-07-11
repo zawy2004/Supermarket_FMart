@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * @author thanh
  */
 public class DatabaseConfig {
-    private static final String URL = "jdbc:sqlserver://DEMO\\ABC123;databaseName=Fmart;encrypt=false";
+    private static final String URL = "jdbc:sqlserver://DEMO\\SQLEXPRESS;databaseName=Fmart;encrypt=false";
     private static final String USER = "sa";
     private static final String PASSWORD = "1234";
 

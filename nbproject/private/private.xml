@@ -3,13 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/index.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/add_category.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/add_product.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/CategoryDAO.java</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/product_view.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/products.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/UserDAO.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_my_addresses.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/ProfileServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/config/DatabaseConfig.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/User.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/ContactServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/contact_us.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/admin/ProductServlet.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/ProductDAO.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/ProductImageDAO.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/add_product.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/products.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/service/ProductService.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/product_view.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/Product.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/ProductImage.java</file>
         </group>
     </open-files>
 </project-private>

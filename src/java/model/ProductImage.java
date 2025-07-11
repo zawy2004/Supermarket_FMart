@@ -37,4 +37,7 @@ public class ProductImage {
     public void setDisplayOrder(int displayOrder) { this.displayOrder = displayOrder; }
     public Date getCreatedDate() { return createdDate; }
     public void setCreatedDate(Date createdDate) { this.createdDate = createdDate; }
+     public boolean isIsMainImage() {
+        return isMainImage;
+    }
 }
