@@ -51,7 +51,7 @@ public class ShopServlet extends HttpServlet {
             String minPriceStr = request.getParameter("minPrice");
             String maxPriceStr = request.getParameter("maxPrice");
             
-            System.out.println("Parameters - categoryId: " + categoryIdStr + ", page: " + pageStr);
+            System.out.println("Parameters - categoryId: " + categoryIdStr + ", page: " + pageStr + ", search: " + search);
             
             // Parse parameters
             int categoryId = 0;
@@ -98,11 +98,27 @@ public class ShopServlet extends HttpServlet {
             
             System.out.println("Processing request for categoryId: " + categoryId);
             
+            // ===== ENHANCED SEARCH HANDLING =====
             if (search != null && !search.trim().isEmpty()) {
                 // Tìm kiếm sản phẩm
                 System.out.println("Searching products with keyword: " + search);
                 products = productService.searchProducts(search.trim());
-                pageTitle = "Search Results: " + search;
+                
+                // Enhanced search message
+                int searchResultCount = products.size();
+                if (searchResultCount == 0) {
+                    pageTitle = "Không tìm thấy sản phẩm cho: \"" + search + "\"";
+                } else {
+                    pageTitle = "Tìm thấy " + searchResultCount + " sản phẩm cho: \"" + search + "\"";
+                }
+                
+                // Set search result flag for JSP
+                request.setAttribute("isSearchResult", true);
+                request.setAttribute("searchKeyword", search.trim());
+                request.setAttribute("searchResultCount", searchResultCount);
+                
+                System.out.println("Search completed: " + searchResultCount + " products found");
+                
             } else if (categoryId > 0) {
                 // Kiểm tra category có tồn tại không
                 System.out.println("Getting products for category: " + categoryId);
@@ -113,6 +129,9 @@ public class ShopServlet extends HttpServlet {
                     products = productService.getProductsByCategory(categoryId);
                     pageTitle = currentCategory.getCategoryName();
                     System.out.println("Found " + products.size() + " products in category");
+                    
+                    // Set category result flag
+                    request.setAttribute("isCategoryResult", true);
                 } else {
                     System.err.println("Category not found or inactive for ID: " + categoryId);
                     // Category không tồn tại hoặc không active
@@ -133,6 +152,12 @@ public class ShopServlet extends HttpServlet {
             if (minPrice > 0 || maxPrice < Double.MAX_VALUE) {
                 products = productService.filterProductsByPrice(products, minPrice, maxPrice);
                 System.out.println("Products after price filtering: " + products.size());
+                
+                // Update title if price filtering is applied
+                if (search != null && !search.trim().isEmpty()) {
+                    pageTitle += " (lọc giá: $" + (minPrice > 0 ? minPrice : "0") + " - $" + 
+                               (maxPrice < Double.MAX_VALUE ? maxPrice : "∞") + ")";
+                }
             }
             
             // Sắp xếp sản phẩm
@@ -141,7 +166,7 @@ public class ShopServlet extends HttpServlet {
                 System.out.println("Products sorted by: " + sortBy);
             }
             
-            // Phân trang
+            // ===== ENHANCED PAGINATION =====
             int totalProducts = products.size();
             int totalPages = totalProducts > 0 ? (int) Math.ceil((double) totalProducts / PRODUCTS_PER_PAGE) : 1;
             
@@ -169,7 +194,7 @@ public class ShopServlet extends HttpServlet {
             // Lấy số lượng sản phẩm theo category
             Map<Integer, Integer> categoryProductCount = productService.getProductCountByCategory();
             
-            // Set attributes
+            // ===== SET ENHANCED ATTRIBUTES =====
             request.setAttribute("products", pageProducts);
             request.setAttribute("categories", categories);
             request.setAttribute("currentCategory", currentCategory);
@@ -184,9 +209,25 @@ public class ShopServlet extends HttpServlet {
             request.setAttribute("minPrice", minPrice > 0 ? minPrice : "");
             request.setAttribute("maxPrice", maxPrice < Double.MAX_VALUE ? maxPrice : "");
             
+            // Enhanced search attributes
+            if (search != null && !search.trim().isEmpty()) {
+                request.setAttribute("searchMessage", 
+                    totalProducts > 0 ? 
+                    "Tìm thấy " + totalProducts + " sản phẩm cho \"" + search + "\"" :
+                    "Không tìm thấy sản phẩm nào cho \"" + search + "\". Hãy thử từ khóa khác.");
+            }
+            
+            // Search suggestions for "no results" case
+            if (search != null && !search.trim().isEmpty() && totalProducts == 0) {
+                // Suggest similar or popular products
+                List<Product> suggestedProducts = getSuggestedProducts(search.trim());
+                request.setAttribute("suggestedProducts", suggestedProducts);
+                request.setAttribute("hasSearchSuggestions", !suggestedProducts.isEmpty());
+            }
+            
             System.out.println("Forwarding to User/shop_grid.jsp");
             
-            // FIXED: Forward đến đúng đường dẫn file JSP
+            // Forward đến đúng đường dẫn file JSP
             request.getRequestDispatcher("/User/shop_grid.jsp").forward(request, response);
             
         } catch (Exception e) {
@@ -208,7 +249,7 @@ public class ShopServlet extends HttpServlet {
             request.setAttribute("totalPages", 1);
             request.setAttribute("pageTitle", "Error");
             
-            // FIXED: Forward đến đúng đường dẫn khi có lỗi
+            // Forward đến đúng đường dẫn khi có lỗi
             request.getRequestDispatcher("/User/shop_grid.jsp").forward(request, response);
         }
     }
@@ -236,5 +277,38 @@ public class ShopServlet extends HttpServlet {
         
         System.out.println("Redirecting to: " + redirectUrl.toString());
         response.sendRedirect(redirectUrl.toString());
+    }
+ // ===== HELPER METHODS FOR ENHANCED SEARCH =====
+    
+    /**
+     * Get suggested products when search returns no results
+     */
+    private List<Product> getSuggestedProducts(String searchKeyword) {
+        try {
+            // Try to get products from similar categories or popular products
+            List<Product> suggestions = new java.util.ArrayList<>();
+            
+            // Get some popular/featured products as suggestions
+            suggestions = productService.getFeaturedProducts(6);
+            
+            if (suggestions.isEmpty()) {
+                // Fallback to newest products
+                suggestions = productService.getNewestProducts(6);
+            }
+            
+            if (suggestions.isEmpty()) {
+                // Last fallback to any active products
+                List<Product> allProducts = productService.getActiveProducts();
+                if (!allProducts.isEmpty()) {
+                    suggestions = allProducts.subList(0, Math.min(6, allProducts.size()));
+                }
+            }
+            
+            return suggestions;
+            
+        } catch (Exception e) {
+            System.err.println("Error getting suggested products: " + e.getMessage());
+            return new java.util.ArrayList<>();
+        }
     }
 }

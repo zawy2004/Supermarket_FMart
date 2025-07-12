@@ -3,6 +3,7 @@ package model;
 import java.util.Date;
 
 public class Product {
+
     private int productID;
     private String productName;
     private String sku;
@@ -21,15 +22,16 @@ public class Product {
     private int expiryDays;
     private String brand;
     private String origin;
+    private String imageUrl; // Thêm field này
 
     // Constructors, Getters, and Setters...
-
-    public Product() {}
+    public Product() {
+    }
 
     public Product(int productID, String productName, String sku, int categoryID, int supplierID,
-                   String description, String unit, double costPrice, double sellingPrice, int minStockLevel,
-                   boolean isActive, Date createdDate, Date lastUpdated, double weight,
-                   String dimensions, int expiryDays, String brand, String origin) {
+            String description, String unit, double costPrice, double sellingPrice, int minStockLevel,
+            boolean isActive, Date createdDate, Date lastUpdated, double weight,
+            String dimensions, int expiryDays, String brand, String origin) {
         this.productID = productID;
         this.productName = productName;
         this.sku = sku;
@@ -197,6 +199,15 @@ public class Product {
     public void setSKU(String string) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+// Thêm getter
 
-    
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+// Thêm setter
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 }
