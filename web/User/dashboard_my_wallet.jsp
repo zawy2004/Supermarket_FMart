@@ -18,18 +18,18 @@
 
         <!-- Stylesheets -->
         <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-        <link href='vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/responsive.css" rel="stylesheet">
-        <link href="css/night-mode.css" rel="stylesheet">
-        <link href="css/step-wizard.css" rel="stylesheet">
+        <link href='User/vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
+        <link href="User/css/style.css" rel="stylesheet">
+        <link href="User/css/responsive.css" rel="stylesheet">
+        <link href="User/css/night-mode.css" rel="stylesheet">
+        <link href="User/css/step-wizard.css" rel="stylesheet">
 
         <!-- Vendor Stylesheets -->
-        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
+        <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 
     </head>
 
@@ -361,15 +361,14 @@
                     <div class="row">
                         <div class="col-xl-3 col-lg-4 col-md-12">
                             <div class="left-side-tabs">
-                                <div class="dashboard-left-links">
-                                    <a href="dashboard_overview.jsp" class="user-item"><i class="uil uil-apps"></i>Overview</a>
-                                    <a href="dashboard_my_orders.jsp" class="user-item"><i class="uil uil-box"></i>My Orders</a>
-                                    <a href="dashboard_my_rewards.jsp" class="user-item"><i class="uil uil-gift"></i>My Rewards</a>
-                                    <a href="dashboard_my_wallet.jsp" class="user-item active"><i class="uil uil-wallet"></i>My Wallet</a>
-                                    <a href="dashboard_my_wishlist.jsp" class="user-item"><i class="uil uil-heart"></i>Shopping Wishlist</a>
-                                    <a href="dashboard_my_addresses.jsp" class="user-item"><i class="uil uil-location-point"></i>My Address</a>
-                                    <a href="sign_in.jsp" class="user-item"><i class="uil uil-exit"></i>Logout</a>
-                                </div>
+                                                            <div class="dashboard-left-links">
+                                <a href="profile?action=overview" class="user-item active"><i class="uil uil-apps"></i>Overview</a>
+                                <a href="profile?action=orders" class="user-item"><i class="uil uil-box"></i>My Orders</a>
+                                <a href="profile?action=wishlist" class="user-item"><i class="uil uil-heart"></i>My Wishlist</a>
+                                <a href="profile?action=wallet" class="user-item"><i class="uil uil-wallet"></i>My Wallet</a>
+                                <a href="profile?action=addresses" class="user-item"><i class="uil uil-location-point"></i>My Address</a>
+                                <a href="logout" class="user-item"><i class="uil uil-exit"></i>Logout</a>
+                            </div>
                             </div>
                         </div>
                         <div class="col-xl-9 col-lg-8 col-md-12">
@@ -608,15 +607,15 @@
       <jsp:include page="footer.jsp"></jsp:include>
         <!-- Footer End -->
         <!-- Javascripts -->
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-        <script src="vendor/OwlCarousel/owl.carousel.js"></script>
-        <script src="js/jquery.countdown.min.js"></script>
-        <script src="js/custom.js"></script>
-        <script src="js/product.thumbnail.slider.js"></script>
-        <script src="js/offset_overlay.js"></script>
-        <script src="js/night-mode.js"></script>
+        <script src="User/js/jquery.min.js"></script>
+        <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+        <script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
+        <script src="User/js/jquery.countdown.min.js"></script>
+        <script src="User/js/custom.js"></script>
+        <script src="User/js/product.thumbnail.slider.js"></script>
+        <script src="User/js/offset_overlay.js"></script>
+        <script src="User/js/night-mode.js"></script>
 
 
     </body>
