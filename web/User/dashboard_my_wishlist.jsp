@@ -14,26 +14,53 @@
         <link href="User/css/responsive.css" rel="stylesheet">
         <link href="User/css/night-mode.css" rel="stylesheet">
         <style>
-            .cart-close-btn {
-                background-color: transparent;
-                border: none;
-                color: #e91e63;
-                font-size: 20px;
-                cursor: pointer;
+            
+            .wishlist-table {
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 1px 7px #e5e5e5;
             }
-            .cart-close-btn:hover {
-                color: #ff4081;
+            .wishlist-table td, .wishlist-table th {
+                vertical-align: middle !important;
+                border-top: none;
+                border-bottom: 1px solid #f1f1f1;
             }
-            .add-cart-btn {
-                background-color: #28a745;
-                color: #fff;
-                border: none;
-                padding: 5px 12px;
-                border-radius: 4px;
-                cursor: pointer;
+            .wishlist-img-thumb {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 7px;
+                box-shadow: 0 0 2px #eee;
+                background: #f7f7f7;
             }
-            .add-cart-btn:hover {
-                background-color: #218838;
+            .wishlist-product-title {
+                font-weight: 500;
+                font-size: 1.08em;
+                color: #232323;
+                margin-bottom: 2px;
+            }
+            .wishlist-product-price {
+                color: #e74c3c;
+                font-weight: bold;
+                font-size: 1em;
+                margin-top: 2px;
+                display: block;
+            }
+            .btn-sm {
+                font-size: 15px;
+                padding: 0.35rem 0.7rem;
+            }
+            .wishlist-action-btns .btn {
+                margin-right: 4px;
+            }
+            @media (max-width: 767px) {
+                .wishlist-table td, .wishlist-table th {
+                    font-size: 0.97em;
+                }
+                .wishlist-img-thumb {
+                    width: 45px;
+                    height: 45px;
+                }
             }
         </style>
     </head>
@@ -46,7 +73,7 @@
                         <div class="col-md-12">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Home</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Shopping Wishlist</li>
                                 </ol>
                             </nav>
@@ -54,72 +81,82 @@
                     </div>
                 </div>
             </div>
-
             <div class="dashboard-group">
                 <div class="container">
                     <div class="row">
+                        <!-- Sidebar -->
                         <div class="col-xl-3 col-lg-4 col-md-12">
                             <div class="left-side-tabs">
-                            <div class="dashboard-left-links">
-                                <a href="profile?action=overview" class="user-item active"><i class="uil uil-apps"></i>Overview</a>
-                                <a href="profile?action=orders" class="user-item"><i class="uil uil-box"></i>My Orders</a>
-                                <a href="profile?action=wishlist" class="user-item"><i class="uil uil-heart"></i>My Wishlist</a>
-                                <a href="profile?action=wallet" class="user-item"><i class="uil uil-wallet"></i>My Wallet</a>
-                                <a href="profile?action=addresses" class="user-item"><i class="uil uil-location-point"></i>My Address</a>
-                                <a href="logout" class="user-item"><i class="uil uil-exit"></i>Logout</a>
-                            </div>
+                                <div class="dashboard-left-links">
+                                    <a href="profile?action=overview" class="user-item"><i class="uil uil-apps"></i>Overview</a>
+                                    <a href="profile?action=orders" class="user-item"><i class="uil uil-box"></i>My Orders</a>
+                                    <a href="wishlist" class="user-item active"><i class="uil uil-heart"></i>My Wishlist</a>
+                                    <a href="profile?action=wallet" class="user-item"><i class="uil uil-wallet"></i>My Wallet</a>
+                                    <a href="profile?action=addresses" class="user-item"><i class="uil uil-location-point"></i>My Address</a>
+                                    <a href="logout" class="user-item"><i class="uil uil-exit"></i>Logout</a>
+                                </div>
                             </div>
                         </div>
+                        <!-- Main Content -->
                         <div class="col-xl-9 col-lg-8 col-md-12">
                             <div class="dashboard-right">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="main-title-tab">
-                                            <h4><i class="uil uil-heart"></i>My Wishlist</h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 col-md-12">
-                                        <div class="pdpt-bg">
-                                            <div class="wishlist-body-dtt">
-                                                <c:choose>
-                                                    <c:when test="${empty wishlistItems}">
-                                                        <p style="padding:1rem">Your wishlist is empty.</p>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <c:forEach var="item" items="${wishlistItems}">
-                                                            <div class="cart-item">
-                                                                <div class="cart-product-img">
-                                                                    <img src="${wishlistImages[item.productID]}" alt="${item.productName}">
+                                <div class="main-title-tab">
+                                    <h4><i class="uil uil-heart"></i>My Wishlist</h4>
+                                </div>
+                                <div class="pdpt-bg">
+                                    <div class="wishlist-body-dtt">
+                                        <c:choose>
+                                            <c:when test="${empty wishlistItems}">
+                                                <p style="padding:2rem; text-align:center">Your wishlist is empty.</p>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="card card-static-2 mb-30">
+                                                    <div class="card-body-table">
+                                                        <div class="table-responsive">
+                                                            <table class="table wishlist-table table-hover">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="width:60px;">ID</th>
+                                                                        <th style="width:80px;">Image</th>
+                                                                        <th>Name & Price</th>
+                                                                        <th style="width:130px;">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <c:forEach var="item" items="${wishlistItems}">
+                                                                        <tr>
+                                                                            <td>${item.productID}</td>
+                                                                            <td>
+                                                                                <img src="User/${wishlistImages[item.productID]}" alt="${item.productName}" style="max-width: 50px; max-height: 50px; border-radius:6px;"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div>${item.productName}</div>
+                                                                                <div style="color: #e91e63; font-weight: 600; margin-top:2px;">$${item.sellingPrice}</div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <form method="post" action="${pageContext.request.contextPath}/cart" style="display:inline-block">
+                                                                                    <input type="hidden" name="action" value="add"/>
+                                                                                    <input type="hidden" name="productId" value="${item.productID}"/>
+                                                                                    <input type="hidden" name="quantity" value="1"/>
+                                                                                    <button type="submit" class="btn btn-success btn-sm" title="Add to Cart">
+                                                                                        <i class="uil uil-shopping-cart-alt"></i>
+                                                                                    </button>
+                                                                                </form>
+                                                                                <button class="btn btn-danger btn-sm remove-wishlist-btn"
+                                                                                        data-productid="${item.productID}" title="Remove from Wishlist">
+                                                                                    <i class="uil uil-trash-alt"></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </c:forEach>
+                                                                </tbody>
+                                                            </table>
 
-                                                                    
-                                                                </div>
-                                                                <div class="cart-text">
-                                                                    <h4>${item.productName}</h4>
-                                                                    <div class="cart-item-price">
-                                                                        $${item.sellingPrice}
-                                                                        
-                                                                    </div>
-                                                                    <div style="margin-top:5px;">
-                                                                        <form method="post" action="${pageContext.request.contextPath}/cart" style="display:inline-block">
-                                                                            <input type="hidden" name="action" value="add">
-                                                                            <input type="hidden" name="productId" value="${item.productID}">
-                                                                            <input type="hidden" name="quantity" value="1">
-                                                                            <button type="submit" class="add-cart-btn"><i class="uil uil-shopping-cart-alt"></i> Add to Cart</button>
-                                                                        </form>
-                                                                        <form method="post" action="${pageContext.request.contextPath}/wishlist" style="display:inline-block">
-                                                                            <input type="hidden" name="action" value="remove">
-                                                                            <input type="hidden" name="productId" value="${item.productID}">
-                                                                            <button type="submit" class="cart-close-btn" title="Remove from Wishlist"><i class="uil uil-trash-alt"></i></button>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </c:forEach>
-
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
-                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +164,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <jsp:include page="footer.jsp" />
         <script src="User/js/jquery.min.js"></script>
@@ -138,5 +174,27 @@
         <script src="User/js/product.thumbnail.slider.js"></script>
         <script src="User/js/offset_overlay.js"></script>
         <script src="User/js/night-mode.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(function () {
+                $('.wishlist-table').on('click', '.remove-wishlist-btn', function () {
+                    var $btn = $(this);
+                    var productId = $btn.data('productid');
+                    $.post('${pageContext.request.contextPath}/wishlist', {
+                        action: 'remove',
+                        productId: productId
+                    }, function (response) {
+                        $btn.closest('tr').fadeOut(250, function () {
+                            $(this).remove();
+                            // Nếu hết sản phẩm, show empty
+                            if ($('.wishlist-table tbody tr').length === 0) {
+                                $('.wishlist-table').replaceWith('<p style="padding:2rem; text-align:center">Your wishlist is empty.</p>');
+                            }
+                        });
+                    });
+                    return false;
+                });
+            });
+        </script>
     </body>
 </html>

@@ -59,7 +59,7 @@
                             </a>
 
                             <a href="profile?action=orders"" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
-                            <a href="profile?action=wishlist" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
+                            <a href="wishlist" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
                             <a href="profile?action=wallet" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
                             <a href="profile?action=addresses" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
                             <a href="User/offers.jsp" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>

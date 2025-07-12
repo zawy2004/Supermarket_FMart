@@ -1,13 +1,14 @@
 package controller.user;
 
 import dao.WishlistDAO;
-import dao.ProductDAO;
-import dao.ProductImageDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.User;
 import model.Product;
+import model.ProductImage;
+import service.ProductService;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -24,19 +25,55 @@ public class WishlistServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json");
-
         HttpSession session = request.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        List<Product> wishlistItems = wishlistDAO.getWishlistProducts(user.getUserId());
+
+        // --- Sử dụng ProductService giống ProductServlet ---
+        ProductService productService = new ProductService();
+        Map<Integer, String> wishlistImages = new HashMap<>();
+        for (Product p : wishlistItems) {
+            List<ProductImage> imgs = productService.getProductImagesByProductId(p.getProductID());
+            String imgUrl = "images/product/default.jpg";
+            boolean foundMain = false;
+            for (ProductImage img : imgs) {
+                if (img.isIsMainImage()) {
+                    imgUrl = img.getImageUrl();
+                    foundMain = true;
+                    break;
+                }
+            }
+            if (!foundMain && !imgs.isEmpty()) {
+                imgUrl = imgs.get(0).getImageUrl();
+            }
+            wishlistImages.put(p.getProductID(), imgUrl);
+        }
+
+        request.setAttribute("wishlistItems", wishlistItems);
+        request.setAttribute("wishlistImages", wishlistImages);
+
+        request.getRequestDispatcher("/User/dashboard_my_wishlist.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().print("{\"message\":\"Please log in first.\"}");
             return;
         }
-
         int userId = user.getUserId();
         String action = request.getParameter("action");
         int productId = Integer.parseInt(request.getParameter("productId"));
@@ -52,32 +89,5 @@ public class WishlistServlet extends HttpServlet {
         } else {
             response.getWriter().print("{\"message\":\"Invalid action\"}");
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-
-        if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-
-        List<Product> wishlistItems = wishlistDAO.getWishlistProducts(user.getUserId());
-        Map<Integer, String> wishlistImages = new HashMap<>();
-
-        for (Product p : wishlistItems) {
-            String img = ProductImageDAO.getMainImageUrl(p.getProductID());
-            wishlistImages.put(p.getProductID(),
-                    img != null ? img : "images/product/default.jpg"
-            );
-        }
-
-        request.setAttribute("wishlistItems", wishlistItems);
-        request.setAttribute("wishlistImages", wishlistImages);
-
-        request.getRequestDispatcher("/User/dashboard_my_wishlist.jsp").forward(request, response);
     }
 }

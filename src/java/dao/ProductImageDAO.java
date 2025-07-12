@@ -2,6 +2,9 @@ package dao;
 
 import config.DatabaseConfig;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import model.ProductImage;
 
 public class ProductImageDAO {
 
@@ -26,4 +29,47 @@ public class ProductImageDAO {
             return false;
         }
     }
+     // Lấy tất cả ảnh của 1 sản phẩm
+    public List<ProductImage> getProductImagesByProductId(int productId) {
+        List<ProductImage> images = new ArrayList<>();
+        String sql = "SELECT * FROM ProductImages WHERE ProductID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, productId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ProductImage img = new ProductImage();
+                    img.setImageID(rs.getInt("ImageID"));
+                    img.setProductID(rs.getInt("ProductID"));
+                    img.setImageUrl(rs.getString("ImageUrl"));
+                    img.setAltText(rs.getString("AltText"));
+                    img.setIsMainImage(rs.getBoolean("IsMainImage"));
+                    img.setDisplayOrder(rs.getInt("DisplayOrder"));
+                    img.setCreatedDate(rs.getTimestamp("CreatedDate"));
+                    images.add(img);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return images;
+    }
+
+    public static String getMainImageUrl(int productId) {
+        String sql = "SELECT TOP 1 ImageUrl FROM ProductImages WHERE ProductID = ? AND IsMainImage = 1";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("ImageUrl");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
