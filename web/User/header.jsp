@@ -330,9 +330,11 @@
                                     <li><a class="dropdown-item" href="User/forgot_password.jsp">Forgot Password</a></li>
                                 </ul>
                             </li>
+                            <!-- Fix trong header.jsp - dòng cuối cùng -->
                             <li class="nav-item">
-                                <a class="nav-link" href="${pageContext.request.contextPath}/User/contact_us.jsp">Contact Us</a>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/contact">Contact Us</a>
                             </li>
+
                         </ul>
                         <div class="d-block d-lg-none">
                             <ul class="offcanvas-help-links">

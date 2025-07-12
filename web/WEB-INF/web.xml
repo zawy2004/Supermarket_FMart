@@ -47,6 +47,7 @@
     </session-config>
     
     <!-- Add this to your web.xml -->
+<!-- Thêm vào web.xml -->
 <servlet>
     <servlet-name>ContactServlet</servlet-name>
     <servlet-class>controller.user.ContactServlet</servlet-class>
@@ -62,4 +63,8 @@
     <url-pattern>/contact-us</url-pattern>
 </servlet-mapping>
 
+<servlet-mapping>
+    <servlet-name>ContactServlet</servlet-name>
+    <url-pattern>/support</url-pattern>
+</servlet-mapping>
 </web-app>
