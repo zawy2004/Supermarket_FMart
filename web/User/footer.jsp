@@ -76,8 +76,8 @@
                     <div class="second-row-item-app">
                         <h4>Download App</h4>
                         <ul>
-                            <li><a href="#"><img class="download-btn mb-2" src="User/images/download-1.svg" alt=""></a></li>
-                            <li><a href="#"><img class="download-btn mb-2" src="User/images/download-2.svg" alt=""></a></li>
+                            <li><a href="#"><img class="download-btn mb-2" src="${pageContext.request.contextPath}/User/images/download-1.svg" alt=""></a></li>
+                            <li><a href="#"><img class="download-btn mb-2" src="${pageContext.request.contextPath}/User/images/download-2.svg" alt=""></a></li>
                         </ul>
                     </div>
                     <div class="second-row-item-payment">
@@ -85,19 +85,19 @@
                         <div class="footer-payments">
                             <ul id="paypal-gateway" class="financial-institutes">
                                 <li class="financial-institutes__logo">
-                                    <img alt="Visa" title="Visa" src="User/images/footer-icons/pyicon-6.svg">
+                                    <img alt="Visa" title="Visa" src="${pageContext.request.contextPath}/User/images/footer-icons/pyicon-6.svg">
                                 </li>
                                 <li class="financial-institutes__logo">
-                                    <img alt="Visa" title="Visa" src="User/images/footer-icons/pyicon-1.svg">
+                                    <img alt="Visa" title="Visa" src="${pageContext.request.contextPath}/User/images/footer-icons/pyicon-1.svg">
                                 </li>
                                 <li class="financial-institutes__logo">
-                                    <img alt="MasterCard" title="MasterCard" src="User/images/footer-icons/pyicon-2.svg">
+                                    <img alt="MasterCard" title="MasterCard" src="${pageContext.request.contextPath}/User/images/footer-icons/pyicon-2.svg">
                                 </li>
                                 <li class="financial-institutes__logo">
-                                    <img alt="American Express" title="American Express" src="User/images/footer-icons/pyicon-3.svg">
+                                    <img alt="American Express" title="American Express" src="${pageContext.request.contextPath}/User/images/footer-icons/pyicon-3.svg">
                                 </li>
                                 <li class="financial-institutes__logo">
-                                    <img alt="Discover" title="Discover" src="User/images/footer-icons/pyicon-4.svg">
+                                    <img alt="Discover" title="Discover" src="${pageContext.request.contextPath}/User/images/footer-icons/pyicon-4.svg">
                                 </li>
                             </ul>
                         </div>
