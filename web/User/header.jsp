@@ -119,6 +119,7 @@
         /* Search input enhanced */
         .prompt.srch10 {
             transition: all 0.3s ease;
+            width: 350px !important;
         }
         
         .prompt.srch10:focus {
