@@ -173,21 +173,53 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <nav aria-label="Page navigation" class="mt-4">
-                                    <ul class="pagination justify-content-center">
-                                        <li class="page-item <c:if test='${page == 1}'>disabled</c:if>'">
-                                            <a class="page-link" href="?page=${page-1}">Previous</a>
-                                        </li>
-                                        <c:forEach begin="1" end="${totalPages}" var="i">
-                                            <li class="page-item <c:if test='${i == page}'>active</c:if>'">
-                                                <a class="page-link" href="?page=${i}">${i}</a>
-                                            </li>
-                                        </c:forEach>
-                                        <li class="page-item <c:if test='${page == totalPages || totalPages == 0}'>disabled</c:if>'">
-                                            <a class="page-link" href="?page=${page+1}">Next</a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                                
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        <li class="page-item <c:if test='${page == 1}'>disabled</c:if>'">
+            <a class="page-link"
+               href="?page=${page-1}&keyword=${param.keyword}&categoryId=${param.categoryId}">Previous</a>
+        </li>
+        <c:choose>
+            <c:when test="${totalPages <= 7}">
+                <c:forEach begin="1" end="${totalPages}" var="i">
+                    <li class="page-item <c:if test='${i == page}'>active</c:if>'">
+                        <a class="page-link"
+                           href="?page=${i}&keyword=${param.keyword}&categoryId=${param.categoryId}">${i}</a>
+                    </li>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <li class="page-item <c:if test='${1 == page}'>active</c:if>'">
+                    <a class="page-link"
+                       href="?page=1&keyword=${param.keyword}&categoryId=${param.categoryId}">1</a>
+                </li>
+                <c:if test="${page > 4}">
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                </c:if>
+                <c:forEach var="i" begin="${page-1}" end="${page+1}">
+                    <c:if test="${i > 1 && i < totalPages}">
+                        <li class="page-item <c:if test='${i == page}'>active</c:if>'">
+                            <a class="page-link"
+                               href="?page=${i}&keyword=${param.keyword}&categoryId=${param.categoryId}">${i}</a>
+                        </li>
+                    </c:if>
+                </c:forEach>
+                <c:if test="${page < totalPages - 3}">
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                </c:if>
+                <li class="page-item <c:if test='${totalPages == page}'>active</c:if>'">
+                    <a class="page-link"
+                       href="?page=${totalPages}&keyword=${param.keyword}&categoryId=${param.categoryId}">${totalPages}</a>
+                </li>
+            </c:otherwise>
+        </c:choose>
+        <li class="page-item <c:if test='${page == totalPages || totalPages == 0}'>disabled</c:if>'">
+            <a class="page-link"
+               href="?page=${page+1}&keyword=${param.keyword}&categoryId=${param.categoryId}">Next</a>
+        </li>
+    </ul>
+</nav>
 
                             </div>
                         </div>

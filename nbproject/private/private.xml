@@ -14,11 +14,9 @@
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/ProductDAO.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/ProductImageDAO.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/add_product.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/products.jsp</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/service/ProductService.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/product_view.jsp</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/Product.java</file>
-            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/ProductImage.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/products.jsp</file>
         </group>
     </open-files>
 </project-private>
