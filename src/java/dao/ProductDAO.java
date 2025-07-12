@@ -139,6 +139,146 @@ public class ProductDAO {
         }
     }
 
+//    // 7. Lấy sản phẩm theo trang
+//    public static List<Product> getProductsByPage(int offset, int pageSize) {
+//        List<Product> products = new ArrayList<>();
+//        String sql = "SELECT * FROM " + TABLE + " ORDER BY productID DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+//        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setInt(1, offset);
+//            ps.setInt(2, pageSize);
+//            try (ResultSet rs = ps.executeQuery()) {
+//                while (rs.next()) {
+//                    Product product = extractProductFromResultSet(rs);
+//                    products.add(product);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return products;
+//    }
+//
+//    // 8. Đếm tổng số sản phẩm
+//    public static int getTotalProducts() {
+//        int count = 0;
+//        String sql = "SELECT COUNT(*) FROM " + TABLE;
+//        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+//            if (rs.next()) {
+//                count = rs.getInt(1);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return count;
+//    }
+//    // 9. Tìm kiếm sản phẩm theo keyword và category
+//
+//    public static List<Product> searchProducts(String keyword, String categoryId) {
+//        List<Product> products = new ArrayList<>();
+//        StringBuilder sql = new StringBuilder("SELECT * FROM " + TABLE + " WHERE 1=1");
+//        List<Object> params = new ArrayList<>();
+//
+//        if (keyword != null && !keyword.trim().isEmpty()) {
+//            sql.append(" AND (productName LIKE ? OR sku LIKE ? OR brand LIKE ? OR description LIKE ?)");
+//            String key = "%" + keyword.trim() + "%";
+//            params.add(key);
+//            params.add(key);
+//            params.add(key);
+//            params.add(key);
+//        }
+//        if (categoryId != null && !categoryId.isEmpty()) {
+//            sql.append(" AND categoryID = ?");
+//            params.add(Integer.parseInt(categoryId));
+//        }
+//
+//        sql.append(" ORDER BY productID DESC"); // Để hiển thị mới nhất trên cùng
+//
+//        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+//            for (int i = 0; i < params.size(); i++) {
+//                ps.setObject(i + 1, params.get(i));
+//            }
+//            try (ResultSet rs = ps.executeQuery()) {
+//                while (rs.next()) {
+//                    Product product = extractProductFromResultSet(rs);
+//                    products.add(product);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return products;
+//    }
+    //// Tìm kiếm + phân trang 
+public static List<Product> searchProductsPaged(String keyword, String categoryId, int offset, int pageSize) {
+        List<Product> products = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Products WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (productName LIKE ? OR sku LIKE ? OR brand LIKE ? OR description LIKE ?)");
+            String key = "%" + keyword.trim() + "%";
+            for (int i = 0; i < 4; i++) {
+                params.add(key);
+            }
+        }
+        if (categoryId != null && !categoryId.isEmpty()) {
+            sql.append(" AND categoryID = ?");
+            params.add(Integer.parseInt(categoryId));
+        }
+        sql.append(" ORDER BY productID DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add(offset);
+        params.add(pageSize);
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Product product = extractProductFromResultSet(rs);
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+//
+
+    //// Đếm số sản phẩm thỏa điều kiện tìm kiếm
+public static int countSearchProducts(String keyword, String categoryId) {
+        int count = 0;
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Products WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (productName LIKE ? OR sku LIKE ? OR brand LIKE ? OR description LIKE ?)");
+            String key = "%" + keyword.trim() + "%";
+            for (int i = 0; i < 4; i++) {
+                params.add(key);
+            }
+        }
+        if (categoryId != null && !categoryId.isEmpty()) {
+            sql.append(" AND categoryID = ?");
+            params.add(Integer.parseInt(categoryId));
+        }
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
     // 7. Lấy sản phẩm theo trang
     public static List<Product> getProductsByPage(int offset, int pageSize) {
         List<Product> products = new ArrayList<>();
@@ -304,8 +444,8 @@ public class ProductDAO {
     public static List<Product> getRelatedProducts(int productID, int limit) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT TOP " + limit + " p.* FROM " + TABLE + " p "
-                + "JOIN " + TABLE + " c ON p.categoryID = c.categoryID "
-                + "WHERE p.isActive = 1 AND p.productID != ? AND c.productID = ? "
+                + "JOIN " + TABLE + " current ON p.categoryID = current.categoryID "
+                + "WHERE p.isActive = 1 AND p.productID != ? AND current.productID = ? "
                 + "ORDER BY p.createdDate DESC";
         try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productID);
@@ -362,53 +502,4 @@ public class ProductDAO {
         return images;
     }
 
-    public List<Product> getProductsForShopPage(Integer categoryId, String search, Integer userId) {
-        List<Product> products = new ArrayList<>();
-
-        String sql = "SELECT * FROM Products WHERE 1=1 ";
-        if (categoryId != null) {
-            sql += " AND CategoryID = ?";
-        }
-        if (search != null && !search.trim().isEmpty()) {
-            sql += " AND ProductName LIKE ?";
-        }
-
-        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            int idx = 1;
-            if (categoryId != null) {
-                stmt.setInt(idx++, categoryId);
-            }
-            if (search != null && !search.trim().isEmpty()) {
-                stmt.setString(idx++, "%" + search + "%");
-            }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                WishlistDAO wishlistDAO = new WishlistDAO();
-                while (rs.next()) {
-                    Product product = new Product();
-                    product.setProductID(rs.getInt("ProductID"));
-                    product.setProductName(rs.getString("ProductName"));
-                    product.setSellingPrice(rs.getDouble("SellingPrice"));
-                    product.setCostPrice(rs.getDouble("CostPrice"));
-                    product.setDescription(rs.getString("Description"));
-                    product.setMinStockLevel(rs.getInt("MinStockLevel"));
-                    // ... gán thêm thuộc tính khác nếu cần
-
-                    if (userId != null) {
-                        product.setIsWishlisted(
-                                wishlistDAO.isInWishlist(userId, product.getProductID())
-                        );
-                    } else {
-                        product.setIsWishlisted(false);
-                    }
-
-                    products.add(product);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-    }
 }
