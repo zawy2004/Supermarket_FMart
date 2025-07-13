@@ -25,6 +25,15 @@ public class User {
     private String authProvider;
     private String externalID;
     private String roleName;
+    private int points;// 
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
     public String getRoleName() {
         return roleName;
@@ -186,7 +195,7 @@ public class User {
     public void setExternalID(String externalID) {
         this.externalID = externalID;
     }
-    // Thêm phương thức này vào class User.java
+
 
     @Override
     public String toString() {
