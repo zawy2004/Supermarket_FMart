@@ -1,7 +1,9 @@
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<fmt:setLocale value="vi_VN" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,24 +13,17 @@
     <meta name="description" content="FMart Supermarket">
     <meta name="author" content="Your Team">
     <title>FMart - ${product.productName}</title>
-
-    <!-- Favicon Icon -->
     <link rel="icon" type="image/png" href="User/images/fav.png">
-
-    <!-- Stylesheets -->
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href='User/vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
     <link href="User/css/style.css" rel="stylesheet">
     <link href="User/css/responsive.css" rel="stylesheet">
     <link href="User/css/night-mode.css" rel="stylesheet">
-
-    <!-- Vendor Stylesheets -->
     <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
     <link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
     <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
-
     <style>
         .product-radio ul.kggrm-now li label {
             cursor: pointer;
@@ -97,16 +92,10 @@
     </style>
 </head>
 <body>
-    <!-- Search Model -->
     <jsp:include page="search_model.jsp"></jsp:include>
-    <!-- Cart Sidebar Offcanvas -->
     <jsp:include page="cart_sidebar.jsp"></jsp:include>
-    <!-- Header -->
     <jsp:include page="header.jsp"></jsp:include>
-
-    <!-- Body Start -->
     <div class="wrapper">
-        <!-- Breadcrumb -->
         <div class="gambo-Breadcrumb">
             <div class="container">
                 <div class="row">
@@ -124,15 +113,12 @@
                 </div>
             </div>
         </div>
-
-        <!-- Product Detail -->
         <div class="all-product-grid">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="product-dt-view">
                             <div class="row">
-                                <!-- Product Images -->
                                 <div class="col-lg-4 col-md-4">
                                     <div id="sync1" class="owl-carousel owl-theme">
                                         <c:choose>
@@ -140,7 +126,6 @@
                                                 <c:forEach var="image" items="${productImages}">
                                                     <div class="item">
                                                         <img src="http://localhost:8080/Supermarket_FMart/User/${image.imageUrl}" alt="${image.altText}">
-                                                        <!-- Debug -->
                                                         <p style="display: none;">Debug: Image URL = ${image.imageUrl}, ProductID = ${image.productID}</p>
                                                     </div>
                                                 </c:forEach>
@@ -170,7 +155,6 @@
                                         </c:choose>
                                     </div>
                                 </div>
-                                <!-- Product Details -->
                                 <div class="col-lg-8 col-md-8">
                                     <div class="product-dt-right">
                                         <h2>${product.productName}</h2>
@@ -180,7 +164,6 @@
                                                 ${product.minStockLevel > 0 ? 'Available (In Stock)' : 'Out of Stock'}
                                             </p>
                                         </div>
-                                        <!-- Unit Selection -->
                                         <div class="product-radio">
                                             <ul class="product-now">
                                                 <li>
@@ -194,13 +177,13 @@
                                             <ul>
                                                 <li>
                                                     <div class="main-price color-discount">Price
-                                                        <span id="product-price" class="price-value">$<fmt:formatNumber value="${product.sellingPrice}" maxFractionDigits="2"/></span>
+                                                        <span id="product-price" class="price-value"><fmt:formatNumber value="${product.sellingPrice}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
                                                     </div>
                                                 </li>
                                                 <c:if test="${product.costPrice > 0 && product.sellingPrice < product.costPrice}">
                                                     <li>
                                                         <div class="main-price mrp-price">MRP Price
-                                                            <span>$<fmt:formatNumber value="${product.costPrice}" maxFractionDigits="2"/></span>
+                                                            <span><fmt:formatNumber value="${product.costPrice}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
                                                         </div>
                                                     </li>
                                                 </c:if>
@@ -209,13 +192,13 @@
                                                 <li>
                                                     <div class="qty-product">
                                                         <div class="quantity buttons_added">
-                                                            <input type="button" value="-" class="minus">
-                                                            <input type="number" step="1" name="quantity" value="1" class="input-text qty text" min="1" id="quantity-input">
-                                                            <input type="button" value="+" class="plus">
+                                                            <input type="button" value="-" class="minus product-minus-btn">
+                                                            <input type="number" step="1" name="quantity" value="1" class="input-text qty text product-qty-input" min="1" id="quantity-input">
+                                                            <input type="button" value="+" class="plus product-plus-btn">
                                                         </div>
                                                         <div class="quantity-input-container">
                                                             <label for="custom-quantity">Enter Quantity:</label>
-                                                            <input type="number" id="custom-quantity" class="quantity-input" min="1" value="1">
+                                                            <input type="number" id="custom-quantity" class="quantity-input product-qty-input" min="1" value="1">
                                                         </div>
                                                     </div>
                                                 </li>
@@ -261,7 +244,6 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        <!-- Additional Product Info -->
                                         <div class="pdp-details">
                                             <ul>
                                                 <li>
@@ -322,151 +304,147 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- Related and Featured Products -->
-                    <div class="row">
-                        <!-- Related Products -->
-                        <div class="col-lg-4 col-md-12">
-                            <div class="pdpt-bg">
-                                <div class="pdpt-title">
-                                    <h4>More Like This</h4>
-                                </div>
-                                <div class="pdpt-body scrollstyle_4">
-                                    <c:set var="currentCategoryId" value="${product.categoryID}" />
-                                    <c:forEach var="relatedProduct" items="${relatedProducts}">
-                                        <c:if test="${relatedProduct.categoryID == currentCategoryId && relatedProduct.productID != product.productID}">
-                                            <div class="cart-item border_radius">
-                                                <a href="single_product?productId=${relatedProduct.productID}" class="cart-product-img">
-                                                    <img src="${relatedProductImages[relatedProduct.productID]}" alt="${relatedProduct.productName}">
-                                                    <p style="display: none;">Debug: Image URL = ${relatedProductImages[relatedProduct.productID]}, ProductID = ${relatedProduct.productID}</p>
-                                                    <c:if test="${relatedProduct.costPrice > 0 && relatedProduct.sellingPrice < relatedProduct.costPrice}">
-                                                        <c:set var="discount" value="${((relatedProduct.costPrice - relatedProduct.sellingPrice) / relatedProduct.costPrice) * 100}"/>
-                                                        <div class="offer-badge"><fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% OFF</div>
-                                                    </c:if>
-                                                </a>
-                                                <div class="cart-text">
-                                                    <h4>${relatedProduct.productName}</h4>
-                                                    <div class="cart-radio">
-                                                        <ul class="kggrm-now">
-                                                            <li>
-                                                                <input type="radio" id="r${relatedProduct.productID}" name="cart${relatedProduct.productID}" checked>
-                                                                <label for="r${relatedProduct.productID}">${relatedProduct.unit}</label>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="qty-group">
-                                                        <div class="quantity buttons_added">
-                                                            <input type="button" value="-" class="minus">
-                                                            <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                            <input type="button" value="+" class="plus">
-                                                        </div>
-                                                        <div class="cart-item-price">
-                                                            $<fmt:formatNumber value="${relatedProduct.sellingPrice}" maxFractionDigits="2"/>
-                                                            <c:if test="${relatedProduct.costPrice > 0 && relatedProduct.sellingPrice < relatedProduct.costPrice}">
-                                                                <span>$<fmt:formatNumber value="${relatedProduct.costPrice}" maxFractionDigits="2"/></span>
-                                                            </c:if>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:if>
-                                    </c:forEach>
-                                    <c:if test="${empty relatedProducts || fn:length(relatedProducts) == 0}">
-                                        <div class="text-center p-4">
-                                            <p class="text-muted">No similar products found.</p>
-                                        </div>
-                                    </c:if>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Product Details -->
-                        <div class="col-lg-8 col-md-12">
-                            <div class="pdpt-bg">
-                                <div class="pdpt-title">
-                                    <h4>Product Details</h4>
-                                </div>
-                                <div class="pdpt-body scrollstyle_4">
-                                    <div class="pdct-dts-1">
-                                        <div class="pdct-dt-step">
-                                            <h4>Description</h4>
-                                            <p>${product.description}</p>
-                                        </div>
-                                        <c:if test="${not empty product.brand}">
-                                            <div class="pdct-dt-step">
-                                                <h4>Brand</h4>
-                                                <div class="product_attr">${product.brand}</div>
-                                            </div>
-                                        </c:if>
-                                        <c:if test="${not empty product.origin}">
-                                            <div class="pdct-dt-step">
-                                                <h4>Origin</h4>
-                                                <div class="product_attr">${product.origin}</div>
-                                            </div>
-                                        </c:if>
-                                        <div class="pdct-dt-step">
-                                            <h4>Seller</h4>
-                                            <div class="product_attr">${product.supplierID}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Featured Products -->
-                    <div class="section145">
-                        <div class="container">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <div class="main-title-tt">
-                                        <div class="main-title-left">
-                                            <span>For You</span>
-                                            <h2>Top Featured Products</h2>
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="pdpt-bg">
+                                        <div class="pdpt-title">
+                                            <h4>More Like This</h4>
                                         </div>
-                                        <a href="shop" class="see-more-btn">See All</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="owl-carousel featured-slider owl-theme">
-                                        <c:forEach var="featuredProduct" items="${featuredProducts}">
-                                            <div class="item">
-                                                <div class="product-item">
-                                                    <a href="single_product?productId=${featuredProduct.productID}" class="product-img">
-                                                        <img src="${featuredProductImages[featuredProduct.productID]}" alt="${featuredProduct.productName}">
-                                                        <p style="display: none;">Debug: Image URL = ${featuredProductImages[featuredProduct.productID]}, ProductID = ${featuredProduct.productID}</p>
-                                                        <div class="product-absolute-options">
-                                                            <c:if test="${featuredProduct.costPrice > 0 && featuredProduct.sellingPrice < featuredProduct.costPrice}">
-                                                                <c:set var="discount" value="${((featuredProduct.costPrice - featuredProduct.sellingPrice) / featuredProduct.costPrice) * 100}"/>
+                                        <div class="pdpt-body scrollstyle_4">
+                                            <c:set var="currentCategoryId" value="${product.categoryID}" />
+                                            <c:forEach var="relatedProduct" items="${relatedProducts}">
+                                                <c:if test="${relatedProduct.categoryID == currentCategoryId && relatedProduct.productID != product.productID}">
+                                                    <div class="cart-item border_radius">
+                                                        <a href="single_product?productId=${relatedProduct.productID}" class="cart-product-img">
+                                                            <img src="${relatedProductImages[relatedProduct.productID]}" alt="${relatedProduct.productName}">
+                                                            <p style="display: none;">Debug: Image URL = ${relatedProductImages[relatedProduct.productID]}, ProductID = ${relatedProduct.productID}</p>
+                                                            <c:if test="${relatedProduct.costPrice > 0 && relatedProduct.sellingPrice < relatedProduct.costPrice}">
+                                                                <c:set var="discount" value="${((relatedProduct.costPrice - relatedProduct.sellingPrice) / relatedProduct.costPrice) * 100}"/>
                                                                 <div class="offer-badge"><fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% OFF</div>
                                                             </c:if>
-                                                            <span class="wishlist-icon" title="wishlist" onclick="addToWishlist(${featuredProduct.productID})"><i class="fas fa-heart"></i></span>
-                                                        </div>
-                                                    </a>
-                                                    <div class="product-text-dt">
-                                                        <p>${featuredProduct.minStockLevel > 0 ? 'Available (In Stock)' : '<span class="text-danger">Out of Stock</span>'}</p>
-                                                        <h4>${featuredProduct.productName}</h4>
-                                                        <div class="product-price">
-                                                            $<fmt:formatNumber value="${featuredProduct.sellingPrice}" maxFractionDigits="2"/>
-                                                            <c:if test="${featuredProduct.costPrice > 0 && featuredProduct.sellingPrice < featuredProduct.costPrice}">
-                                                                <span>$<fmt:formatNumber value="${featuredProduct.costPrice}" maxFractionDigits="2"/></span>
-                                                            </c:if>
-                                                        </div>
-                                                        <div class="qty-cart">
-                                                            <c:if test="${featuredProduct.minStockLevel > 0}">
+                                                        </a>
+                                                        <div class="cart-text">
+                                                            <h4>${relatedProduct.productName}</h4>
+                                                            <div class="cart-radio">
+                                                                <ul class="kggrm-now">
+                                                                    <li>
+                                                                        <input type="radio" id="r${relatedProduct.productID}" name="cart${relatedProduct.productID}" checked>
+                                                                        <label for="r${relatedProduct.productID}">${relatedProduct.unit}</label>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="qty-group">
                                                                 <div class="quantity buttons_added">
-                                                                    <input type="button" value="-" class="minus">
-                                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                                                    <input type="button" value="+" class="plus">
+                                                                    <input type="button" value="-" class="minus related-minus-btn">
+                                                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text related-qty-input" min="1">
+                                                                    <input type="button" value="+" class="plus related-plus-btn">
                                                                 </div>
-                                                                <span class="cart-icon" onclick="addToCart(${featuredProduct.productID})">
-                                                                    <i class="uil uil-shopping-cart-alt"></i>
-                                                                </span>
-                                                            </c:if>
+                                                                <div class="cart-item-price">
+                                                                    <fmt:formatNumber value="${relatedProduct.sellingPrice}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫
+                                                                    <c:if test="${relatedProduct.costPrice > 0 && relatedProduct.sellingPrice < relatedProduct.costPrice}">
+                                                                        <span><fmt:formatNumber value="${relatedProduct.costPrice}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                                                    </c:if>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                </c:if>
+                                            </c:forEach>
+                                            <c:if test="${empty relatedProducts || fn:length(relatedProducts) == 0}">
+                                                <div class="text-center p-4">
+                                                    <p class="text-muted">No similar products found.</p>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8 col-md-12">
+                                    <div class="pdpt-bg">
+                                        <div class="pdpt-title">
+                                            <h4>Product Details</h4>
+                                        </div>
+                                        <div class="pdpt-body scrollstyle_4">
+                                            <div class="pdct-dts-1">
+                                                <div class="pdct-dt-step">
+                                                    <h4>Description</h4>
+                                                    <p>${product.description}</p>
+                                                </div>
+                                                <c:if test="${not empty product.brand}">
+                                                    <div class="pdct-dt-step">
+                                                        <h4>Brand</h4>
+                                                        <div class="product_attr">${product.brand}</div>
+                                                    </div>
+                                                </c:if>
+                                                <c:if test="${not empty product.origin}">
+                                                    <div class="pdct-dt-step">
+                                                        <h4>Origin</h4>
+                                                        <div class="product_attr">${product.origin}</div>
+                                                    </div>
+                                                </c:if>
+                                                <div class="pdct-dt-step">
+                                                    <h4>Seller</h4>
+                                                    <div class="product_attr">${product.supplierID}</div>
                                                 </div>
                                             </div>
-                                        </c:forEach>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section145">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="main-title-tt">
+                                                <div class="main-title-left">
+                                                    <span>For You</span>
+                                                    <h2>Top Featured Products</h2>
+                                                </div>
+                                                <a href="shop" class="see-more-btn">See All</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="owl-carousel featured-slider owl-theme">
+                                                <c:forEach var="featuredProduct" items="${featuredProducts}">
+                                                    <div class="item">
+                                                        <div class="product-item">
+                                                            <a href="single_product?productId=${featuredProduct.productID}" class="product-img">
+                                                                <img src="${featuredProductImages[featuredProduct.productID]}" alt="${featuredProduct.productName}">
+                                                                <p style="display: none;">Debug: Image URL = ${featuredProductImages[featuredProduct.productID]}, ProductID = ${featuredProduct.productID}</p>
+                                                                <div class="product-absolute-options">
+                                                                    <c:if test="${featuredProduct.costPrice > 0 && featuredProduct.sellingPrice < featuredProduct.costPrice}">
+                                                                        <c:set var="discount" value="${((featuredProduct.costPrice - featuredProduct.sellingPrice) / featuredProduct.costPrice) * 100}"/>
+                                                                        <div class="offer-badge"><fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% OFF</div>
+                                                                    </c:if>
+                                                                    <span class="wishlist-icon" title="wishlist" onclick="addToWishlist(${featuredProduct.productID})"><i class="fas fa-heart"></i></span>
+                                                                </div>
+                                                            </a>
+                                                            <div class="product-text-dt">
+                                                                <p>${featuredProduct.minStockLevel > 0 ? 'Available (In Stock)' : '<span class="text-danger">Out of Stock</span>'}</p>
+                                                                <h4>${featuredProduct.productName}</h4>
+                                                                <div class="product-price">
+                                                                    <fmt:formatNumber value="${featuredProduct.sellingPrice}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫
+                                                                    <c:if test="${featuredProduct.costPrice > 0 && featuredProduct.sellingPrice < featuredProduct.costPrice}">
+                                                                        <span><fmt:formatNumber value="${featuredProduct.costPrice}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                                                    </c:if>
+                                                                </div>
+                                                                <div class="qty-cart">
+                                                                    <c:if test="${featuredProduct.minStockLevel > 0}">
+                                                                        <div class="quantity buttons_added">
+                                                                            <input type="button" value="-" class="minus featured-minus-btn">
+                                                                            <input type="number" step="1" name="quantity" value="1" class="input-text qty text featured-qty-input" min="1">
+                                                                            <input type="button" value="+" class="plus featured-plus-btn">
+                                                                        </div>
+                                                                        <span class="cart-icon" onclick="addToCart(${featuredProduct.productID})">
+                                                                            <i class="uil uil-shopping-cart-alt"></i>
+                                                                        </span>
+                                                                    </c:if>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -475,25 +453,17 @@
                 </div>
             </div>
         </div>
-        <!-- Body End -->
-
-        <!-- Footer -->
         <jsp:include page="footer.jsp"></jsp:include>
-
-        <!-- Javascripts -->
         <script src="User/js/jquery.min.js"></script>
         <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
         <script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
         <script src="User/js/jquery.countdown.min.js"></script>
-        <!-- Comment tạm thời để kiểm tra -->
-        <!-- <script src="User/js/custom.js"></script> -->
+        <!-- <script src="User/js/custom.js"></script> --> <!-- Commented out to avoid conflicts -->
         <script src="User/js/product.thumbnail.slider.js"></script>
         <script src="User/js/offset_overlay.js"></script>
         <script src="User/js/night-mode.js"></script>
-
         <script>
-            // Check if user is logged in via AJAX
             function isUserLoggedIn(callback) {
                 $.ajax({
                     url: 'checkLogin',
@@ -509,15 +479,17 @@
                 });
             }
 
-            // Update price based on quantity
             function updatePrice(quantityInput) {
                 const quantity = parseInt(quantityInput.value) || 1;
-                const basePrice = parseFloat('${product.sellingPrice}'); // Giá gốc từ JSP
+                const basePrice = parseFloat('${product.sellingPrice}');
                 const totalPrice = basePrice * quantity;
-                document.getElementById('product-price').textContent = '$' + totalPrice.toFixed(2);
+                document.getElementById('product-price').textContent = totalPrice.toLocaleString('vi-VN', { 
+                    style: 'decimal', 
+                    minimumFractionDigits: 0, 
+                    maximumFractionDigits: 0 
+                }) + ' ₫';
             }
 
-            // Synchronize quantity inputs
             function syncQuantities() {
                 const qtyInput = document.getElementById('quantity-input');
                 const customQtyInput = document.getElementById('custom-quantity');
@@ -528,50 +500,95 @@
                 }
             }
 
-            // Update quantity from custom input in real-time
             function updateQuantityFromInput() {
                 const customQtyInput = document.getElementById('custom-quantity');
                 const qtyInput = document.getElementById('quantity-input');
                 let newValue = parseInt(customQtyInput.value) || 1;
                 if (newValue < 1) newValue = 1;
-                if (newValue > ${product.minStockLevel}) newValue = ${product.minStockLevel}; // Giới hạn theo tồn kho
+                if (newValue > ${product.minStockLevel}) newValue = ${product.minStockLevel};
                 qtyInput.value = newValue;
                 customQtyInput.value = newValue;
                 updatePrice(qtyInput);
             }
 
-            // Quantity Controls with custom logic
-            document.addEventListener('click', function(e) {
+            // Handle product +/- buttons
+            document.addEventListener('DOMContentLoaded', function() {
                 const qtyInput = document.getElementById('quantity-input');
                 const customQtyInput = document.getElementById('custom-quantity');
-                if (!qtyInput || !customQtyInput) return;
 
-                let currentValue = parseInt(qtyInput.value) || 1;
+                document.querySelectorAll('.product-minus-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        let currentValue = parseInt(qtyInput.value) || 1;
+                        if (currentValue > 1) {
+                            currentValue -= 1;
+                            qtyInput.value = currentValue;
+                            customQtyInput.value = currentValue;
+                            updatePrice(qtyInput);
+                        }
+                    });
+                });
 
-                if (e.target.classList.contains('plus')) {
-                    if (currentValue < ${product.minStockLevel}) {
-                        currentValue += 1; // Tăng 1 đơn vị
-                        qtyInput.value = currentValue;
-                        customQtyInput.value = currentValue;
-                    }
-                }
-                if (e.target.classList.contains('minus')) {
-                    if (currentValue > 1) {
-                        currentValue -= 1; // Giảm 1 đơn vị
-                        qtyInput.value = currentValue;
-                        customQtyInput.value = currentValue;
-                    }
-                }
-                updatePrice(qtyInput); // Cập nhật giá
-                syncQuantities(); // Đồng bộ hóa giá trị
+                document.querySelectorAll('.product-plus-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        let currentValue = parseInt(qtyInput.value) || 1;
+                        if (currentValue < ${product.minStockLevel}) {
+                            currentValue += 1;
+                            qtyInput.value = currentValue;
+                            customQtyInput.value = currentValue;
+                            updatePrice(qtyInput);
+                        }
+                    });
+                });
+
+                qtyInput.addEventListener('change', function() {
+                    let value = parseInt(this.value) || 1;
+                    if (value < 1) value = 1;
+                    if (value > ${product.minStockLevel}) value = ${product.minStockLevel};
+                    this.value = value;
+                    customQtyInput.value = value;
+                    updatePrice(this);
+                });
+
+                customQtyInput.addEventListener('change', function() {
+                    let value = parseInt(this.value) || 1;
+                    if (value < 1) value = 1;
+                    if (value > ${product.minStockLevel}) value = ${product.minStockLevel};
+                    this.value = value;
+                    qtyInput.value = value;
+                    updatePrice(qtyInput);
+                });
+
+                // Handle related and featured products +/- buttons
+                document.querySelectorAll('.related-minus-btn, .featured-minus-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const qtyInput = this.parentElement.querySelector('.related-qty-input, .featured-qty-input');
+                        let currentValue = parseInt(qtyInput.value) || 1;
+                        if (currentValue > 1) {
+                            qtyInput.value = currentValue - 1;
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.related-plus-btn, .featured-plus-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const qtyInput = this.parentElement.querySelector('.related-qty-input, .featured-qty-input');
+                        let currentValue = parseInt(qtyInput.value) || 1;
+                        qtyInput.value = currentValue + 1;
+                    });
+                });
+
+                document.querySelectorAll('.related-qty-input, .featured-qty-input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        let value = parseInt(this.value) || 1;
+                        if (value < 1) value = 1;
+                        this.value = value;
+                    });
+                });
+
+                syncQuantities();
+                updatePrice(qtyInput);
             });
 
-            // Real-time update for custom quantity input
-            document.getElementById('custom-quantity').addEventListener('input', function() {
-                updateQuantityFromInput();
-            });
-
-            // Add to Cart with AJAX and update cart dynamically
             function addToCart(productId) {
                 isUserLoggedIn(function(loggedIn) {
                     if (!loggedIn) {
@@ -594,12 +611,11 @@
                         },
                         success: function(response) {
                             showNotification('Added ' + quantity + ' item(s) to cart!', 'success');
-                            // Cập nhật giỏ hàng động
                             $.ajax({
                                 url: 'cart',
                                 type: 'GET',
                                 success: function(cartData) {
-                                    $('#cartSidebar').html(cartData); // Cập nhật nội dung giỏ hàng
+                                    $('#cartSidebar').html(cartData);
                                 },
                                 error: function(xhr) {
                                     console.error('Error updating cart: ', xhr.responseText);
@@ -613,7 +629,6 @@
                 });
             }
 
-            // Order Now
             function orderNow(productId, productName, sellingPrice) {
                 isUserLoggedIn(function(loggedIn) {
                     if (!loggedIn) {
@@ -626,11 +641,15 @@
                     const unit = document.querySelector('input[name="unit"]:checked').value;
                     const totalPrice = sellingPrice * quantity;
 
-                    window.location.href = 'checkout?productId=' + productId + '&productName=' + encodeURIComponent(productName) + '&quantity=' + quantity + '&unit=' + encodeURIComponent(unit) + '&sellingPrice=' + sellingPrice + '&totalPrice=' + totalPrice;
+                    window.location.href = 'checkout?productId=' + productId + 
+                        '&productName=' + encodeURIComponent(productName) + 
+                        '&quantity=' + quantity + 
+                        '&unit=' + encodeURIComponent(unit) + 
+                        '&sellingPrice=' + sellingPrice + 
+                        '&totalPrice=' + totalPrice;
                 });
             }
 
-            // Add to Wishlist
             function addToWishlist(productId) {
                 isUserLoggedIn(function(loggedIn) {
                     if (!loggedIn) {
@@ -664,7 +683,6 @@
                 });
             }
 
-            // Show Notification
             function showNotification(message, type) {
                 const existingNotifications = document.querySelectorAll('.toast-notification');
                 existingNotifications.forEach(notif => notif.remove());
@@ -689,7 +707,6 @@
                 }, 3000);
             }
 
-            // Initialize Owl Carousel
             $(document).ready(function() {
                 const sync1 = $("#sync1");
                 const sync2 = $("#sync2");
@@ -754,9 +771,6 @@
                     sync1.data('owl.carousel').to(number, 300, true);
                 });
             });
-
-            // Initial price update
-            updatePrice(document.getElementById('quantity-input'));
         </script>
 </body>
 </html>
