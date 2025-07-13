@@ -37,7 +37,7 @@ public class WishlistServlet extends HttpServlet {
 
         List<Product> wishlistItems = wishlistDAO.getWishlistProducts(user.getUserId());
 
-        // --- Sử dụng ProductService giống ProductServlet ---
+      
         ProductService productService = new ProductService();
         Map<Integer, String> wishlistImages = new HashMap<>();
         for (Product p : wishlistItems) {

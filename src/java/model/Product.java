@@ -22,6 +22,7 @@ public class Product {
     private String brand;
     private String origin;
     private boolean isWishlisted;
+    private String imageUrl; // Thêm field này
     // Constructors, Getters, and Setters...
 
     public Product() {}
@@ -204,6 +205,13 @@ public class Product {
 public void setIsWishlisted(boolean isWishlisted) {
     this.isWishlisted = isWishlisted;
 }
+  public String getImageUrl() {
+        return imageUrl;
+    }
 
+// Thêm setter
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
     
 }

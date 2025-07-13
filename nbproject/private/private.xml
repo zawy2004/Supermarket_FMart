@@ -15,7 +15,16 @@
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/WishlistDAO.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/ProductImageDAO.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/web/Admin/products.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/dao/ProductDAO.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_my_wallet.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_my_rewards.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/web/User/dashboard_my_orders.jsp</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/service/ProductService.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/admin/ProductServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/AutocompleteServlet.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/ProductImage.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/model/Product.java</file>
+            <file>file:/D:/sieuthifmart/Supermarket_FMart/nbproject/build-impl.xml</file>
         </group>
     </open-files>
 </project-private>
