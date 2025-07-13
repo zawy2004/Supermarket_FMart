@@ -1,3 +1,4 @@
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -14,15 +15,15 @@
         <div class="cart-top-total p-4">
             <div class="cart-total-dil">
                 <h4>FMart Super Market</h4>
-                <span id="selected-total">$0.00</span>
+                <span>$<fmt:formatNumber value="${cartTotal != null ? cartTotal : 0}" maxFractionDigits="2"/></span>
             </div>
             <div class="cart-total-dil pt-2">
                 <h4>Delivery Charges</h4>
-                <span id="delivery-charge">$<fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 1}" maxFractionDigits="2"/></span>
+                <span>$<fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 1}" maxFractionDigits="2"/></span>
             </div>
         </div>
         <div class="side-cart-items">
-            <c:forEach var="cartItem" items="${cartItems}" varStatus="loop">
+            <c:forEach var="cartItem" items="${cartItems}">
                 <div class="cart-item">
                     <div class="cart-product-img">
                         <img src="User/images/product/img-${cartItem.productID}.jpg" alt="${cartItem.productName}">
@@ -32,14 +33,11 @@
                         </c:if>
                     </div>
                     <div class="cart-text">
-                        <div class="form-check">
-                            <input class="form-check-input item-checkbox" type="checkbox" id="item-${cartItem.cartID}" data-price="${cartItem.sellingPrice * cartItem.quantity}" onchange="updateTotal()">
-                            <label class="form-check-label" for="item-${cartItem.cartID}">${cartItem.productName}</label>
-                        </div>
+                        <h4>${cartItem.productName}</h4>
                         <div class="qty-group">
                             <div class="quantity buttons_added">
                                 <input type="button" value="-" class="minus minus-btn" onclick="updateCart(${cartItem.cartID}, ${cartItem.quantity - 1})">
-                                <input type="number" step="1" name="quantity" value="${cartItem.quantity}" class="input-text qty text" min="1" onchange="updatePrice(${cartItem.cartID}, this.value)">
+                                <input type="number" step="1" name="quantity" value="${cartItem.quantity}" class="input-text qty text" min="1">
                                 <input type="button" value="+" class="plus plus-btn" onclick="updateCart(${cartItem.cartID}, ${cartItem.quantity + 1})">
                             </div>
                             <div class="cart-item-price">
@@ -62,24 +60,19 @@
                 </div>
             </c:if>
         </div>
-        <div class="offcanvas-footer">
-            <div class="all-button-container d-flex justify-content-start p-3">
-                <button class="btn btn-custom-all btn-sm" onclick="selectAllItems()">
-                    <i class="fas fa-check-double me-2"></i>All
-                </button>
-            </div>
-            <div class="cart-total-dil saving-total">
-                <h4>Total Saving</h4>
-                <span id="selected-saving">$0.00</span>
-            </div>
-            <div class="main-total-cart">
-                <h2>Total</h2>
-                <span id="grand-total">$0.00</span>
-            </div>
-            <div class="checkout-cart">
-                <a href="#" class="promo-code" data-bs-toggle="modal" data-bs-target="#promoCodeModal">Have a promocode?</a>
-                <a href="checkout" class="cart-checkout-btn hover-btn">Proceed to Checkout</a>
-            </div>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="cart-total-dil saving-total">
+            <h4>Total Saving</h4>
+            <span>$<fmt:formatNumber value="${totalSaving != null ? totalSaving : 0}" maxFractionDigits="2"/></span>
+        </div>
+        <div class="main-total-cart">
+            <h2>Total</h2>
+            <span>$<fmt:formatNumber value="${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 1) : 0}" maxFractionDigits="2"/></span>
+        </div>
+        <div class="checkout-cart">
+            <a href="#" class="promo-code" data-bs-toggle="modal" data-bs-target="#promoCodeModal">Have a promocode?</a>
+            <a href="checkout" class="cart-checkout-btn hover-btn">Proceed to Checkout</a>
         </div>
     </div>
 </div>
@@ -105,39 +98,12 @@
     </div>
 </div>
 
-<style>
-    /* CSS tùy chỉnh cho nút "All" */
-    .btn-custom-all {
-        background-color: #FF5722; /* Màu cam tươi đẹp */
-        border-color: #FF5722;
-        color: #ffffff;
-        font-weight: 600;
-        padding: 8px 20px;
-        border-radius: 20px; /* Bo góc tròn mềm mại */
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3); /* Hiệu ứng bóng cam */
-    }
-
-    .btn-custom-all:hover {
-        background-color: #E64A19; /* Màu cam đậm hơn khi hover */
-        border-color: #E64A19;
-        color: #ffffff;
-        transform: translateY(-2px); /* Nâng nút lên khi hover */
-        box-shadow: 0 6px 15px rgba(255, 87, 34, 0.4);
-    }
-
-    .btn-custom-all:active {
-        transform: translateY(0); /* Quay về vị trí ban đầu khi click */
-        box-shadow: 0 2px 6px rgba(255, 87, 34, 0.2);
-    }
-
-    .all-button-container {
-        padding: 10px 20px; /* Tăng khoảng cách cho cân đối */
-    }
-</style>
-
 <script>
-    function updatePrice(cartId, quantity) {
+    function updateCart(cartId, quantity) {
+        if (quantity < 1) {
+            removeFromCart(cartId);
+            return;
+        }
         $.ajax({
             url: 'cart',
             type: 'POST',
@@ -148,20 +114,12 @@
             },
             success: function(response) {
                 showNotification('Cart updated successfully!', 'success');
-                location.reload();
+                location.reload(); // Tải lại trang để cập nhật giỏ hàng
             },
             error: function(xhr) {
                 showNotification('Error updating cart: ' + xhr.responseText, 'error');
             }
         });
-    }
-
-    function updateCart(cartId, quantity) {
-        if (quantity < 1) {
-            removeFromCart(cartId);
-            return;
-        }
-        updatePrice(cartId, quantity);
     }
 
     function removeFromCart(cartId) {
@@ -174,7 +132,7 @@
             },
             success: function(response) {
                 showNotification('Item removed from cart!', 'success');
-                location.reload();
+                location.reload(); // Tải lại trang để cập nhật giỏ hàng
             },
             error: function(xhr) {
                 showNotification('Error removing item: ' + xhr.responseText, 'error');
@@ -225,38 +183,4 @@
             }
         }, 3000);
     }
-
-    function updateTotal() {
-        let total = 0;
-        let saving = 0;
-        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-        
-        checkboxes.forEach(checkbox => {
-            const price = parseFloat(checkbox.getAttribute('data-price'));
-            total += price;
-            // Giả định saving dựa trên costPrice và sellingPrice
-            const costPrice = price * 1.2; // Ví dụ: costPrice cao hơn sellingPrice 20%
-            saving += (costPrice - price);
-        });
-
-        const deliveryCharge = parseFloat(document.getElementById('delivery-charge').textContent.replace('$', ''));
-        const grandTotal = total + deliveryCharge;
-
-        document.getElementById('selected-total').textContent = '$' + total.toFixed(2);
-        document.getElementById('selected-saving').textContent = '$' + saving.toFixed(2);
-        document.getElementById('grand-total').textContent = '$' + grandTotal.toFixed(2);
-    }
-
-    function selectAllItems() {
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = true;
-        });
-        updateTotal();
-    }
-
-    // Khởi tạo tổng tiền khi tải trang
-    document.addEventListener('DOMContentLoaded', function() {
-        updateTotal();
-    });
 </script>

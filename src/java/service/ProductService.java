@@ -39,114 +39,13 @@ public class ProductService {
     /**
      * Tìm kiếm sản phẩm theo từ khóa
      */
-// Trong ProductService.java, thay thế method searchProducts
-
-public List<Product> searchProducts(String keyword) {
-    if (keyword == null || keyword.trim().isEmpty()) {
-        return new ArrayList<>();
+    public List<Product> searchProducts(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return ProductDAO.searchProducts(keyword.trim());
     }
-    
-    String searchKeyword = keyword.trim();
-    System.out.println("ProductService.searchProducts called with: " + searchKeyword);
-    
-    // Thử search thông thường trước
-    List<Product> results = ProductDAO.searchProducts(searchKeyword);
-    
-    // Nếu không có kết quả, thử các chiến lược khác
-    if (results.isEmpty()) {
-        System.out.println("No direct matches, trying alternative search strategies...");
-        
-        // 1. Thử search bỏ dấu (nếu có)
-        String normalizedKeyword = removeVietnameseAccents(searchKeyword);
-        if (!normalizedKeyword.equals(searchKeyword)) {
-            results = ProductDAO.searchProducts(normalizedKeyword);
-        }
-        
-        // 2. Thử search từng từ
-        if (results.isEmpty()) {
-            results = searchByWords(searchKeyword);
-        }
-        
-        // 3. Thử search gần đúng
-        if (results.isEmpty()) {
-            results = fuzzySearch(searchKeyword);
-        }
-    }
-    
-    System.out.println("Total search results: " + results.size());
-    return results;
-}
 
-// Helper method: Search từng từ riêng biệt
-private List<Product> searchByWords(String keyword) {
-    List<Product> results = new ArrayList<>();
-    String[] words = keyword.toLowerCase().split("\\s+");
-    
-    for (String word : words) {
-        if (word.length() > 2) { // Chỉ search từ có ít nhất 3 ký tự
-            List<Product> wordResults = ProductDAO.searchProducts(word);
-            for (Product p : wordResults) {
-                // Tránh duplicate
-                if (!results.contains(p)) {
-                    results.add(p);
-                }
-            }
-        }
-    }
-    
-    return results;
-}
-
-// Helper method: Fuzzy search (tìm kiếm gần đúng)
-private List<Product> fuzzySearch(String keyword) {
-    List<Product> allProducts = ProductDAO.getActiveProducts();
-    List<Product> fuzzyResults = new ArrayList<>();
-    
-    keyword = keyword.toLowerCase();
-    
-    for (Product product : allProducts) {
-        String productName = product.getProductName().toLowerCase();
-        
-        // Kiểm tra nếu tên sản phẩm chứa bất kỳ từ nào trong keyword
-        String[] keywordWords = keyword.split("\\s+");
-        int matchCount = 0;
-        
-        for (String word : keywordWords) {
-            if (word.length() > 2 && productName.contains(word)) {
-                matchCount++;
-            }
-        }
-        
-        // Nếu match ít nhất 1 từ, thêm vào kết quả
-        if (matchCount > 0) {
-            fuzzyResults.add(product);
-        }
-    }
-    
-    return fuzzyResults;
-}
-
-// Helper method: Bỏ dấu tiếng Việt (basic version)
-private String removeVietnameseAccents(String str) {
-    if (str == null) return "";
-    
-    str = str.replaceAll("[àáạảãâầấậẩẫăằắặẳẵ]", "a");
-    str = str.replaceAll("[ÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴ]", "A");
-    str = str.replaceAll("[èéẹẻẽêềếệểễ]", "e");
-    str = str.replaceAll("[ÈÉẸẺẼÊỀẾỆỂỄ]", "E");
-    str = str.replaceAll("[ìíịỉĩ]", "i");
-    str = str.replaceAll("[ÌÍỊỈĨ]", "I");
-    str = str.replaceAll("[òóọỏõôồốộổỗơờớợởỡ]", "o");
-    str = str.replaceAll("[ÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠ]", "O");
-    str = str.replaceAll("[ùúụủũưừứựửữ]", "u");
-    str = str.replaceAll("[ÙÚỤỦŨƯỪỨỰỬỮ]", "U");
-    str = str.replaceAll("[ỳýỵỷỹ]", "y");
-    str = str.replaceAll("[ỲÝỴỶỸ]", "Y");
-    str = str.replaceAll("[đ]", "d");
-    str = str.replaceAll("[Đ]", "D");
-    
-    return str;
-}
     /**
      * Lọc sản phẩm theo khoảng giá
      */

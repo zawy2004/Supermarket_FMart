@@ -1,6 +1,3 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -203,9 +200,82 @@
     </div>
     <!-- Search Model End -->
     <!-- Cart Sidebar Offcanvas Start -->
-    <jsp:include page="cart_sidebar.jsp"></jsp:include>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header bs-canvas-header side-cart-header p-3">
+            <div class="d-inline-block main-cart-title" id="offcanvasRightLabel">
+                My Cart <span>(<c:out value="${cartItems != null ? cartItems.size() : 0}"/> Items)</span>
+            </div>
+            <button type="button" class="close-btn" data-bs-dismiss="offcanvas" aria-label="Close">
+                <i class="uil uil-multiply"></i>
+            </button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="cart-top-total p-4">
+                <div class="cart-total-dil">
+                    <h4>FMart Super Market</h4>
+                    <span>$<fmt:formatNumber value="${cartTotal != null ? cartTotal : 0}" maxFractionDigits="2"/></span>
+                </div>
+                <div class="cart-total-dil pt-2">
+                    <h4>Delivery Charges</h4>
+                    <span>$<fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 1}" maxFractionDigits="2"/></span>
+                </div>
+            </div>
+            <div class="side-cart-items">
+                <c:forEach var="cartItem" items="${cartItems}">
+                    <div class="cart-item">
+                        <div class="cart-product-img">
+                            <img src="${pageContext.request.contextPath}/User/images/product/img-${cartItem.productID}.jpg" alt="${cartItem.productName}">
+                            <c:if test="${cartItem.costPrice > 0 && cartItem.sellingPrice < cartItem.costPrice}">
+                                <c:set var="discount" value="${((cartItem.costPrice - cartItem.sellingPrice) / cartItem.costPrice) * 100}"/>
+                                <div class="offer-badge"><fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% OFF</div>
+                            </c:if>
+                        </div>
+                        <div class="cart-text">
+                            <h4>${cartItem.productName}</h4>
+                            <div class="qty-group">
+                                <div class="quantity buttons_added">
+                                    <input type="button" value="-" class="minus minus-btn" onclick="updateCart(${cartItem.cartID}, ${cartItem.quantity - 1})">
+                                    <input type="number" step="1" name="quantity" value="${cartItem.quantity}" class="input-text qty text" min="1">
+                                    <input type="button" value="+" class="plus plus-btn" onclick="updateCart(${cartItem.cartID}, ${cartItem.quantity + 1})">
+                                </div>
+                                <div class="cart-item-price">
+                                    $<fmt:formatNumber value="${cartItem.sellingPrice * cartItem.quantity}" maxFractionDigits="2"/>
+                                    <c:if test="${cartItem.costPrice > 0 && cartItem.sellingPrice < cartItem.costPrice}">
+                                        <span>$<fmt:formatNumber value="${cartItem.costPrice * cartItem.quantity}" maxFractionDigits="2"/></span>
+                                    </c:if>
+                                </div>
+                            </div>
+                            <button type="button" class="cart-close-btn" onclick="removeFromCart(${cartItem.cartID})">
+                                <i class="uil uil-multiply"></i>
+                            </button>
+                        </div>
+                    </div>
+                </c:forEach>
+                <c:if test="${empty cartItems}">
+                    <div class="text-center p-4">
+                        <p class="text-muted">Your cart is empty</p>
+                        <a href="${pageContext.request.contextPath}/shop" class="btn btn-primary">Shop Now</a>
+                    </div>
+                </c:if>
+            </div>
+        </div>
+        <div class="offcanvas-footer">
+            <div class="cart-total-dil saving-total">
+                <h4>Total Saving</h4>
+                <span>$<fmt:formatNumber value="${totalSaving != null ? totalSaving : 0}" maxFractionDigits="2"/></span>
+            </div>
+            <div class="main-total-cart">
+                <h2>Total</h2>
+                <span>$<fmt:formatNumber value="${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 1) : 0}" maxFractionDigits="2"/></span>
+            </div>
+            <div class="checkout-cart">
+                <a href="#" class="promo-code" data-bs-toggle="modal" data-bs-target="#promoCodeModal">Have a promocode?</a>
+                <a href="${pageContext.request.contextPath}/User/checkout.jsp" class="cart-checkout-btn hover-btn">Proceed to Checkout</a>
+            </div>
+        </div>
+    </div>
+    <!-- Cart Sidebar Offcanvas End -->
     <!-- Header Start -->
-    <jsp:include page="search_model.jsp"></jsp:include>
     <jsp:include page="header.jsp"></jsp:include>
     <!-- Header End -->
     <!-- Body Start -->
@@ -227,6 +297,7 @@
         <div class="all-product-grid">
             <div class="container">
                 <div class="row">
+                    <!-- Form Checkout (b�n tr�i) -->
                     <div class="col-lg-8 col-md-7">
                         <div id="checkout_wizard" class="checkout accordion left-chck145">
                             <div class="checkout-step">
@@ -592,33 +663,77 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Order Summary (bên ph?i) -->
                     </div>
+                    <!-- Order Summary (b�n ph?i) -->
                     <div class="col-lg-4 col-md-5">
                         <div class="pdpt-bg mt-0">
                             <div class="pdpt-title">
                                 <h4>Order Summary</h4>
                             </div>
                             <div class="right-cart-dt-body">
-                                <c:if test="${not empty cartItems}">
-                                    <c:forEach var="cartItem" items="${cartItems}">
-                                        <div class="cart-item border_radius">
-                                            <div class="cart-product-img">
-                                                <img src="${pageContext.request.contextPath}/User/images/product/img-${cartItem.productID}.jpg" alt="${cartItem.productName}">
-                                            </div>
-                                            <div class="cart-text">
-                                                <h4>${cartItem.productName}</h4>
-                                                <div class="cart-item-price">
-                                                    $<fmt:formatNumber value="${cartItem.sellingPrice * cartItem.quantity}" maxFractionDigits="2"/>
-                                                </div>
-                                                <p>Quantity: ${cartItem.quantity} ${cartItem.unit}</p>
-                                            </div>
+                                <c:if test="${not empty product}">
+                                    <div class="cart-item border_radius">
+                                        <div class="cart-product-img">
+                                            <img src="${pageContext.request.contextPath}/User/${mainImageUrl}" alt="${product.productName}">
+                                            <c:if test="${product.costPrice > 0 && product.sellingPrice < product.costPrice}">
+                                                <c:set var="discount" value="${((product.costPrice - product.sellingPrice) / product.costPrice) * 100}"/>
+                                                <div class="offer-badge"><fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% OFF</div>
+                                            </c:if>
                                         </div>
-                                    </c:forEach>
+                                        <div class="cart-text">
+                                            <h4>${product.productName}</h4>
+                                            <div class="cart-item-price">
+                                                $<fmt:formatNumber value="${product.sellingPrice * quantity}" maxFractionDigits="2"/>
+                                                <c:if test="${product.costPrice > 0 && product.sellingPrice < product.costPrice}">
+                                                    <span>$<fmt:formatNumber value="${product.costPrice * quantity}" maxFractionDigits="2"/></span>
+                                                </c:if>
+                                            </div>
+                                            <p>Quantity: ${quantity} ${unit}</p>
+                                            <c:if test="${not empty product.description}">
+                                                <p>Description: ${product.description}</p>
+                                            </c:if>
+                                            <c:if test="${not empty product.weight}">
+                                                <p>Weight: ${product.weight} ${product.unit}</p>
+                                            </c:if>
+                                            <c:if test="${not empty product.dimensions}">
+                                                <p>Dimensions: ${product.dimensions}</p>
+                                            </c:if>
+                                            <c:if test="${product.expiryDays > 0}">
+                                                <p>Expiry Days: ${product.expiryDays} days</p>
+                                            </c:if>
+                                            <c:if test="${not empty product.brand}">
+                                                <p>Brand: ${product.brand}</p>
+                                            </c:if>
+                                            <c:if test="${not empty product.origin}">
+                                                <p>Origin: ${product.origin}</p>
+                                            </c:if>
+                                        </div>
+                                    </div>
                                 </c:if>
-                                <c:if test="${empty cartItems}">
+                                <c:forEach var="cartItem" items="${cartItems}">
+                                    <div class="cart-item border_radius">
+                                        <div class="cart-product-img">
+                                            <img src="${pageContext.request.contextPath}/User/images/product/img-${cartItem.productID}.jpg" alt="${cartItem.productName}">
+                                            <c:if test="${cartItem.costPrice > 0 && cartItem.sellingPrice < cartItem.costPrice}">
+                                                <c:set var="discount" value="${((cartItem.costPrice - cartItem.sellingPrice) / cartItem.costPrice) * 100}"/>
+                                                <div class="offer-badge"><fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% OFF</div>
+                                            </c:if>
+                                        </div>
+                                        <div class="cart-text">
+                                            <h4>${cartItem.productName}</h4>
+                                            <div class="cart-item-price">
+                                                $<fmt:formatNumber value="${cartItem.sellingPrice * cartItem.quantity}" maxFractionDigits="2"/>
+                                                <c:if test="${cartItem.costPrice > 0 && cartItem.sellingPrice < cartItem.costPrice}">
+                                                    <span>$<fmt:formatNumber value="${cartItem.costPrice * cartItem.quantity}" maxFractionDigits="2"/></span>
+                                                </c:if>
+                                            </div>
+                                            <p>Quantity: ${cartItem.quantity} ${cartItem.unit}</p>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                                <c:if test="${empty product && empty cartItems}">
                                     <div class="text-center p-4">
-                                        <p class="text-muted">No items selected for checkout.</p>
+                                        <p class="text-muted">Your cart is empty</p>
                                         <a href="${pageContext.request.contextPath}/shop" class="btn btn-primary">Shop Now</a>
                                     </div>
                                 </c:if>
@@ -633,7 +748,7 @@
                                     <span>$<fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 1}" maxFractionDigits="2"/></span>
                                 </div>
                             </div>
-                            <div class="cart-total-dil saving-total">
+                            <div class="cart-total-dil saving-total ">
                                 <h4>Total Saving</h4>
                                 <span>$<fmt:formatNumber value="${totalSaving != null ? totalSaving : 0}" maxFractionDigits="2"/></span>
                             </div>
@@ -671,7 +786,7 @@
     <script src="${pageContext.request.contextPath}/User/js/offset_overlay.js"></script>
     <script src="${pageContext.request.contextPath}/User/js/night-mode.js"></script>
     <script>
-        // Include các hàm từ cart_sidebar.jsp nếu cần
+        // Include c�c h�m t? cart_sidebar.jsp n?u c?n
         function updateCart(cartId, quantity) {
             if (quantity < 1) {
                 removeFromCart(cartId);
@@ -687,7 +802,7 @@
                 },
                 success: function(response) {
                     showNotification('Cart updated successfully!', 'success');
-                    location.reload(); // Tải lại trang để cập nhật giỏ hàng
+                    location.reload(); // T?i l?i trang ?? c?p nh?t gi? h�ng
                 },
                 error: function(xhr) {
                     showNotification('Error updating cart: ' + xhr.responseText, 'error');
@@ -705,7 +820,7 @@
                 },
                 success: function(response) {
                     showNotification('Item removed from cart!', 'success');
-                    location.reload(); // Tải lại trang để cập nhật giỏ hàng
+                    location.reload(); // T?i l?i trang ?? c?p nh?t gi? h�ng
                 },
                 error: function(xhr) {
                     showNotification('Error removing item: ' + xhr.responseText, 'error');

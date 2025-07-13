@@ -13,7 +13,6 @@ import service.ProductService;
 import service.ShoppingCartService;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,86 +42,64 @@ public class CheckoutServlet extends HttpServlet {
                 return;
             }
             
-            // Lấy thông tin từ "Order Now"
             String productIdStr = request.getParameter("productId");
-            String productName = request.getParameter("productName");
             String quantityStr = request.getParameter("quantity");
             String unit = request.getParameter("unit");
-            String sellingPriceStr = request.getParameter("sellingPrice");
-            String totalPriceStr = request.getParameter("totalPrice");
-
-            // Khởi tạo danh sách giỏ hàng tạm để xử lý "Order Now"
-            List<ShoppingCart> cartItems = new ArrayList<>();
+            
+            if (productIdStr == null || quantityStr == null) {
+                request.setAttribute("error", "Missing product ID or quantity");
+                request.getRequestDispatcher("/User/error.jsp").forward(request, response);
+                return;
+            }
+            
+            int productId = Integer.parseInt(productIdStr);
+            int quantity = Integer.parseInt(quantityStr);
+            
+            Product product = productService.getProductById(productId);
+            if (product == null || !product.isIsActive()) {
+                request.setAttribute("error", "Product not found or inactive");
+                request.getRequestDispatcher("/User/error.jsp").forward(request, response);
+                return;
+            }
+            
+            List<ProductImage> productImages = productService.getProductImagesByProductId(productId);
+            String mainImageUrl = productImages.stream()
+                    .filter(ProductImage::isIsMainImage)
+                    .findFirst()
+                    .map(ProductImage::getImageUrl)
+                    .orElse(productImages.isEmpty() ? "images/product/default.jpg" : productImages.get(0).getImageUrl());
+            
+            // Lấy toàn bộ giỏ hàng từ session
+            List<ShoppingCart> cartItems = null;
             double cartTotal = 0.0;
             double totalSaving = 0.0;
             double deliveryCharge = 1.0; // Giá trị mặc định
-
-            if (productIdStr != null && quantityStr != null && sellingPriceStr != null) {
-                int productId = Integer.parseInt(productIdStr);
-                int quantity = Integer.parseInt(quantityStr);
-                double sellingPrice = Double.parseDouble(sellingPriceStr);
-                double totalPrice = Double.parseDouble(totalPriceStr);
-                double costPrice = productService.getProductById(productId).getCostPrice(); // Lấy costPrice từ ProductService
-
-                ShoppingCart orderItem = new ShoppingCart();
-                orderItem.setUserID(userId);
-                orderItem.setProductID(productId);
-                orderItem.setQuantity(quantity);
-                orderItem.setUnit(unit);
-                orderItem.setAddedDate(new Date());
-                orderItem.setProductName(productName);
-                orderItem.setSellingPrice(sellingPrice);
-                orderItem.setCostPrice(costPrice > 0 ? costPrice : sellingPrice); // Nếu không có costPrice, dùng sellingPrice
-                cartItems.add(orderItem);
-
-                cartTotal += totalPrice;
-                if (costPrice > sellingPrice) {
-                    totalSaving += (costPrice - sellingPrice) * quantity;
-                }
-            }
-
-            // Lấy thêm các sản phẩm từ giỏ hàng hiện tại
-            List<ShoppingCart> existingCartItems = cartService.getCartItemsByUserId(userId);
-            if (existingCartItems != null && !existingCartItems.isEmpty()) {
-                cartItems.addAll(existingCartItems);
-                for (ShoppingCart item : existingCartItems) {
+            
+            if (userId != null) {
+                cartItems = cartService.getCartItemsByUserId(userId);
+                for (ShoppingCart item : cartItems) {
                     Product p = productService.getProductById(item.getProductID());
                     if (p != null) {
-                        item.setProductName(p.getProductName());
-                        item.setSellingPrice(p.getSellingPrice());
-                        item.setCostPrice(p.getCostPrice());
                         cartTotal += p.getSellingPrice() * item.getQuantity();
                         if (p.getCostPrice() > p.getSellingPrice()) {
                             totalSaving += (p.getCostPrice() - p.getSellingPrice()) * item.getQuantity();
                         }
+                        item.setProductName(p.getProductName());
+                        item.setSellingPrice(p.getSellingPrice());
+                        item.setCostPrice(p.getCostPrice());
                     }
                 }
             }
-
-            // Lấy hình ảnh chính của sản phẩm từ "Order Now" nếu có
-            String mainImageUrl = "images/product/default.jpg";
-            if (productIdStr != null) {
-                int productId = Integer.parseInt(productIdStr);
-                List<ProductImage> productImages = productService.getProductImagesByProductId(productId);
-                mainImageUrl = productImages.stream()
-                        .filter(ProductImage::isIsMainImage)
-                        .findFirst()
-                        .map(ProductImage::getImageUrl)
-                        .orElse(productImages.isEmpty() ? "images/product/default.jpg" : productImages.get(0).getImageUrl());
-            }
-
-            // Set attributes
-            request.setAttribute("product", productIdStr != null ? productService.getProductById(Integer.parseInt(productIdStr)) : null);
+            
+            request.setAttribute("product", product);
             request.setAttribute("mainImageUrl", mainImageUrl);
-            request.setAttribute("quantity", quantityStr != null ? Integer.parseInt(quantityStr) : 1);
+            request.setAttribute("quantity", quantity);
             request.setAttribute("unit", unit);
             request.setAttribute("cartItems", cartItems);
             request.setAttribute("cartTotal", cartTotal);
             request.setAttribute("totalSaving", totalSaving);
             request.setAttribute("deliveryCharge", deliveryCharge);
-            request.setAttribute("productPrice", sellingPriceStr != null ? Double.parseDouble(sellingPriceStr) : 0.0);
-            request.setAttribute("productOriginalPrice", productIdStr != null ? productService.getProductById(Integer.parseInt(productIdStr)).getCostPrice() : 0.0);
-
+            
             request.getRequestDispatcher("/User/checkout.jsp").forward(request, response);
             
         } catch (Exception e) {

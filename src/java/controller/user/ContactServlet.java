@@ -1,278 +1,119 @@
 package controller.user;
 
-import dao.ContactDao;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.ContactMessage;
-import model.User;
-import service.ContactService;
-import java.io.IOException;
-import java.util.List;
+import jakarta.servlet.http.*;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-@WebServlet(name = "ContactServlet", urlPatterns = {"/contact", "/contact-us", "/support"})
+@WebServlet("/contact")
 public class ContactServlet extends HttpServlet {
-    
-    private ContactService contactService;
-    
+    private static final String EMAIL_HOST = "smtp.gmail.com";
+    private static final String EMAIL_USER = "duyluong2892004@gmail.com";
+    private static final String EMAIL_PASS = "rpjz xfza mlux jsdl"; // App Password
+    private static final String TO_EMAIL = "duyluong2892004@gmail.com"; // Admin nhận thông báo
+
     @Override
-    public void init() throws ServletException {
-        super.init();
-        contactService = new ContactService();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        String name = request.getParameter("sendername");
+        String email = request.getParameter("emailaddress");
+        String subject = request.getParameter("sendersubject");
+        String message = request.getParameter("sendermessage");
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        boolean isError = false;
+        String resultMessage = "";
+
+        // 1. Gửi email cho admin
+        try {
+            sendEmail(name, email, subject, message, timestamp);
+        } catch (Exception ex) {
+            isError = true;
+            resultMessage = "Không thể gửi email: " + ex.getMessage();
+            ex.printStackTrace();
+        }
+
+        // 2. Lưu vào file CSV nếu gửi email không lỗi
+        if (!isError) {
+            try {
+                saveToCSV(name, email, subject, message, timestamp);
+            } catch (Exception ex) {
+                isError = true;
+                resultMessage = "Không thể lưu vào file CSV: " + ex.getMessage();
+                ex.printStackTrace();
+            }
+        }
+
+        // 3. Trả kết quả về giao diện
+        if (!isError) {
+            request.setAttribute("success", "Yêu cầu của bạn đã được gửi thành công!");
+        } else {
+            request.setAttribute("error", resultMessage);
+        }
+        request.getRequestDispatcher("User/contact_us.jsp").forward(request, response);
     }
-    
+
+    private void sendEmail(String name, String email, String subject, String message, String timestamp) throws MessagingException, UnsupportedEncodingException {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", EMAIL_HOST);
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(EMAIL_USER, EMAIL_PASS);
+            }
+        });
+
+        Message msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress(EMAIL_USER, "FMart Contact Bot"));
+        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO_EMAIL));
+        msg.setSubject("Yêu Cầu Hỗ Trợ: " + subject);
+        msg.setText(
+                "Yêu Cầu Hỗ Trợ từ FMart\n\n" +
+                "Họ và Tên: " + name + "\n" +
+                "Email: " + email + "\n" +
+                "Chủ Đề: " + subject + "\n" +
+                "Nội Dung:\n" + message + "\n" +
+                "Thời Gian: " + timestamp
+        );
+        Transport.send(msg);
+    }
+
+    private void saveToCSV(String name, String email, String subject, String message, String timestamp) throws IOException {
+        // Lưu tại folder gốc của project/webapp hoặc đặt lại đường dẫn tùy bạn
+        String filePath = getServletContext().getRealPath("/") + "contact_log.csv";
+        boolean writeHeader = false;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            writeHeader = true;
+        }
+        try (FileWriter fw = new FileWriter(file, true)) {
+            if (writeHeader) {
+                fw.write("Họ tên,Email,Chủ đề,Nội dung,Thời gian\n");
+            }
+            // Escape dấu phẩy trong nội dung
+            String row = String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
+                    name.replace("\"", "\"\""),
+                    email.replace("\"", "\"\""),
+                    subject.replace("\"", "\"\""),
+                    message.replace("\"", "\"\""),
+                    timestamp);
+            fw.write(row);
+        }
+    }
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        String action = request.getParameter("action");
-        
-        if ("history".equals(action)) {
-            handleContactHistory(request, response);
-        } else if ("view".equals(action)) {
-            handleViewMessage(request, response);
-        } else {
-            handleContactForm(request, response);
-        }
-    }
-    
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        String action = request.getParameter("action");
-        
-        if ("submit".equals(action)) {
-            handleContactSubmission(request, response);
-        } else {
-            response.sendRedirect("contact");
-        }
-    }
-    
-    // Handle contact form display
-    private void handleContactForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        try {
-            // Get current user if logged in
-            HttpSession session = request.getSession(false);
-            User user = null;
-            if (session != null) {
-                user = (User) session.getAttribute("user");
-            }
-            
-            // Pre-fill form if user is logged in
-            if (user != null) {
-                request.setAttribute("userFullName", user.getFullName());
-                request.setAttribute("userEmail", user.getEmail());
-                request.setAttribute("userPhone", user.getPhoneNumber());
-            }
-            
-            // Get contact statistics for display
-            ContactDao.ContactStatistics stats = contactService.getContactStatistics();
-            request.setAttribute("contactStats", stats);
-            
-            // Set page title and meta
-            request.setAttribute("pageTitle", "Contact Us - FMart Super Market");
-            request.setAttribute("pageDescription", "Get in touch with FMart customer service. We're here to help with your questions, feedback, and support needs.");
-            
-            // Forward to contact us page
-            request.getRequestDispatcher("/User/contact_us.jsp").forward(request, response);
-            
-        } catch (Exception e) {
-            System.err.println("Error in handleContactForm: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("error", "Unable to load contact form. Please try again.");
-            request.getRequestDispatcher("/User/error.jsp").forward(request, response);
-        }
-    }
-    
-    // Handle contact form submission
-    private void handleContactSubmission(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        try {
-            // Get form parameters
-            String senderName = request.getParameter("sendername");
-            String senderEmail = request.getParameter("emailaddress");
-            String senderPhone = request.getParameter("phone");
-            String subject = request.getParameter("sendersubject");
-            String message = request.getParameter("sendermessage");
-            String messageType = request.getParameter("messagetype");
-            
-            // Create contact message object
-            ContactMessage contact = new ContactMessage();
-            contact.setSenderName(senderName != null ? senderName.trim() : "");
-            contact.setSenderEmail(senderEmail != null ? senderEmail.trim() : "");
-            contact.setSenderPhone(senderPhone != null ? senderPhone.trim() : "");
-            contact.setSubject(subject != null ? subject.trim() : "");
-            contact.setMessage(message != null ? message.trim() : "");
-            contact.setMessageType(messageType != null ? messageType.trim() : "INQUIRY");
-            
-            // Set customer ID if user is logged in
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                User user = (User) session.getAttribute("user");
-                Integer userId = (Integer) session.getAttribute("userId");
-                if (user != null && userId != null) {
-                    contact.setCustomerID(userId);
-                }
-            }
-            
-            // Submit contact message
-            ContactService.ContactSubmissionResult result = contactService.submitContactMessage(contact, request);
-            
-            if (result.isSuccess()) {
-                // Success - redirect with success message
-                session = request.getSession(true);
-                session.setAttribute("contactSuccess", result.getMessage());
-                session.setAttribute("contactMessageId", result.getMessageID());
-                
-                System.out.println("Contact message submitted successfully: ID=" + result.getMessageID() + 
-                                 ", From=" + contact.getSenderEmail());
-                
-                response.sendRedirect(request.getContextPath() + "/contact?success=true");
-            } else {
-                // Error - return to form with error message
-                request.setAttribute("error", result.getMessage());
-                request.setAttribute("formData", contact); // To preserve form data
-                
-                System.out.println("Contact message submission failed: " + result.getMessage());
-                
-                // Forward back to contact form
-                handleContactForm(request, response);
-            }
-            
-        } catch (Exception e) {
-            System.err.println("Error in handleContactSubmission: " + e.getMessage());
-            e.printStackTrace();
-            
-            request.setAttribute("error", "An error occurred while processing your request. Please try again.");
-            handleContactForm(request, response);
-        }
-    }
-    
-    // Handle contact history for logged-in users
-    private void handleContactHistory(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        try {
-            HttpSession session = request.getSession(false);
-            if (session == null) {
-                response.sendRedirect("login?redirect=contact?action=history");
-                return;
-            }
-            
-            User user = (User) session.getAttribute("user");
-            Integer userId = (Integer) session.getAttribute("userId");
-            
-            if (user == null || userId == null) {
-                response.sendRedirect("login?redirect=contact?action=history");
-                return;
-            }
-            
-            // Get customer's contact messages
-            List<ContactMessage> contactHistory = contactService.getCustomerContactMessages(userId);
-            
-            request.setAttribute("contactHistory", contactHistory);
-            request.setAttribute("user", user);
-            request.setAttribute("pageTitle", "My Contact History - FMart");
-            
-            request.getRequestDispatcher("/User/contact_history.jsp").forward(request, response);
-            
-        } catch (Exception e) {
-            System.err.println("Error in handleContactHistory: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("error", "Unable to load contact history.");
-            request.getRequestDispatcher("/User/error.jsp").forward(request, response);
-        }
-    }
-    
-    // Handle view specific message
-    private void handleViewMessage(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        try {
-            String messageIdStr = request.getParameter("id");
-            if (messageIdStr == null || messageIdStr.trim().isEmpty()) {
-                response.sendRedirect("contact?action=history");
-                return;
-            }
-            
-            int messageId = Integer.parseInt(messageIdStr);
-            
-            // Check if user is logged in
-            HttpSession session = request.getSession(false);
-            if (session == null) {
-                response.sendRedirect("login");
-                return;
-            }
-            
-            User user = (User) session.getAttribute("user");
-            Integer userId = (Integer) session.getAttribute("userId");
-            
-            if (user == null || userId == null) {
-                response.sendRedirect("login");
-                return;
-            }
-            
-            // Get contact message and verify ownership
-            ContactMessage contactMessage = contactService.getContactMessageById(messageId);
-            
-            if (contactMessage == null) {
-                request.setAttribute("error", "Contact message not found.");
-                request.getRequestDispatcher("/User/error.jsp").forward(request, response);
-                return;
-            }
-            
-            // Verify that the message belongs to the current user
-            if (contactMessage.getCustomerID() != userId) {
-                request.setAttribute("error", "Access denied. You can only view your own messages.");
-                request.getRequestDispatcher("/User/error.jsp").forward(request, response);
-                return;
-            }
-            
-            request.setAttribute("contactMessage", contactMessage);
-            request.setAttribute("user", user);
-            request.setAttribute("pageTitle", "Contact Message - " + contactMessage.getSubject());
-            
-            request.getRequestDispatcher("/User/contact_view.jsp").forward(request, response);
-            
-        } catch (NumberFormatException e) {
-            request.setAttribute("error", "Invalid message ID.");
-            request.getRequestDispatcher("/User/error.jsp").forward(request, response);
-        } catch (Exception e) {
-            System.err.println("Error in handleViewMessage: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("error", "Unable to load contact message.");
-            request.getRequestDispatcher("/User/error.jsp").forward(request, response);
-        }
-    }
-    
-    // Utility method to get client IP
-    private String getClientIpAddress(HttpServletRequest request) {
-        String xForwardedForHeader = request.getHeader("X-Forwarded-For");
-        if (xForwardedForHeader == null) {
-            return request.getRemoteAddr();
-        } else {
-            return xForwardedForHeader.split(",")[0];
-        }
-    }
-    
-    // Utility method to sanitize input
-    private String sanitizeInput(String input) {
-        if (input == null) {
-            return "";
-        }
-        
-        // Basic XSS prevention
-        return input.replaceAll("<", "&lt;")
-                   .replaceAll(">", "&gt;")
-                   .replaceAll("\"", "&quot;")
-                   .replaceAll("'", "&#x27;")
-                   .replaceAll("/", "&#x2F;");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        request.getRequestDispatcher("User/contact_us.jsp").forward(request, response);
     }
 }
