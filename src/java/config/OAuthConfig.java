@@ -15,9 +15,8 @@ public class OAuthConfig {
     public static final String GOOGLE_SCOPE = "email profile";
     
     // Facebook OAuth Configuration
-    // QUAN TRỌNG: Bạn cần cập nhật thông tin Facebook App của mình tại đây
-    public static final String FACEBOOK_CLIENT_ID = "632448446522489"; // Thay bằng App ID thực
-    public static final String FACEBOOK_CLIENT_SECRET = "836d6a17118dd20a7763450ba4635a91"; // Thay bằng App Secret thực
+    public static final String FACEBOOK_CLIENT_ID = "1401431707636221"; // Cập nhật App ID thực
+    public static final String FACEBOOK_CLIENT_SECRET = "b07b85e745a0b733ccf5371f1bea3f52"; // Cập nhật App Secret thực
     public static final String FACEBOOK_AUTH_URL = "https://www.facebook.com/v18.0/dialog/oauth";
     public static final String FACEBOOK_TOKEN_URL = "https://graph.facebook.com/v18.0/oauth/access_token";
     public static final String FACEBOOK_USER_INFO_URL = "https://graph.facebook.com/me?fields=id,name,email,picture";
@@ -45,8 +44,8 @@ public class OAuthConfig {
      * Check if Facebook OAuth is configured
      */
     public static boolean isFacebookConfigured() {
-        return !FACEBOOK_CLIENT_ID.equals("632448446522489") && 
-               !FACEBOOK_CLIENT_SECRET.equals("836d6a17118dd20a7763450ba4635a91");
+        return FACEBOOK_CLIENT_ID != null && !FACEBOOK_CLIENT_ID.isEmpty() &&
+               FACEBOOK_CLIENT_SECRET != null && !FACEBOOK_CLIENT_SECRET.isEmpty();
     }
     
     /**
