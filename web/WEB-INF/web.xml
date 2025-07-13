@@ -35,6 +35,26 @@
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
+    
+        <!-- Admin Coupon Management -->
+    <servlet>
+        <servlet-name>CouponManagementServlet</servlet-name>
+        <servlet-class>controller.admin.CouponManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CouponManagementServlet</servlet-name>
+        <url-pattern>/CouponManagementServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Customer Coupon -->
+    <servlet>
+        <servlet-name>CustomerCouponServlet</servlet-name>
+        <servlet-class>controller.user.CustomerCouponServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerCouponServlet</servlet-name>
+        <url-pattern>/user/coupons</url-pattern>
+    </servlet-mapping>
 
     <!-- Welcome file configuration -->
     <welcome-file-list>
