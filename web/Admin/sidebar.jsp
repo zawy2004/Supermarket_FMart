@@ -60,8 +60,9 @@
                             </a>
                             <div class="collapse" id="collapseShops" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link sub_nav_link" href="shops.jsp">All Shops</a>
-                                    <a class="nav-link sub_nav_link" href="add_shop.jsp">Add Shop</a>
+                                    <a class="nav-link sub_nav_link" href="/InventoryManagementServlet">Inventory</a>
+                                    <a class="nav-link sub_nav_link" href="/ImportRecieptServlet">Import Receipt</a>
+                                    <a class="nav-link sub_nav_link" href="/DípartRecieptServlet">Dispart Receipt</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">

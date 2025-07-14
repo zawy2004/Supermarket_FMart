@@ -64,10 +64,11 @@
                                 Inventory
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <div class="collapse" id="collapseShops" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                          <div class="collapse" id="collapseShops" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link sub_nav_link" href="shops.jsp">All Shops</a>
-                                    <a class="nav-link sub_nav_link" href="ImportReceiptServlet">Add Shop</a>
+                                    <a class="nav-link sub_nav_link" href="InventoryManagementServlet">Inventory</a>
+                                    <a class="nav-link sub_nav_link" href="ImportReceiptServlet">Import Receipt</a>
+                                    <a class="nav-link sub_nav_link" href="DispatchReceiptServlet">Dispart Receipt</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">

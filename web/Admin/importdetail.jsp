@@ -62,7 +62,7 @@
 
                             <div class="row justify-content-between">
                                 <div class="col-lg-12">
-                                    <a href="ImportDetailServlet?action=add&importID=${param.importID}" class="btn btn-sm btn-primary">AddProduct</a>
+                                    <a href="ImportDetailServlet?action=add&importID=${param.importID}" class="btn btn-sm btn-primary">Add Product</a>
                                 <a href="ImportReceiptServlet?action=delete&importID=${param.importID}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this receipt?')">Delete</a>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                                                                 <td>${detail.productID}</td>
                                                                 <td>${detail.productName}</td>
                                                                 <td>${detail.quantity}</td>
-                                                                <td>${detail.unitPrice}</td>S
+                                                                <td>${detail.unitPrice}</td>
                                                                 <td>${detail.quantity * detail.unitPrice}</td>
                                                                 <td>
                                                                         <a href="${pageContext.request.contextPath}/ImportDetailServlet?action=delete&importDetailID=${detail.importDetailID}&importID=${param.importID}"
