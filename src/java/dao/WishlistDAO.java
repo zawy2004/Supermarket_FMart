@@ -82,19 +82,23 @@ public class WishlistDAO {
         return products;
     }
 
-    // Thêm sản phẩm vào wishlist
     public boolean addToWishlist(int userID, int productID) {
-        String sql = "INSERT INTO Wishlist (UserID, ProductID, AddedDate) VALUES (?, ?, GETDATE())";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userID);
-            ps.setInt(2, productID);
-            return ps.executeUpdate() > 0;
-        } catch (Exception ex) {
+    String sql = "INSERT INTO Wishlist (UserID, ProductID, AddedDate) VALUES (?, ?, GETDATE())";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userID);
+        ps.setInt(2, productID);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException ex) {
+        if (ex.getMessage().contains("UNIQUE")) {
+            System.out.println("Product already in wishlist for this user.");
+        } else {
             ex.printStackTrace();
         }
-        return false;
     }
+    return false;
+}
+
 
     // Xóa sản phẩm khỏi wishlist
     public boolean removeFromWishlist(int userID, int productID) {

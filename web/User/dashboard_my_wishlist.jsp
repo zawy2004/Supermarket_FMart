@@ -14,33 +14,10 @@
     <link href="User/css/responsive.css" rel="stylesheet">
     <link href="User/css/night-mode.css" rel="stylesheet">
     <style>
-        .wishlist-table {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 1px 7px #e5e5e5;
-        }
-        .wishlist-table td, .wishlist-table th {
-            vertical-align: middle !important;
-            border-top: none;
-            border-bottom: 1px solid #f1f1f1;
-        }
-        .wishlist-img-thumb {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 7px;
-            box-shadow: 0 0 2px #eee;
-            background: #f7f7f7;
-        }
-        @media (max-width: 767px) {
-            .wishlist-table td, .wishlist-table th {
-                font-size: 0.97em;
-            }
-            .wishlist-img-thumb {
-                width: 45px;
-                height: 45px;
-            }
-        }
+        .wishlist-table { background: #fff; border-radius: 10px; box-shadow: 0 1px 7px #e5e5e5; }
+        .wishlist-table td, .wishlist-table th { vertical-align: middle !important; border-top: none; border-bottom: 1px solid #f1f1f1; }
+        .wishlist-img-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 7px; box-shadow: 0 0 2px #eee; background: #f7f7f7; }
+        @media (max-width: 767px) { .wishlist-table td, .wishlist-table th { font-size: 0.97em; } .wishlist-img-thumb { width: 45px; height: 45px; } }
     </style>
 </head>
 <body>
@@ -106,17 +83,18 @@
                                                             <tr>
                                                                 <td>${item.productID}</td>
                                                                 <td>
-                                                                    <img src="User/images/product/${item.imageUrl}" alt="${item.productName}" class="wishlist-img-thumb"/>
+                                                                    <img src="User/images/product/${item.imageUrl}" 
+                                                                         alt="${item.productName}" class="wishlist-img-thumb"
+                                                                         onerror="this.onerror=null;this.src='User/images/product/default.jpg';"/>
                                                                 </td>
                                                                 <td>
                                                                     <div class="wishlist-product-title">${item.productName}</div>
                                                                     <span class="wishlist-product-price">$${item.sellingPrice}</span>
                                                                 </td>
                                                                 <td>
-                                                                    <form method="post" action="${pageContext.request.contextPath}/cart" style="display:inline-block">
+                                                                    <form method="post" action="${pageContext.request.contextPath}/wishlist" style="display:inline-block">
                                                                         <input type="hidden" name="action" value="add"/>
                                                                         <input type="hidden" name="productId" value="${item.productID}"/>
-                                                                        <input type="hidden" name="quantity" value="1"/>
                                                                         <button type="submit" class="btn btn-success btn-sm" title="Add to Cart">
                                                                             <i class="uil uil-shopping-cart-alt"></i>
                                                                         </button>
@@ -163,7 +141,6 @@
             }, function (response) {
                 $btn.closest('tr').fadeOut(250, function () {
                     $(this).remove();
-                    // Nếu hết sản phẩm, show empty
                     if ($('.wishlist-table tbody tr').length === 0) {
                         $('.wishlist-table').replaceWith('<p style="padding:2rem; text-align:center">Your wishlist is empty.</p>');
                     }
