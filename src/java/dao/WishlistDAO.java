@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import model.Product;
 
 public class WishlistDAO {
     
@@ -54,4 +57,72 @@ public class WishlistDAO {
             e.printStackTrace();
         }
     }
+    
+
+     // Lấy toàn bộ sản phẩm yêu thích của user (dạng Product, thường dùng để hiển thị)
+    public List<Product> getWishlistProducts(int userID) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT p.* FROM Wishlist w JOIN Products p ON w.ProductID = p.ProductID WHERE w.UserID = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setProductID(rs.getInt("ProductID"));
+                product.setProductName(rs.getString("ProductName"));
+                product.setSellingPrice(rs.getDouble("SellingPrice"));
+                product.setImageUrl(rs.getString("ImageUrl"));
+                // ...set các thuộc tính khác nếu cần
+                products.add(product);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return products;
+    }
+
+    // Thêm sản phẩm vào wishlist
+    public boolean addToWishlist(int userID, int productID) {
+        String sql = "INSERT INTO Wishlist (UserID, ProductID, AddedDate) VALUES (?, ?, GETDATE())";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ps.setInt(2, productID);
+            return ps.executeUpdate() > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    // Xóa sản phẩm khỏi wishlist
+    public boolean removeFromWishlist(int userID, int productID) {
+        String sql = "DELETE FROM Wishlist WHERE UserID = ? AND ProductID = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ps.setInt(2, productID);
+            return ps.executeUpdate() > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    // Kiểm tra sản phẩm đã tồn tại trong wishlist chưa (tránh duplicate)
+    public boolean existsInWishlist(int userID, int productID) {
+        String sql = "SELECT 1 FROM Wishlist WHERE UserID = ? AND ProductID = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ps.setInt(2, productID);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }
+

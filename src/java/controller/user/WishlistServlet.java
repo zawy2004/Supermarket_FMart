@@ -1,77 +1,73 @@
-
 package controller.user;
 
-import jakarta.servlet.ServletException;
+import dao.WishlistDAO;
+import jakarta.servlet.ServletException; // Để lấy thêm thông tin sản phẩm nếu cần
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Wishlist;
-import service.WishlistService;
+import model.Product;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
+import java.util.List;
 
-@WebServlet(name = "WishlistServlet", urlPatterns = {"/wishlist"})
+@WebServlet("/wishlist")
 public class WishlistServlet extends HttpServlet {
-    
-    private WishlistService wishlistService;
-    
+
+    private WishlistDAO wishlistDAO = new WishlistDAO();
+
     @Override
-    public void init() throws ServletException {
-        super.init();
-        wishlistService = new WishlistService();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Lấy user từ session (giả sử đã đăng nhập)
+        HttpSession session = request.getSession();
+        model.User user = (model.User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        int userID = user.getUserId();
+
+        // Lấy list sản phẩm wishlist
+        List<Product> wishlistItems = wishlistDAO.getWishlistProducts(userID);
+        request.setAttribute("wishlistItems", wishlistItems);
+
+        // Chuyển đến trang JSP để hiển thị wishlist
+        request.getRequestDispatcher("User/dashboard_my_wishlist.jsp").forward(request, response);
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
-        
-        try {
-            HttpSession session = request.getSession(false);
-            Integer userId = (session != null) ? (Integer) session.getAttribute("userId") : null;
-            System.out.println("WishlistServlet: userId = " + userId);
-            
-            if (userId == null) {
-                out.print("{\"error\": \"User not logged in\"}");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-            
-            String action = request.getParameter("action");
-            String productIdStr = request.getParameter("productId");
-            
-            if (action == null || productIdStr == null) {
-                out.print("{\"error\": \"Missing parameters\"}");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                return;
-            }
-            
-            int productId = Integer.parseInt(productIdStr);
-            
-            if (action.equals("add")) {
-                Wishlist wishlistItem = new Wishlist();
-                wishlistItem.setUserID(userId);
-                wishlistItem.setProductID(productId);
-                wishlistItem.setAddedDate(new Date());
-                wishlistService.addToWishlist(wishlistItem);
-                out.print("{\"message\": \"Item added to wishlist successfully\"}");
-            } else if (action.equals("remove")) {
-                wishlistService.removeFromWishlist(userId, productId);
-                out.print("{\"message\": \"Item removed from wishlist successfully\"}");
-            } else {
-                out.print("{\"error\": \"Invalid action\"}");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            System.err.println("Error in WishlistServlet doPost: " + e.getMessage());
-            e.printStackTrace();
-            out.print("{\"error\": \"" + e.getMessage() + "\"}");
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        // Lấy user từ session
+        HttpSession session = request.getSession();
+        model.User user = (model.User) session.getAttribute("user");
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
+        int userID = user.getUserId();
+
+        String action = request.getParameter("action");
+        int productID = Integer.parseInt(request.getParameter("productId"));
+
+        boolean result = false;
+
+        if ("add".equals(action)) {
+            // Kiểm tra đã có chưa, nếu chưa thì thêm
+            if (!wishlistDAO.existsInWishlist(userID, productID)) {
+                result = wishlistDAO.addToWishlist(userID, productID);
+            } else {
+                result = true; // Đã tồn tại cũng trả về true
+            }
+        } else if ("remove".equals(action)) {
+            result = wishlistDAO.removeFromWishlist(userID, productID);
+        }
+
+        // Nếu gọi bằng AJAX thì chỉ cần trả plain text
+        response.setContentType("application/json");
+        response.getWriter().write("{\"success\": " + result + "}");
     }
 }

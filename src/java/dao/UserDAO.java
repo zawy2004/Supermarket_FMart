@@ -368,88 +368,139 @@ public class UserDAO {
         }
         return 0;
     }
+
     public List<User> searchUsers(String keyword, Integer roleID, int offset, int pageSize) {
-    List<User> users = new ArrayList<>();
+        List<User> users = new ArrayList<>();
 
-    StringBuilder sql = new StringBuilder(
-        "SELECT u.*, r.RoleName FROM Users u " +
-        "LEFT JOIN Roles r ON u.RoleID = r.RoleID WHERE 1=1 ");
-
-    if (keyword != null && !keyword.trim().isEmpty()) {
-        sql.append("AND (u.FullName LIKE ? OR u.Email LIKE ?) ");
-    }
-
-    if (roleID != null) {
-        sql.append("AND u.RoleID = ? ");
-    }
-
-    sql.append("ORDER BY u.UserID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-
-    try (Connection conn = DatabaseConfig.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-
-        int index = 1;
+        StringBuilder sql = new StringBuilder(
+                "SELECT u.*, r.RoleName FROM Users u "
+                + "LEFT JOIN Roles r ON u.RoleID = r.RoleID WHERE 1=1 ");
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            ps.setString(index++, "%" + keyword + "%");
-            ps.setString(index++, "%" + keyword + "%");
+            sql.append("AND (u.FullName LIKE ? OR u.Email LIKE ?) ");
         }
 
         if (roleID != null) {
-            ps.setInt(index++, roleID);
+            sql.append("AND u.RoleID = ? ");
         }
 
-        ps.setInt(index++, offset);
-        ps.setInt(index++, pageSize);
+        sql.append("ORDER BY u.UserID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            users.add(mapResultSetToUser(rs));
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int index = 1;
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                ps.setString(index++, "%" + keyword + "%");
+                ps.setString(index++, "%" + keyword + "%");
+            }
+
+            if (roleID != null) {
+                ps.setInt(index++, roleID);
+            }
+
+            ps.setInt(index++, offset);
+            ps.setInt(index++, pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
+        return users;
+    }
+
+    public int countSearchUsers(String keyword, Integer roleID) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Users WHERE 1=1 ");
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append("AND (FullName LIKE ? OR Email LIKE ?) ");
+        }
+
+        if (roleID != null) {
+            sql.append("AND RoleID = ? ");
+        }
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int index = 1;
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                ps.setString(index++, "%" + keyword + "%");
+                ps.setString(index++, "%" + keyword + "%");
+            }
+
+            if (roleID != null) {
+                ps.setInt(index++, roleID);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public void updateProfileImage(int userId, String imageUrl) {
+        String sql = "UPDATE Users SET ProfileImageUrl = ? WHERE UserID = ?";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, imageUrl);
+            ps.setInt(2, userId);
+            int rows = ps.executeUpdate();
+            System.out.println("Cập nhật ảnh đại diện thành công: " + rows + " rows");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateAddress(int userId, String address) {
+        String sql = "UPDATE Users SET Address = ? WHERE UserID = ?";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, address);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+// Thêm vào cuối class UserDAO:
+public boolean updateUserInfo(User user) {
+    String sql = "UPDATE Users SET FullName = ?, PhoneNumber = ? WHERE UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, user.getFullName());
+        ps.setString(2, user.getPhoneNumber());
+        ps.setInt(3, user.getUserId());
+        int rows = ps.executeUpdate();
+        return rows > 0;
     } catch (SQLException e) {
         e.printStackTrace();
     }
-
-    return users;
+    return false;
 }
-    public int countSearchUsers(String keyword, Integer roleID) {
-    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Users WHERE 1=1 ");
 
-    if (keyword != null && !keyword.trim().isEmpty()) {
-        sql.append("AND (FullName LIKE ? OR Email LIKE ?) ");
-    }
-
-    if (roleID != null) {
-        sql.append("AND RoleID = ? ");
-    }
-
-    try (Connection conn = DatabaseConfig.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-
-        int index = 1;
-
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            ps.setString(index++, "%" + keyword + "%");
-            ps.setString(index++, "%" + keyword + "%");
-        }
-
-        if (roleID != null) {
-            ps.setInt(index++, roleID);
-        }
-
+public boolean checkUserPassword(int userId, String rawPassword) {
+    String sql = "SELECT PasswordHash FROM Users WHERE UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            return rs.getInt(1);
+            String hash = rs.getString("PasswordHash");
+            // Nếu mật khẩu đã mã hóa (BCrypt...), hãy thay bằng hàm kiểm tra tương ứng:
+            return hash != null && hash.equals(rawPassword); // Nếu dùng BCrypt: BCrypt.checkpw(rawPassword, hash)
         }
-
     } catch (SQLException e) {
         e.printStackTrace();
     }
-
-    return 0;
+    return false;
 }
-
-
 
 }
