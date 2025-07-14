@@ -23,24 +23,22 @@
     </head>
     <body>
         <jsp:include page="header.jsp"></jsp:include>
-
-            <div class="wrapper">
-                <div class="gambo-Breadcrumb">
-                    <div class="container">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="home">Home</a></li>
-                            <li class="breadcrumb-item active">Dashboard</li>
-                        </ol>
-                    </div>
+        <div class="wrapper">
+            <div class="gambo-Breadcrumb">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="home">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
                 </div>
-
-                <div class="dashboard-group">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="user-dt">
-                                    <div class="user-img">
-                                        <img src="${user.profileImageUrl != null ? user.profileImageUrl : 'User/images/avatar/img-5.jpg'}" alt="profile">
+            </div>
+            <div class="dashboard-group">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="user-dt">
+                                <div class="user-img">
+                                    <img src="${user.profileImageUrl != null ? user.profileImageUrl : 'User/images/avatar/img-5.jpg'}" alt="profile">
                                     <form action="${pageContext.request.contextPath}/profile/uploadImage" method="post" enctype="multipart/form-data">
                                         <div class="img-add">
                                             <input type="file" name="avatarFile" id="file" onchange="this.form.submit()">
@@ -58,11 +56,10 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row mt-4">
                         <div class="col-xl-3 col-lg-4 col-md-12">
                             <div class="dashboard-left-links">
-                                <a href="profile?action=overview" class="user-item"><i class="uil uil-apps"></i>Overview</a>
+                                <a href="profile?action=overview" class="user-item "><i class="uil uil-apps"></i>Overview</a>
                                 <a href="profile?action=orders" class="user-item"><i class="uil uil-box"></i>My Orders</a>
                                 <a href="wishlist" class="user-item"><i class="uil uil-heart"></i>My Wishlist</a>
                                 <a href="profile?action=wallet" class="user-item"><i class="uil uil-wallet"></i>My Wallet</a>
@@ -70,7 +67,6 @@
                                 <a href="logout" class="user-item"><i class="uil uil-exit"></i>Logout</a>
                             </div>
                         </div>
-
                         <div class="col-xl-9 col-lg-8 col-md-12">
                             <div class="dashboard-right">
                                 <h4 class="mb-3"><i class="uil uil-apps"></i> Overview</h4>
@@ -126,13 +122,67 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- ----------- FORM THÔNG TIN CÁ NHÂN ------------ -->
+                                <div class="card mb-4">
+                                    <div class="card-header bg-light"><b>Edit Profile Information</b></div>
+                                    <div class="card-body">
+                                        <form method="post" action="profile">
+                                            <input type="hidden" name="action" value="updateInfo"/>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label>Full Name</label>
+                                                    <input type="text" class="form-control" name="fullName" value="${user.fullName}" required/>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label>Phone Number</label>
+                                                    <input type="text" class="form-control" name="phoneNumber" value="${user.phoneNumber}" required/>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-success">Update Info</button>
+                                            <c:if test="${not empty infoSuccess}">
+                                                <div class="alert alert-success mt-2">${infoSuccess}</div>
+                                            </c:if>
+                                            <c:if test="${not empty infoError}">
+                                                <div class="alert alert-danger mt-2">${infoError}</div>
+                                            </c:if>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- ----------- FORM ĐỔI MẬT KHẨU ------------ -->
+                                <div class="card mb-4">
+                                    <div class="card-header bg-light"><b>Change Password</b></div>
+                                    <div class="card-body">
+                                        <form method="post" action="profile">
+                                            <input type="hidden" name="action" value="changePassword"/>
+                                            <div class="mb-3">
+                                                <label>Current Password</label>
+                                                <input type="password" class="form-control" name="currentPassword" required/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label>New Password</label>
+                                                <input type="password" class="form-control" name="newPassword" required minlength="6"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label>Confirm New Password</label>
+                                                <input type="password" class="form-control" name="confirmPassword" required minlength="6"/>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning">Change Password</button>
+                                            <c:if test="${not empty passSuccess}">
+                                                <div class="alert alert-success mt-2">${passSuccess}</div>
+                                            </c:if>
+                                            <c:if test="${not empty passError}">
+                                                <div class="alert alert-danger mt-2">${passError}</div>
+                                            </c:if>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- ---------------------------------------- -->
                             </div> 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <jsp:include page="footer.jsp"></jsp:include>
         <script src="User/js/jquery.min.js"></script>
         <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

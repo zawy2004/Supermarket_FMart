@@ -472,5 +472,35 @@ public class UserDAO {
             e.printStackTrace();
         }
     }
+// Thêm vào cuối class UserDAO:
+public boolean updateUserInfo(User user) {
+    String sql = "UPDATE Users SET FullName = ?, PhoneNumber = ? WHERE UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, user.getFullName());
+        ps.setString(2, user.getPhoneNumber());
+        ps.setInt(3, user.getUserId());
+        int rows = ps.executeUpdate();
+        return rows > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
+public boolean checkUserPassword(int userId, String rawPassword) {
+    String sql = "SELECT PasswordHash FROM Users WHERE UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            String hash = rs.getString("PasswordHash");
+            // Nếu mật khẩu đã mã hóa (BCrypt...), hãy thay bằng hàm kiểm tra tương ứng:
+            return hash != null && hash.equals(rawPassword); // Nếu dùng BCrypt: BCrypt.checkpw(rawPassword, hash)
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 
 }
