@@ -362,7 +362,7 @@
                         <div class="col-xl-3 col-lg-4 col-md-12">
                             <div class="left-side-tabs">
                                                             <div class="dashboard-left-links">
-                                <a href="profile?action=overview" class="user-item active"><i class="uil uil-apps"></i>Overview</a>
+                                <a href="profile?action=overview" class="user-item "><i class="uil uil-apps"></i>Overview</a>
                                 <a href="profile?action=orders" class="user-item"><i class="uil uil-box"></i>My Orders</a>
                                 <a href="wishlist" class="user-item"><i class="uil uil-heart"></i>My Wishlist</a>
                                 <a href="profile?action=wallet" class="user-item"><i class="uil uil-wallet"></i>My Wallet</a>
