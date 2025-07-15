@@ -450,7 +450,7 @@
                                     <a href="dashboard_my_wallet.jsp" class="user-item"><i class="uil uil-wallet"></i>My Wallet</a>
                                     <a href="dashboard_my_wishlist.jsp" class="user-item"><i class="uil uil-heart"></i>Shopping Wishlist</a>
                                     <a href="dashboard_my_addresses.jsp" class="user-item active"><i class="uil uil-location-point"></i>My Address</a>
-                                    <a href="sign_in.jsp" class="user-item"><i class="uil uil-exit"></i>Logout</a>
+                                    <a href="login" class="user-item"><i class="uil uil-exit"></i>Logout</a>
                                 </div>
                             </div>
                         </div>

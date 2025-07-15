@@ -432,7 +432,12 @@
                             </div>
                             <div class="right-cart-dt-body">
                                 <c:if test="${not empty cartItems}">
+                                    <c:set var="totalQuantity" value="0"/>
+                                    <c:set var="originalCartTotal" value="${cartTotal != null ? cartTotal : 0}"/>
+                                    <c:set var="promoDiscount" value="${sessionScope.promoCode == 'ILOVEFMART' ? originalCartTotal * 0.2 : 0}"/>
+                                    <c:set var="cartTotal" value="${originalCartTotal - promoDiscount}"/>
                                     <c:forEach var="cartItem" items="${cartItems}">
+                                        <c:set var="totalQuantity" value="${totalQuantity + cartItem.quantity}"/>
                                         <div class="cart-item border_radius">
                                             <div class="cart-product-img">
                                                 <img src="${pageContext.request.contextPath}/User/images/product/img-${cartItem.productID}.jpg" alt="${cartItem.productName}">
@@ -454,24 +459,33 @@
                                     </div>
                                 </c:if>
                             </div>
-                            <div class="total-checkout-group">
-                                <div class="cart-total-dil">
-                                    <h4>Tổng giỏ hàng</h4>
-                                    <span><fmt:formatNumber value="${cartTotal != null ? cartTotal : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                            <c:if test="${not empty cartItems}">
+                                <c:set var="deliveryCharge" value="${cartTotal >= 500000 ? 0 : (30000 + totalQuantity * 5000 < 100000 ? 30000 + totalQuantity * 5000 : 100000)}"/>
+                                <div class="total-checkout-group">
+                                    <div class="cart-total-dil">
+                                        <h4>Tổng giỏ hàng</h4>
+                                        <span><fmt:formatNumber value="${originalCartTotal}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                    </div>
+                                    <c:if test="${promoDiscount > 0}">
+                                        <div class="cart-total-dil pt-3">
+                                            <h4>Khuyến mãi (ILOVEFMART)</h4>
+                                            <span>-<fmt:formatNumber value="${promoDiscount}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                        </div>
+                                    </c:if>
+                                    <div class="cart-total-dil pt-3">
+                                        <h4>Phí giao hàng <small>(Miễn phí cho đơn từ 500.000 ₫)</small></h4>
+                                        <span><fmt:formatNumber value="${deliveryCharge}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                    </div>
                                 </div>
-                                <div class="cart-total-dil pt-3">
-                                    <h4>Phí giao hàng</h4>
-                                    <span><fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 30000}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                <div class="cart-total-dil saving-total">
+                                    <h4>Tổng tiết kiệm</h4>
+                                    <span><fmt:formatNumber value="${(totalSaving != null ? totalSaving : 0) + promoDiscount}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
                                 </div>
-                            </div>
-                            <div class="cart-total-dil saving-total">
-                                <h4>Tổng tiết kiệm</h4>
-                                <span><fmt:formatNumber value="${totalSaving != null ? totalSaving : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
-                            </div>
-                            <div class="main-total-cart p-4">
-                                <h2>Tổng cộng</h2>
-                                <span><fmt:formatNumber value="${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 30000) : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
-                            </div>
+                                <div class="main-total-cart p-4">
+                                    <h2>Tổng cộng</h2>
+                                    <span><fmt:formatNumber value="${cartTotal + deliveryCharge}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                </div>
+                            </c:if>
                             <div class="payment-secure">
                                 <i class="uil uil-padlock"></i>Thanh toán an toàn
                             </div>
@@ -498,7 +512,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="promoCodeInput">Mã khuyến mãi</label>
-                        <input type="text" class="form-control" id="promoCodeInput" placeholder="Nhập mã khuyến mãi">
+                        <input type="text" class="form-control" id="promoCodeInput" placeholder="Nhập mã khuyến mãi (VD: ILOVEFMART)">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -602,7 +616,7 @@
 
         // Apply Promo Code
         function applyPromoCode() {
-            const promoCode = document.getElementById('promoCodeInput').value;
+            const promoCode = document.getElementById('promoCodeInput').value.trim().toUpperCase();
             if (!promoCode) {
                 showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
                 return;
@@ -615,9 +629,13 @@
                     promoCode: promoCode
                 },
                 success: function(response) {
-                    showNotification('Áp dụng mã khuyến mãi thành công!', 'success');
-                    $('#promoCodeModal').modal('hide');
-                    location.reload();
+                    if (promoCode === 'ILOVEFMART') {
+                        showNotification('Áp dụng mã khuyến mãi ILOVEFMART thành công! Giảm 20% tổng giá trị đơn hàng.', 'success');
+                        $('#promoCodeModal').modal('hide');
+                        location.reload();
+                    } else {
+                        showNotification('Mã khuyến mãi không hợp lệ!', 'error');
+                    }
                 },
                 error: function(xhr) {
                     showNotification('Lỗi khi áp dụng mã khuyến mãi: ' + xhr.responseText, 'error');
@@ -670,7 +688,6 @@
                     $('#collapseOne').collapse('hide');
                     $('#collapseTwo').collapse('show');
                     document.getElementById('otpSection').style.display = 'none';
-                    // Update phone display with verified status
                     document.getElementById('phoneDisplay').parentElement.classList.add('phone-verified');
                 },
                 error: function(xhr) {
@@ -720,6 +737,13 @@
                 return;
             }
 
+            const totalQuantity = ${totalQuantity != null ? totalQuantity : 0};
+            let cartTotal = ${cartTotal != null ? cartTotal : 0};
+            const originalCartTotal = cartTotal;
+            const promoCode = '${sessionScope.promoCode}';
+            let promoDiscount = promoCode === 'ILOVEFMART' ? cartTotal * 0.2 : 0;
+            cartTotal -= promoDiscount;
+            const deliveryCharge = cartTotal >= 500000 ? 0 : Math.min(30000 + totalQuantity * 5000, 100000);
             const paymentMethod = document.querySelector('input[name="paymentmethod"]:checked').value;
             const orderData = {
                 paymentMethod: paymentMethod,
@@ -737,11 +761,18 @@
                         }<c:if test="${!status.last}">,</c:if>
                     </c:forEach>
                 ],
-                cartTotal: ${cartTotal != null ? cartTotal : 0},
-                deliveryCharge: ${deliveryCharge != null ? deliveryCharge : 30000},
-                total: ${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 30000) : 0},
+                originalCartTotal: originalCartTotal,
+                promoDiscount: promoDiscount,
+                cartTotal: cartTotal,
+                deliveryCharge: deliveryCharge,
+                total: cartTotal + deliveryCharge,
                 appTransId: 'FMART_' + Date.now()
             };
+
+            if (paymentMethod === 'cod' && orderData.total > 10000000) {
+                showNotification('Thanh toán khi nhận hàng không áp dụng cho đơn hàng trên 10 triệu đồng!', 'error');
+                return;
+            }
 
             $.ajax({
                 url: '${pageContext.request.contextPath}/processCheckout',

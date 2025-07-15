@@ -18,7 +18,7 @@
                                value="${search}"
                                style="width: 100%; padding: 15px 60px 15px 20px; border: 2px solid #f0f0f0; border-radius: 25px; font-size: 16px; outline: none;">
                         <button type="submit" 
-                                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer;">
+                                style="position: absolute; right: 10px; margin-top: -10px; top: 50%; transform: translateY(-50%); background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer;">
                             <i class="uil uil-search"></i>
                         </button>
                     </form>
