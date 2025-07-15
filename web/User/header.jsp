@@ -353,7 +353,7 @@
                 </div>
                 <div class="sub_header_right">
                     <div class="header_cart">
-                        <a href="#" class="cart__btn hover-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="uil uil-shopping-cart-alt"></i><span>My Cart</span><ins></ins><i class="uil uil-angle-down"></i></a>
+                        <a href="#" class="cart__btn hover-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="uil uil-shopping-cart-alt"></i><span>Cart</span><ins>2</ins><i class="uil uil-angle-down"></i></a>
                     </div>
                 </div>
             </nav>
