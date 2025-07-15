@@ -5,226 +5,226 @@
     User user = (User) session.getAttribute("user");
 %>
 
-        <!-- Category Model Start-->
-        <div class="header-cate-model main-gambo-model modal fade" id="category_model" tabindex="-1" role="dialog" aria-modal="false">
-            <div class="modal-dialog category-area" role="document">
-                <div class="category-area-inner">
-                    <div class="modal-header">
-                        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
-                            <i class="uil uil-multiply"></i>
-                        </button>
-                    </div>
-                    <div class="category-model-content modal-content"> 
-                        <div class="cate-header">
-                            <h4>Select Category</h4>
-                        </div>
-                        <ul class="category-by-cat">
-                            <li>
-                                <a href="shop?categoryId=1" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-1.svg" alt="">
-                                    </div>
-                                    <div class="text"> Fruits and Vegetables </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=2" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-2.svg" alt="">
-                                    </div>
-                                    <div class="text"> Grocery & Staples </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=3" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-3.svg" alt="">
-                                    </div>
-                                    <div class="text"> Dairy & Eggs </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=4" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-4.svg" alt="">
-                                    </div>
-                                    <div class="text"> Beverages </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=5" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-5.svg" alt="">
-                                    </div>
-                                    <div class="text"> Snacks </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=6" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-6.svg" alt="">
-                                    </div>
-                                    <div class="text"> Home Care </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=7" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-7.svg" alt="">
-                                    </div>
-                                    <div class="text"> Noodles & Sauces </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=8" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-8.svg" alt="">
-                                    </div>
-                                    <div class="text"> Personal Care </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=9" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-9.svg" alt="">
-                                    </div>
-                                    <div class="text"> Pet Care </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=10" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-10.svg" alt="">
-                                    </div>
-                                    <div class="text"> Meat & Seafood </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="shop?categoryId=11" class="single-cat-item">
-                                    <div class="icon">
-                                        <img src="User/images/category/icon-11.svg" alt="">
-                                    </div>
-                                    <div class="text"> Electronics </div>
-                                </a>
-                            </li>
-                        </ul>
-                        <a href="#" class="morecate-btn"><i class="uil uil-apps"></i>More Categories</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Category Model End-->
-        <!-- Cart Sidebar Offcanvas Start-->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header bs-canvas-header side-cart-header p-3">
-                <div class="d-inline-block main-cart-title" id="offcanvasRightLabel">My Cart <span>(2 Items)</span></div>
-                <button type="button" class="close-btn" data-bs-dismiss="offcanvas" aria-label="Close">
+<!-- Category Model Start-->
+<div class="header-cate-model main-gambo-model modal fade" id="category_model" tabindex="-1" role="dialog" aria-modal="false">
+    <div class="modal-dialog category-area" role="document">
+        <div class="category-area-inner">
+            <div class="modal-header">
+                <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
                     <i class="uil uil-multiply"></i>
                 </button>
             </div>
-            <div class="offcanvas-body p-0">
-                <div class="cart-top-total p-4">
-                    <div class="cart-total-dil">
-                        <h4>FMart Super Market</h4>
-                        <span>$34</span>
-                    </div>
-                    <div class="cart-total-dil pt-2">
-                        <h4>Delivery Charges</h4>
-                        <span>$1</span>
-                    </div>
+            <div class="category-model-content modal-content"> 
+                <div class="cate-header">
+                    <h4>Select Category</h4>
                 </div>
-                <div class="side-cart-items">
-                    <div class="cart-item">
-                        <div class="cart-product-img">
-                            <img src="User/images/product/img-1.jpg" alt="">
-                            <div class="offer-badge">6% OFF</div>
+                <ul class="category-by-cat">
+                    <li>
+                        <a href="shop?categoryId=1" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-1.svg" alt="">
+                            </div>
+                            <div class="text"> Fruits and Vegetables </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=2" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-2.svg" alt="">
+                            </div>
+                            <div class="text"> Grocery & Staples </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=3" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-3.svg" alt="">
+                            </div>
+                            <div class="text"> Dairy & Eggs </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=4" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-4.svg" alt="">
+                            </div>
+                            <div class="text"> Beverages </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=5" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-5.svg" alt="">
+                            </div>
+                            <div class="text"> Snacks </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=6" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-6.svg" alt="">
+                            </div>
+                            <div class="text"> Home Care </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=7" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-7.svg" alt="">
+                            </div>
+                            <div class="text"> Noodles & Sauces </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=8" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-8.svg" alt="">
+                            </div>
+                            <div class="text"> Personal Care </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=9" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-9.svg" alt="">
+                            </div>
+                            <div class="text"> Pet Care </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=10" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-10.svg" alt="">
+                            </div>
+                            <div class="text"> Meat & Seafood </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shop?categoryId=11" class="single-cat-item">
+                            <div class="icon">
+                                <img src="User/images/category/icon-11.svg" alt="">
+                            </div>
+                            <div class="text"> Electronics </div>
+                        </a>
+                    </li>
+                </ul>
+                <a href="#" class="morecate-btn"><i class="uil uil-apps"></i>More Categories</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Category Model End-->
+<!-- Cart Sidebar Offcanvas Start-->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header bs-canvas-header side-cart-header p-3">
+        <div class="d-inline-block main-cart-title" id="offcanvasRightLabel">My Cart <span>(2 Items)</span></div>
+        <button type="button" class="close-btn" data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="uil uil-multiply"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div class="cart-top-total p-4">
+            <div class="cart-total-dil">
+                <h4>FMart Super Market</h4>
+                <span>$34</span>
+            </div>
+            <div class="cart-total-dil pt-2">
+                <h4>Delivery Charges</h4>
+                <span>$1</span>
+            </div>
+        </div>
+        <div class="side-cart-items">
+            <div class="cart-item">
+                <div class="cart-product-img">
+                    <img src="User/images/product/img-1.jpg" alt="">
+                    <div class="offer-badge">6% OFF</div>
+                </div>
+                <div class="cart-text">
+                    <h4>Product Title Here</h4>
+                    <div class="cart-radio">
+                        <ul class="kggrm-now">
+                            <li>
+                                <input type="radio" id="a1" name="cart1">
+                                <label for="a1">0.50</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="a2" name="cart1">
+                                <label for="a2">1kg</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="a3" name="cart1">
+                                <label for="a3">2kg</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="a4" name="cart1">
+                                <label for="a4">3kg</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="qty-group">
+                        <div class="quantity buttons_added">
+                            <input type="button" value="-" class="minus minus-btn">
+                            <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
+                            <input type="button" value="+" class="plus plus-btn">
                         </div>
-                        <div class="cart-text">
-                            <h4>Product Title Here</h4>
-                            <div class="cart-radio">
-                                <ul class="kggrm-now">
-                                    <li>
-                                        <input type="radio" id="a1" name="cart1">
-                                        <label for="a1">0.50</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a2" name="cart1">
-                                        <label for="a2">1kg</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a3" name="cart1">
-                                        <label for="a3">2kg</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a4" name="cart1">
-                                        <label for="a4">3kg</label>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="qty-group">
-                                <div class="quantity buttons_added">
-                                    <input type="button" value="-" class="minus minus-btn">
-                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                    <input type="button" value="+" class="plus plus-btn">
-                                </div>
-                                <div class="cart-item-price">$10 <span>$15</span></div>
-                            </div>
+                        <div class="cart-item-price">$10 <span>$15</span></div>
+                    </div>
 
-                            <button type="button" class="cart-close-btn"><i class="uil uil-multiply"></i></button>
-                        </div>
-                    </div>
-                    <div class="cart-item">
-                        <div class="cart-product-img">
-                            <img src="User/images/product/img-2.jpg" alt="">
-                            <div class="offer-badge">6% OFF</div>
-                        </div>
-                        <div class="cart-text">
-                            <h4>Product Title Here</h4>
-                            <div class="cart-radio">
-                                <ul class="kggrm-now">
-                                    <li>
-                                        <input type="radio" id="a5" name="cart2">
-                                        <label for="a5">0.50</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a6" name="cart2">
-                                        <label for="a6">1kg</label>
-                                    </li>
-                                    <li>
-                                        <input type="radio" id="a7" name="cart2">
-                                        <label for="a7">2kg</label>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="qty-group">
-                                <div class="quantity buttons_added">
-                                    <input type="button" value="-" class="minus minus-btn">
-                                    <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
-                                    <input type="button" value="+" class="plus plus-btn">
-                                </div>
-                                <div class="cart-item-price">$24 <span>$30</span></div>
-                            </div>	
-                            <button type="button" class="cart-close-btn"><i class="uil uil-multiply"></i></button>
-                        </div>
-                    </div>
+                    <button type="button" class="cart-close-btn"><i class="uil uil-multiply"></i></button>
                 </div>
             </div>
-            <div class="offcanvas-footer">
-                <div class="cart-total-dil saving-total ">
-                    <h4>Total Saving</h4>
-                    <span>$11</span>
+            <div class="cart-item">
+                <div class="cart-product-img">
+                    <img src="User/images/product/img-2.jpg" alt="">
+                    <div class="offer-badge">6% OFF</div>
                 </div>
-                <div class="main-total-cart">
-                    <h2>Total</h2>
-                    <span>$35</span>
-                </div>
-                <div class="checkout-cart">
-                    <a href="#" class="promo-code">Have a promocode?</a>
-                    <a href="checkout.jsp" class="cart-checkout-btn hover-btn">Proceed to Checkout</a>
+                <div class="cart-text">
+                    <h4>Product Title Here</h4>
+                    <div class="cart-radio">
+                        <ul class="kggrm-now">
+                            <li>
+                                <input type="radio" id="a5" name="cart2">
+                                <label for="a5">0.50</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="a6" name="cart2">
+                                <label for="a6">1kg</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="a7" name="cart2">
+                                <label for="a7">2kg</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="qty-group">
+                        <div class="quantity buttons_added">
+                            <input type="button" value="-" class="minus minus-btn">
+                            <input type="number" step="1" name="quantity" value="1" class="input-text qty text">
+                            <input type="button" value="+" class="plus plus-btn">
+                        </div>
+                        <div class="cart-item-price">$24 <span>$30</span></div>
+                    </div>	
+                    <button type="button" class="cart-close-btn"><i class="uil uil-multiply"></i></button>
                 </div>
             </div>
-        </div>	
-        <!-- Cart Sidebar Offcanvas End-->
+        </div>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="cart-total-dil saving-total ">
+            <h4>Total Saving</h4>
+            <span>$11</span>
+        </div>
+        <div class="main-total-cart">
+            <h2>Total</h2>
+            <span>$35</span>
+        </div>
+        <div class="checkout-cart">
+            <a href="#" class="promo-code">Have a promocode?</a>
+            <a href="checkout.jsp" class="cart-checkout-btn hover-btn">Proceed to Checkout</a>
+        </div>
+    </div>
+</div>	
+<!-- Cart Sidebar Offcanvas End-->
 <header class="header clearfix" >
     <style>
         .header.clearfix {
@@ -449,11 +449,35 @@
                                     </span>
                                 </a>
                             </div>
-                            <a href="profile?action=overview" class="channel_item">
-                                <i class="uil uil-apps icon__1"></i>Dashboard
+                            <%
+        String dashboardTitle = "";
+        String dashboardLink = "";
+
+        switch (user.getRoleId()) {
+            case 1:
+                dashboardTitle = "Dashboard";
+                dashboardLink = "profile?action=overview";
+                break;
+            case 2:
+                dashboardTitle = "Staff Dashboard";
+                dashboardLink = "staff/dashboard";
+                break;
+            case 3:
+                dashboardTitle = "Admin Dashboard";
+                dashboardLink = "AdminServlet";
+                break;
+            case 4:
+                dashboardTitle = "Manager Dashboard";
+                dashboardLink = "manager/dashboard";
+                break;
+        }
+                            %>
+                            <a href="<%= dashboardLink %>" class="channel_item">
+                                <i class="uil uil-apps icon__1"></i> <%= dashboardTitle %>
                             </a>
 
-                            <a href="profile?action=orders"" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
+
+                            <a href="profile?action=orders" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
                             <a href="wishlist" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
                             <a href="profile?action=wallet" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
                             <a href="profile?action=addresses" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
