@@ -228,11 +228,14 @@
                                     </span>
                                 </a>
                             </div>
-                            <a href="User/dashboard_overview.jsp" class="channel_item"><i class="uil uil-apps icon__1"></i>Dashboard</a>
-                            <a href="User/dashboard_my_orders.jsp" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
-                            <a href="User/dashboard_my_wishlist.jsp" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
-                            <a href="User/dashboard_my_wallet.jsp" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
-                            <a href="User/dashboard_my_addresses.jsp" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
+                            <a href="profile?action=overview" class="channel_item">
+                                <i class="uil uil-apps icon__1"></i>Dashboard
+                            </a>
+
+                            <a href="profile?action=orders"" class="channel_item"><i class="uil uil-box icon__1"></i>My Orders</a>
+                            <a href="wishlist" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
+                            <a href="profile?action=wallet" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
+                            <a href="profile?action=addresses" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
                             <a href="User/offers.jsp" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>
                             <a href="User/faq.jsp" class="channel_item"><i class="uil uil-info-circle icon__1"></i>Faq</a>
                             <a href="logout" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
