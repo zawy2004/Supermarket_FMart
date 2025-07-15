@@ -170,40 +170,48 @@ public List<Inventory> getInventoryByPage(Integer warehouseID, int page, int ite
     return inventoryList;
 }
     // Tăng tồn kho (khi nhập hàng)
-    public void increaseStock(int productID, int warehouseID, int quantity) throws SQLException {
-        String mergeSQL =
-            "MERGE Inventory AS inv " +
-            "USING (SELECT ? AS ProductID, ? AS WarehouseID) AS vals " +
-            "ON inv.ProductID = vals.ProductID AND inv.WarehouseID = vals.WarehouseID " +
-            "WHEN MATCHED THEN UPDATE SET inv.CurrentStock = inv.CurrentStock + ?, LastStockUpdate = CURRENT_TIMESTAMP " +
-            "WHEN NOT MATCHED THEN INSERT (ProductID, WarehouseID, CurrentStock, ReservedStock, LastStockUpdate) " +
-            "VALUES (?, ?, ?, 0, CURRENT_TIMESTAMP);";
+ public void increaseStock(int productID, int warehouseID, int quantity) throws SQLException {
+    String sql = "UPDATE Inventory SET CurrentStock = CurrentStock + ?, LastStockUpdate = CURRENT_TIMESTAMP WHERE ProductID = ? AND WarehouseID = ?";
 
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(mergeSQL)) {
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, quantity);
+        stmt.setInt(2, productID);
+        stmt.setInt(3, warehouseID);
 
-            stmt.setInt(1, productID);
-            stmt.setInt(2, warehouseID);
-            stmt.setInt(3, quantity);
-            stmt.setInt(4, productID);
-            stmt.setInt(5, warehouseID);
-            stmt.setInt(6, quantity);
-            stmt.executeUpdate();
+        int rowsUpdated = stmt.executeUpdate();
+
+        if (rowsUpdated == 0) {
+            // Không tồn tại, thì insert mới
+            String insertSQL = "INSERT INTO Inventory (ProductID, WarehouseID, CurrentStock, ReservedStock, LastStockUpdate) VALUES (?, ?, ?, 0, CURRENT_TIMESTAMP)";
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSQL)) {
+                insertStmt.setInt(1, productID);
+                insertStmt.setInt(2, warehouseID);
+                insertStmt.setInt(3, quantity);
+                insertStmt.executeUpdate();
+            }
         }
     }
+}
 
-    // Giảm tồn kho (khi xuất hàng)
-    public void decreaseStock(int productID, int warehouseID, int quantity) throws SQLException {
-        String sql = "UPDATE Inventory SET CurrentStock = CurrentStock - ?, LastStockUpdate = CURRENT_TIMESTAMP WHERE ProductID = ? AND WarehouseID = ?";
 
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, quantity);
-            stmt.setInt(2, productID);
-            stmt.setInt(3, warehouseID);
-            stmt.executeUpdate();
-        }
+   public boolean decreaseStock(int productID, int warehouseID, int quantity) throws SQLException {
+    String sql = "UPDATE Inventory " +
+                 "SET CurrentStock = CurrentStock - ?, LastStockUpdate = CURRENT_TIMESTAMP " +
+                 "WHERE ProductID = ? AND WarehouseID = ? AND CurrentStock >= ?";
+
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, quantity);       // Số lượng cần giảm
+        stmt.setInt(2, productID);
+        stmt.setInt(3, warehouseID);
+        stmt.setInt(4, quantity);       // Điều kiện CurrentStock >= quantity
+
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0; // Trả về true nếu giảm thành công, false nếu tồn kho không đủ
     }
+}
 
    
     // Các phương thức khác (getInventoryByPage, getAllInventory, updateInventory, deleteInventory, etc.)

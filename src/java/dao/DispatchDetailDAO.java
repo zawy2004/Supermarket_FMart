@@ -27,10 +27,7 @@ public class DispatchDetailDAO {
             stmt.setString(5, detail.getReason());
 
             stmt.executeUpdate();
-            DispatchReceipt receipt = new DispatchReceiptDAO().getDispatchReceiptById(detail.getDispatchID());
-        if (receipt != null) {
-            new InventoryDAO().decreaseStock(detail.getProductID(), receipt.getWarehouseID(), detail.getQuantity());
-        }
+           
         }
     }
 

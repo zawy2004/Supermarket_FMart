@@ -13,26 +13,42 @@ public class StockMovementDAO {
     }
 
     // CREATE: Thêm một lần di chuyển kho
-    public void addStockMovement(StockMovement movement) throws SQLException {
-        String query = "INSERT INTO StockMovements (ProductID, MovementType, Quantity, Reason, ReferenceID, ReferenceType, MovementDate, UnitCost, CreatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+       public void addStockMovement(int productID, String movementType, int quantity, String reason,
+                                 Integer referenceID, String referenceType, int createdBy,
+                                 String notes, double unitCost) throws SQLException {
+
+        String sql = "INSERT INTO StockMovements " +
+                "(ProductID, MovementType, Quantity, Reason, ReferenceID, ReferenceType, CreatedBy, Notes, UnitCost) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, movement.getProductID());
-            stmt.setString(2, movement.getMovementType());
-            stmt.setInt(3, movement.getQuantity());
-            stmt.setString(4, movement.getReason());
-            stmt.setInt(5, movement.getReferenceID());
-            stmt.setString(6, movement.getReferenceType());
-            stmt.setTimestamp(7, new Timestamp(movement.getMovementDate().getTime()));
-            stmt.setBigDecimal(8, movement.getUnitCost());
-            stmt.setInt(9, movement.getCreatedBy());
+            stmt.setInt(1, productID);
+            stmt.setString(2, movementType); // 'IN', 'OUT', 'ADJUSTMENT'
+            stmt.setInt(3, quantity);
+            stmt.setString(4, reason);
+
+            if (referenceID != null) {
+                stmt.setInt(5, referenceID);
+            } else {
+                stmt.setNull(5, java.sql.Types.INTEGER);
+            }
+
+            stmt.setString(6, referenceType);
+            stmt.setInt(7, createdBy);
+
+            if (notes != null) {
+                stmt.setString(8, notes);
+            } else {
+                stmt.setNull(8, java.sql.Types.NVARCHAR);
+            }
+
+            stmt.setDouble(9, unitCost);
 
             stmt.executeUpdate();
         }
     }
-
     // READ: Lấy tất cả các lần di chuyển kho
     public List<StockMovement> getAllStockMovements() throws SQLException {
         List<StockMovement> movements = new ArrayList<>();

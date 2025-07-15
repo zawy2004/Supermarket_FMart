@@ -4,6 +4,7 @@ import dao.ImportDetailDAO;
 import dao.ImportReceiptDAO;
 import dao.InventoryDAO;
 import dao.ProductDAO;
+import dao.StockMovementDAO;
 import model.ImportDetail;
 import model.ImportReceipt;
 import model.Product;
@@ -13,11 +14,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import model.Inventory;
 
 @WebServlet("/ImportDetailServlet")
 public class ImportDetailServlet extends HttpServlet {
@@ -122,8 +123,7 @@ public class ImportDetailServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error loading edit form.");
         }
     }
-
-   private void saveImportDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+private void saveImportDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
         int importID = Integer.parseInt(request.getParameter("importID"));
         int productID = Integer.parseInt(request.getParameter("productID"));
@@ -137,13 +137,27 @@ public class ImportDetailServlet extends HttpServlet {
         // Cập nhật tồn kho trong Inventory
         ImportReceipt receipt = importReceiptDAO.getImportReceiptById(importID);
         if (receipt != null) {
-            // Lấy warehouseID từ ImportReceipt để cập nhật tồn kho đúng kho
             int warehouseID = receipt.getWarehouseID();
-            // Cập nhật tồn kho trong Inventory
             inventoryDAO.increaseStock(productID, warehouseID, quantity);
         }
 
-        // Sau khi lưu và cập nhật tồn kho, chuyển hướng về danh sách chi tiết nhập
+        // === Ghi log vào StockMovements ===
+        HttpSession session = request.getSession();
+        int userID = (int) session.getAttribute("userId"); // hoặc "userID" tùy cách bạn set
+        StockMovementDAO stockMovementDAO = new StockMovementDAO();
+        stockMovementDAO.addStockMovement(
+            productID,
+            "IN",                      // MovementType
+            quantity,
+            "Nhập kho",               // Reason (hoặc request.getParameter("reason") nếu có)
+            importID,                 // ReferenceID
+            "IMPORT",                 // ReferenceType
+            userID,                   // CreatedBy
+            null,                     // Notes nếu có thể truyền thêm
+            unitPrice                 // Giá nhập
+        );
+
+        // Chuyển về danh sách chi tiết nhập
         response.sendRedirect("ImportDetailServlet?importID=" + importID);
     } catch (SQLException | NumberFormatException e) {
         e.printStackTrace();

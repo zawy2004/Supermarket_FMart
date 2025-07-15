@@ -23,10 +23,7 @@ public class ImportDetailDAO {
             stmt.setInt(3, detail.getQuantity());
             stmt.setDouble(4, detail.getUnitPrice());
             stmt.executeUpdate();
-            ImportReceipt receipt = new ImportReceiptDAO().getImportReceiptById(detail.getImportID());
-                if (receipt != null) {
-            new InventoryDAO().increaseStock(detail.getProductID(), receipt.getWarehouseID(), detail.getQuantity());
-            }
+            
         }
     }
 

@@ -14,6 +14,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import dao.StockMovementDAO;
 
 @WebServlet("/DispatchDetailServlet")
 public class DispatchDetailServlet extends HttpServlet {
@@ -22,13 +23,14 @@ public class DispatchDetailServlet extends HttpServlet {
     private DispatchDetailDAO dispatchDetailDAO;
     private ProductDAO productDAO;
     private DispatchReceiptDAO dispatchReceiptDAO;
-    private InventoryDAO inventoryDAO;        
+    private InventoryDAO inventoryDAO;
+
     public DispatchDetailServlet() throws SQLException {
         super();
         dispatchDetailDAO = new DispatchDetailDAO();
         productDAO = new ProductDAO();
         dispatchReceiptDAO = new DispatchReceiptDAO();
-        inventoryDAO = new InventoryDAO();  
+        inventoryDAO = new InventoryDAO();
     }
 
     @Override
@@ -79,8 +81,8 @@ public class DispatchDetailServlet extends HttpServlet {
         try {
             DispatchReceipt receipt = dispatchReceiptDAO.getDispatchReceiptById(dispatchID);
             List<DispatchDetail> details = dispatchDetailDAO.getDispatchDetailsByDispatchId(dispatchID);
-                List<Product> products = productDAO.getAllProducts();
-                request.setAttribute("products", products);
+            List<Product> products = productDAO.getAllProducts();
+            request.setAttribute("products", products);
 
             request.setAttribute("dispatchDetails", details);
             request.setAttribute("dispatchReceipt", receipt);
@@ -120,35 +122,63 @@ public class DispatchDetailServlet extends HttpServlet {
         }
     }
 
-   private void saveDispatchDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    try {
-        int dispatchID = Integer.parseInt(request.getParameter("dispatchID"));
-        int productID = Integer.parseInt(request.getParameter("productID"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        double unitCost = Double.parseDouble(request.getParameter("unitCost"));
-        String reason = request.getParameter("reason");
+    private void saveDispatchDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            int dispatchID = Integer.parseInt(request.getParameter("dispatchID"));
+            int productID = Integer.parseInt(request.getParameter("productID"));
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            double unitCost = Double.parseDouble(request.getParameter("unitCost"));
+            String reason = request.getParameter("reason");
 
-        // Thêm chi tiết xuất kho vào cơ sở dữ liệu
-        DispatchDetail detail = new DispatchDetail(0, dispatchID, productID, quantity, unitCost, reason);
-        dispatchDetailDAO.addDispatchDetail(detail);
+            // Lấy warehouse để kiểm tra tồn kho
+            DispatchReceipt receipt = dispatchReceiptDAO.getDispatchReceiptById(dispatchID);
+            if (receipt == null) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dispatch receipt not found.");
+                return;
+            }
 
-        // Cập nhật tồn kho sau khi xuất hàng
-        DispatchReceipt receipt = dispatchReceiptDAO.getDispatchReceiptById(dispatchID);
-        if (receipt != null) {
-            // Lấy warehouseID từ DispatchReceipt để cập nhật tồn kho đúng kho
             int warehouseID = receipt.getWarehouseID();
-            // Cập nhật giảm tồn kho trong Inventory
-            inventoryDAO.decreaseStock(productID, warehouseID, quantity);
+
+            // Kiểm tra tồn kho đủ hay không
+            boolean success = inventoryDAO.decreaseStock(productID, warehouseID, quantity);
+            if (!success) {
+                // Không đủ tồn kho, hiển thị lại form và báo lỗi
+                request.setAttribute("errorMessage", "Không đủ hàng trong kho để xuất.");
+                request.setAttribute("dispatchID", dispatchID);
+                request.setAttribute("products", productDAO.getAllProducts());
+                request.getRequestDispatcher("/Admin/add_dispatchdetail.jsp").forward(request, response);
+                return;
+            }
+
+            // Nếu đủ kho, thêm chi tiết xuất kho vào CSDL
+            DispatchDetail detail = new DispatchDetail(0, dispatchID, productID, quantity, unitCost, reason);
+            dispatchDetailDAO.addDispatchDetail(detail);
+            // Nếu đủ kho, thêm chi tiết xuất kho vào CSDL
+
+            // Ghi log vào bảng StockMovements
+            StockMovementDAO stockMovementDAO = new StockMovementDAO();
+            HttpSession session = request.getSession();
+            int userID = (int) session.getAttribute("userId"); // hoặc lấy từ User trong session
+            stockMovementDAO.addStockMovement(
+                    productID,
+                    "OUT",
+                    quantity,
+                    reason,
+                    dispatchID,
+                    "DISPATCH",
+                    userID,
+                    null,
+                    unitCost
+            );
+
+            // Chuyển về trang danh sách chi tiết xuất kho
+            response.sendRedirect("DispatchDetailServlet?dispatchID=" + dispatchID);
+
+        } catch (SQLException | NumberFormatException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error saving dispatch detail.");
         }
-
-        // Sau khi thêm chi tiết xuất và cập nhật tồn kho, chuyển hướng về danh sách chi tiết xuất kho
-        response.sendRedirect("DispatchDetailServlet?dispatchID=" + dispatchID);
-    } catch (SQLException | NumberFormatException e) {
-        e.printStackTrace();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error saving dispatch detail.");
     }
-}
-
 
     private void deleteDispatchDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
