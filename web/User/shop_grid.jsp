@@ -528,7 +528,7 @@
                                             </p>
                                         </c:if>
                                         <div class="product-price">
-                                            $<fmt:formatNumber value="${product.sellingPrice}" maxFractionDigits="2"/>
+                                            <fmt:formatNumber value="${product.sellingPrice}" maxFractionDigits="2"/>₫
                                             <c:if test="${product.costPrice > 0 && product.sellingPrice < product.costPrice}">
                                                 <span>$<fmt:formatNumber value="${product.costPrice}" maxFractionDigits="2"/></span>
                                             </c:if>

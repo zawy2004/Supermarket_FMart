@@ -78,6 +78,8 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>  
 
             <div class="container mt-4">
@@ -123,6 +125,7 @@
                                     <c:if test="${not empty error}">
                                         <div class="alert alert-danger mt-2">${error}</div>
                                     </c:if>
+
                                 </div>
                             </div>
                         </div>

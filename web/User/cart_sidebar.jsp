@@ -14,11 +14,11 @@
         <div class="cart-top-total p-4">
             <div class="cart-total-dil">
                 <h4>FMart Super Market</h4>
-                <span id="selected-total">$0.00</span>
+                <span id="selected-total"><fmt:formatNumber value="0" pattern="#,##0"/>₫</span>
             </div>
             <div class="cart-total-dil pt-2">
                 <h4>Delivery Charges</h4>
-                <span id="delivery-charge">$<fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 1}" maxFractionDigits="2"/></span>
+                <span id="delivery-charge"><fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 30000}" pattern="#,##0"/>₫</span>
             </div>
         </div>
         <div class="side-cart-items">
@@ -43,9 +43,9 @@
                                 <input type="button" value="+" class="plus plus-btn" onclick="updateCart(${cartItem.cartID}, ${cartItem.quantity + 1})">
                             </div>
                             <div class="cart-item-price">
-                                $<fmt:formatNumber value="${cartItem.sellingPrice * cartItem.quantity}" maxFractionDigits="2"/>
+                                <fmt:formatNumber value="${cartItem.sellingPrice * cartItem.quantity}" pattern="#,##0"/>₫
                                 <c:if test="${cartItem.costPrice > 0 && cartItem.sellingPrice < cartItem.costPrice}">
-                                    <span>$<fmt:formatNumber value="${cartItem.costPrice * cartItem.quantity}" maxFractionDigits="2"/></span>
+                                    <span><fmt:formatNumber value="${cartItem.costPrice * cartItem.quantity}" pattern="#,##0"/>₫</span>
                                 </c:if>
                             </div>
                         </div>
@@ -70,11 +70,11 @@
             </div>
             <div class="cart-total-dil saving-total">
                 <h4>Total Saving</h4>
-                <span id="selected-saving">$0.00</span>
+                <span id="selected-saving"><fmt:formatNumber value="0" pattern="#,##0"/>₫</span>
             </div>
             <div class="main-total-cart">
                 <h2>Total</h2>
-                <span id="grand-total">$0.00</span>
+                <span id="grand-total"><fmt:formatNumber value="0" pattern="#,##0"/>₫</span>
             </div>
             <div class="checkout-cart">
                 <a href="#" class="promo-code" data-bs-toggle="modal" data-bs-target="#promoCodeModal">Have a promocode?</a>
@@ -137,6 +137,10 @@
 </style>
 
 <script>
+    function formatVND(number) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', minimumFractionDigits: 0 }).format(number);
+    }
+
     function updatePrice(cartId, quantity) {
         $.ajax({
             url: 'cart',
@@ -234,17 +238,17 @@
         checkboxes.forEach(checkbox => {
             const price = parseFloat(checkbox.getAttribute('data-price'));
             total += price;
-            // Giả định saving dựa trên costPrice và sellingPrice
-            const costPrice = price * 1.2; // Ví dụ: costPrice cao hơn sellingPrice 20%
+            const costPrice = price * 1.2; // Giả định costPrice cao hơn sellingPrice 20%
             saving += (costPrice - price);
         });
 
-        const deliveryCharge = parseFloat(document.getElementById('delivery-charge').textContent.replace('$', ''));
+        const deliveryChargeText = document.getElementById('delivery-charge').textContent.replace(/[^0-9]/g, '');
+        const deliveryCharge = parseFloat(deliveryChargeText);
         const grandTotal = total + deliveryCharge;
 
-        document.getElementById('selected-total').textContent = '$' + total.toFixed(2);
-        document.getElementById('selected-saving').textContent = '$' + saving.toFixed(2);
-        document.getElementById('grand-total').textContent = '$' + grandTotal.toFixed(2);
+        document.getElementById('selected-total').textContent = formatVND(total);
+        document.getElementById('selected-saving').textContent = formatVND(saving);
+        document.getElementById('grand-total').textContent = formatVND(grandTotal);
     }
 
     function selectAllItems() {
@@ -255,7 +259,6 @@
         updateTotal();
     }
 
-    // Khởi tạo tổng tiền khi tải trang
     document.addEventListener('DOMContentLoaded', function() {
         updateTotal();
     });
