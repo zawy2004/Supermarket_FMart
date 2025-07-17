@@ -3,11 +3,34 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/ChatbotServlet.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/CartServlet.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/CategoryServlet.java</file>
-            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/dao/ImportDetailDAO.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/reports.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/shop_products.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/ResetOTPCounterServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/EmailSettingServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/UserAddressServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/shops.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/SingleProductServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/RegisterServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/DispatchReceiptServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/LoginFacebookServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/ShopServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/shop_view.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/stockmovement.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/DispatchDetailServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/model/StockMovement.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/adminsidebar.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/SendOtpServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/User/header.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/StockMovementServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/HomeServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/UploadProfileImageServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/ImportReceiptServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/user/LoginGoogleServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/sidebar.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/web/Admin/inventory.jsp</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/dao/StockMovementDAO.java</file>
             <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/ImportDetailServlet.java</file>
+            <file>file:/C:/Users/gia%20huy/Documents/IdeaProjects/Fmart/Supermarket_FMart/src/java/controller/admin/InventoryManagementServlet.java</file>
         </group>
     </open-files>
 </project-private>

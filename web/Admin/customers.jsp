@@ -20,6 +20,61 @@
         <!-- Vendor Stylesheets -->
         <link href="Admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="Admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <style>
+            .pagination {
+                margin-top: 1rem;
+            }
+
+            .pagination .page-item {
+                margin: 0 3px;
+            }
+
+            .pagination .page-link {
+                color: #007bff;
+                border: 1px solid #dee2e6;
+                padding: 6px 12px;
+                border-radius: 5px;
+                font-weight: 500;
+                background-color: #fff;
+                transition: all 0.2s ease-in-out;
+            }
+
+            .pagination .page-link:hover {
+                background-color: #e9f0ff;
+                text-decoration: none;
+                border-color: #007bff;
+                color: #0056b3;
+            }
+
+            .pagination .active .page-link {
+                background-color: #007bff;
+                border-color: #007bff;
+                color: #fff;
+                font-weight: bold;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+
+            .pagination .disabled .page-link {
+                background-color: #f8f9fa;
+                color: #adb5bd;
+                border-color: #dee2e6;
+                cursor: not-allowed;
+            }
+
+            .pagination .page-link:focus {
+                box-shadow: none;
+            }
+
+            /* Dot (...) style */
+            .pagination .page-item.disabled span.page-link {
+                background: none;
+                border: none;
+                font-weight: bold;
+                color: #6c757d;
+                cursor: default;
+            }
+        </style>
+
 
     </head>
     <style>
@@ -33,25 +88,25 @@
 
     <body class="sb-nav-fixed">
         <jsp:include page="header.jsp"></jsp:include>
-        <div id="layoutSidenav">
-           <jsp:include page="adminsidebar.jsp"></jsp:include>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid">
-                        <h2 class="mt-30 page-title">Users</h2>
-                        <ol class="breadcrumb mb-30">
-                            <li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Users</li>
-                        </ol>
-                        <div class="row justify-content-between">
+            <div id="layoutSidenav">
+            <jsp:include page="adminsidebar.jsp"></jsp:include>
+                <div id="layoutSidenav_content">
+                    <main>
+                        <div class="container-fluid">
+                            <h2 class="mt-30 page-title">Users</h2>
+                            <ol class="breadcrumb mb-30">
+                                <li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
+                                <li class="breadcrumb-item active">Users</li>
+                            </ol>
+                            <div class="row justify-content-between">
 
 
-                            <form action="UserManagementServlet" method="get" class="form-inline mb-3">
-                                <input type="hidden" name="action" value="list" />
+                                <form action="UserManagementServlet" method="get" class="form-inline mb-3">
+                                    <input type="hidden" name="action" value="list" />
 
-                                <div class="search-by-name-input mr-2">
-                                    <input type="text" name="keyword" class="form-control" placeholder="Search by name or email"
-                                           value="${param.keyword}">
+                                    <div class="search-by-name-input mr-2">
+                                        <input type="text" name="keyword" class="form-control" placeholder="Search by name or email"
+                                               value="${param.keyword}">
                                 </div>
 
                                 <div class="input-group mr-2">
@@ -138,7 +193,7 @@
 
 
                                             </table>
-                                            <!-- Phân trang dưới bảng -->
+                                            <%-- Giữ filter keyword và roleID --%>
                                             <c:set var="queryStr">
                                                 keyword=${fn:escapeXml(param.keyword)}&roleID=${param.roleID}
                                             </c:set>
@@ -146,21 +201,33 @@
                                             <nav aria-label="Page navigation" class="mt-4">
                                                 <ul class="pagination justify-content-center">
 
-                                                    <!-- Previous -->
+                                                    <%-- Nút Previous --%>
                                                     <li class="page-item ${page == 1 ? 'disabled' : ''}">
                                                         <a class="page-link"
                                                            href="UserManagementServlet?action=list&page=${page - 1}&${queryStr}">Previous</a>
                                                     </li>
 
-                                                    <!-- Page Numbers -->
+                                                    <%-- Hiển thị các trang: 1–3, cuối-2 → cuối, và gần trang hiện tại --%>
                                                     <c:forEach begin="1" end="${totalPages}" var="i">
-                                                        <li class="page-item ${i == page ? 'active' : ''}">
-                                                            <a class="page-link"
-                                                               href="UserManagementServlet?action=list&page=${i}&${queryStr}">${i}</a>
-                                                        </li>
-                                                    </c:forEach>
+                                                        <c:if test="${i <= 3 || i > totalPages - 3 || (i >= page - 1 && i <= page + 1)}">
+                                                            <li class="page-item ${i == page ? 'active' : ''}">
+                                                                <a class="page-link"
+                                                                   href="UserManagementServlet?action=list&page=${i}&${queryStr}">${i}</a>
+                                                            </li>
+                                                        </c:if>
 
-                                                    <!-- Next -->
+                                                        <%-- Dấu ... sau trang 3 --%>
+                                                        <c:if test="${i == 4 && page > 5}">
+                                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                            </c:if>
+
+                                                        <%-- Dấu ... trước 3 trang cuối --%>
+                                                        <c:if test="${i == totalPages - 3 && page < totalPages - 4}">
+                                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                            </c:if>
+                                                        </c:forEach>
+
+                                                    <%-- Nút Next --%>
                                                     <li class="page-item ${page == totalPages || totalPages == 0 ? 'disabled' : ''}">
                                                         <a class="page-link"
                                                            href="UserManagementServlet?action=list&page=${page + 1}&${queryStr}">Next</a>
@@ -168,6 +235,7 @@
 
                                                 </ul>
                                             </nav>
+
 
                                         </div>
                                     </div>
