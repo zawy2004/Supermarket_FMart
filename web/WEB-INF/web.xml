@@ -67,4 +67,28 @@
     <servlet-name>ContactServlet</servlet-name>
     <url-pattern>/support</url-pattern>
 </servlet-mapping>
+<servlet>
+    <servlet-name>offers</servlet-name>
+    <servlet-class>controller.user.OffersServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>offers</servlet-name>
+    <url-pattern>/offers</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>faq</servlet-name>
+    <servlet-class>controller.user.FaqServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>faq</servlet-name>
+    <url-pattern>/faq</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>our_blog</servlet-name>
+    <servlet-class>controller.user.OurblogServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>our_blog</servlet-name>
+    <url-pattern>/our_blog</url-pattern>
+</servlet-mapping>
 </web-app>

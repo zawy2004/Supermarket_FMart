@@ -3,7 +3,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
-
     <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/our_blog.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:01:14 GMT -->
     <head>
         <meta charset="utf-8">
@@ -17,19 +16,19 @@
         <link rel="icon" type="image/png" href="images/fav.png">
 
         <!-- Stylesheets -->
-        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-        <link href='vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/responsive.css" rel="stylesheet">
-        <link href="css/night-mode.css" rel="stylesheet">
-        <link href="css/step-wizard.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href='User/vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
+        <link href="User/css/style.css" rel="stylesheet">
+        <link href="User/css/responsive.css" rel="stylesheet">
+        <link href="User/css/night-mode.css" rel="stylesheet">
+        <link href="User/css/step-wizard.css" rel="stylesheet">
 
         <!-- Vendor Stylesheets -->
-        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
+        <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 
     </head>
 
@@ -330,7 +329,7 @@
                                     <nav>
                                         <div class="nav nav-tabs tab_default  justify-content-center">
                                             <a class="nav-item nav-link" href="about_us.jsp">About</a>
-                                            <a class="nav-item nav-link active" href="our_blog.jsp">Blog</a>
+                                            <a class="nav-item nav-link active" href="our_blog">Blog</a>
                                             <a class="nav-item nav-link" href="career.jsp">Careers</a>
                                             <a class="nav-item nav-link" href="press.jsp">Press</a>
                                         </div>
@@ -354,32 +353,32 @@
                                     <ul class="top-posts">
                                         <li>
                                             <div class="blog-top-item">
-                                                <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp" class="top-post-link">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a>
-                                                <span class="blog-time">8 May, 2020</span>
+                                                <a href="blog_detail_view.jsp" class="top-post-link">Optimizing Inventory at FMart</a>
+                                                <span class="blog-time">July 10, 2025</span>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="blog-top-item">
-                                                <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp" class="top-post-link">Vestibulum venenatis sem eu venenatis vulputate.</a>
-                                                <span class="blog-time">7 May, 2020</span>
+                                                <a href="blog_detail_view.jsp" class="top-post-link">Student Projects in FMart System</a>
+                                                <span class="blog-time">July 5, 2025</span>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="blog-top-item">
-                                                <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp" class="top-post-link">In ac diam vitae ex luctus viverra eu eu quam.</a>
-                                                <span class="blog-time">4 May, 2020</span>
+                                                <a href="blog_detail_view.jsp" class="top-post-link">Enhancing Delivery at FPT Campus</a>
+                                                <span class="blog-time">June 28, 2025</span>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="blog-top-item">
-                                                <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp" class="top-post-link">Nullam commodo felis sed lacus lobortis ullamcorper.</a>
-                                                <span class="blog-time">3 May, 2020</span>
+                                                <a href="blog_detail_view.jsp" class="top-post-link">FMart Payment Innovations</a>
+                                                <span class="blog-time">June 20, 2025</span>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="blog-top-item">
-                                                <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp" class="top-post-link">Aenean vel ligula pulvinar, ornare urna sed, luctus lacus.</a>
-                                                <span class="blog-time">2 May, 2020</span>
+                                                <a href="blog_detail_view.jsp" class="top-post-link">Sustainability in FMart Operations</a>
+                                                <span class="blog-time">June 15, 2025</span>
                                             </div>
                                         </li>
                                     </ul>
@@ -401,15 +400,15 @@
                             </div>
                             <div class="col-lg-8 col-md-7">
                                 <div class="blog-item">
-                                    <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp" class="blog-img">
-                                        <img src="images/blog/img-1.jpg" alt="">
-                                        <div class="blog-cate-badge">Food & Life Style</div>
+                                    <a href="blog_detail_view.jsp" class="blog-img">
+                                        <img src="User/images/blog/img-1.jpg" alt="">
+                                        <div class="blog-cate-badge">FMart Operations</div>
                                     </a>
                                     <div class="date-icons-group">
-                                        <div class="blog-time sz-14">15 May, 2020</div>
+                                        <div class="blog-time sz-14">July 18, 2025</div>
                                         <ul class="like-share-icons">
                                             <li>
-                                                <a href="#" class="like-share"><i class="uil uil-thumbs-up"></i><span>5</span></a>
+                                                <a href="#" class="like-share"><i class="uil uil-thumbs-up"></i><span>15</span></a>
                                             </li>
                                             <li>
                                                 <a href="#" class="like-share"><i class="uil uil-share-alt"></i></a>
@@ -417,21 +416,21 @@
                                         </ul>
                                     </div>
                                     <div class="blog-detail">
-                                        <h4>Blog Title Here</h4>
-                                        <p>Maecenas viverra odio sed mauris mattis blandit. Nullam et dolor vitae erat scelerisque vulputate. Maecenas felis arcu, pulvinar id cursus eget, ultrices ac metus. Mauris condimentum tortor sapien, laoreet ornare nibh iaculis eu. Donec posuere ipsum at malesuada egestas. Pellentesque accumsan lacus urna, sed suscipit ipsum bibendum sit amet.</p>
-                                        <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp">Read More</a>
+                                        <h4>Optimizing Inventory Management at FMart</h4>
+                                        <p>Learn how the FMart team at FPT University is using advanced inventory techniques to ensure product availability. This blog explores real-time tracking and student-led innovations in managing stock levels efficiently.</p>
+                                        <a href="blog_detail_view.jsp">Read More</a>
                                     </div>
                                 </div>
                                 <div class="blog-item">
-                                    <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp" class="blog-img">
-                                        <img src="images/blog/img-2.jpg" alt="">
-                                        <div class="blog-cate-badge">Food & Life Style</div>
+                                    <a href="blog_detail_view.jsp" class="blog-img">
+                                        <img src="User/images/blog/img-2.jpg" alt="">
+                                        <div class="blog-cate-badge">Student Projects</div>
                                     </a>
                                     <div class="date-icons-group">
-                                        <div class="blog-time sz-14">14 May, 2020</div>
+                                        <div class="blog-time sz-14">July 12, 2025</div>
                                         <ul class="like-share-icons">
                                             <li>
-                                                <a href="#" class="like-share"><i class="uil uil-thumbs-up"></i><span>10</span></a>
+                                                <a href="#" class="like-share"><i class="uil uil-thumbs-up"></i><span>22</span></a>
                                             </li>
                                             <li>
                                                 <a href="#" class="like-share"><i class="uil uil-share-alt"></i></a>
@@ -439,21 +438,21 @@
                                         </ul>
                                     </div>
                                     <div class="blog-detail">
-                                        <h4>Blog Title Here</h4>
-                                        <p>Maecenas viverra odio sed mauris mattis blandit. Nullam et dolor vitae erat scelerisque vulputate. Maecenas felis arcu, pulvinar id cursus eget, ultrices ac metus. Mauris condimentum tortor sapien, laoreet ornare nibh iaculis eu. Donec posuere ipsum at malesuada egestas. Pellentesque accumsan lacus urna, sed suscipit ipsum bibendum sit amet.</p>
-                                        <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp">Read More</a>
+                                        <h4>Student Contributions to FMart Development</h4>
+                                        <p>Discover how FPT University students are contributing to the FMart system through projects in software development, focusing on enhancing user experience and operational efficiency.</p>
+                                        <a href="blog_detail_view.jsp">Read More</a>
                                     </div>
                                 </div>
                                 <div class="blog-item">
-                                    <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp" class="blog-img">
-                                        <img src="images/blog/img-3.jpg" alt="">
-                                        <div class="blog-cate-badge">Food & Life Style</div>
+                                    <a href="blog_detail_view.jsp" class="blog-img">
+                                        <img src="User/images/blog/img-3.jpg" alt="">
+                                        <div class="blog-cate-badge">Delivery Solutions</div>
                                     </a>
                                     <div class="date-icons-group">
-                                        <div class="blog-time sz-14">10 May, 2020</div>
+                                        <div class="blog-time sz-14">July 5, 2025</div>
                                         <ul class="like-share-icons">
                                             <li>
-                                                <a href="#" class="like-share"><i class="uil uil-thumbs-up"></i><span>25</span></a>
+                                                <a href="#" class="like-share"><i class="uil uil-thumbs-up"></i><span>30</span></a>
                                             </li>
                                             <li>
                                                 <a href="#" class="like-share"><i class="uil uil-share-alt"></i></a>
@@ -461,9 +460,9 @@
                                         </ul>
                                     </div>
                                     <div class="blog-detail">
-                                        <h4>Blog Title Here</h4>
-                                        <p>Maecenas viverra odio sed mauris mattis blandit. Nullam et dolor vitae erat scelerisque vulputate. Maecenas felis arcu, pulvinar id cursus eget, ultrices ac metus. Mauris condimentum tortor sapien, laoreet ornare nibh iaculis eu. Donec posuere ipsum at malesuada egestas. Pellentesque accumsan lacus urna, sed suscipit ipsum bibendum sit amet.</p>
-                                        <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/blog_detail_view.jsp">Read More</a>
+                                        <h4>Improving Delivery Services at FMart</h4>
+                                        <p>Explore the latest updates in FMart's delivery system at FPT University, including faster campus-wide delivery and student feedback integration for better service.</p>
+                                        <a href="blog_detail_view.jsp">Read More</a>
                                     </div>
                                 </div>
                                 <div class="blog-more-btn">
@@ -479,16 +478,15 @@
         <jsp:include page="footer.jsp"></jsp:include>
         <!-- Footer End -->
         <!-- Javascripts -->
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-        <script src="vendor/OwlCarousel/owl.carousel.js"></script>
-        <script src="js/jquery.countdown.min.js"></script>
-        <script src="js/custom.js"></script>
-        <script src="js/product.thumbnail.slider.js"></script>
-        <script src="js/offset_overlay.js"></script>
-        <script src="js/night-mode.js"></script>
-
+        <script src="User/js/jquery.min.js"></script>
+        <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+        <script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
+        <script src="User/js/jquery.countdown.min.js"></script>
+        <script src="User/js/custom.js"></script>
+        <script src="User/js/product.thumbnail.slider.js"></script>
+        <script src="User/js/offset_overlay.js"></script>
+        <script src="User/js/night-mode.js"></script>
 
     </body>
 

@@ -3,7 +3,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
-
     <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/faq.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:01:12 GMT -->
     <head>
         <meta charset="utf-8">
@@ -17,19 +16,19 @@
         <link rel="icon" type="image/png" href="images/fav.png">
 
         <!-- Stylesheets -->
-        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-        <link href='vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/responsive.css" rel="stylesheet">
-        <link href="css/night-mode.css" rel="stylesheet">
-        <link href="css/step-wizard.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href='User/vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
+        <link href="User/css/style.css" rel="stylesheet">
+        <link href="User/css/responsive.css" rel="stylesheet">
+        <link href="User/css/night-mode.css" rel="stylesheet">
+        <link href="User/css/step-wizard.css" rel="stylesheet">
 
         <!-- Vendor Stylesheets -->
-        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
+        <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 
     </head>
 
@@ -328,7 +327,7 @@
                         <div class="col-md-12">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="home">Home</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Frequently Asked Questions</li>
                                 </ol>
                             </nav>
@@ -355,7 +354,7 @@
                                     </div>
                                     <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" data-bs-parent="#accordion0" style="">
                                         <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper faucibus erat a efficitur. Praesent vulputate mauris eget augue semper, at eleifend enim aliquam. Vivamus suscipit lacinia neque eget suscipit. Morbi vitae nisl ac justo placerat vulputate ac quis lectus. Vestibulum pellentesque, orci eu ultrices molestie, nisi libero hendrerit eros, vel interdum augue tortor vel urna. Nullam enim dolor, pulvinar in metus vitae, tincidunt dignissim neque. Pellentesque tempor nulla eu neque hendrerit fringilla. Suspendisse ultricies venenatis maximus. Suspendisse erat elit, ultricies eu porta nec, luctus sit amet dui. Fusce feugiat odio semper, hendrerit lectus vitae, convallis nisl. Ut a justo diam. Donec vitae leo lorem. Cras pharetra libero ut urna condimentum, non imperdiet leo posuere.</p>
+                                            <p>The FMart supermarket management system at FPT University requires students to register an account to access features such as product management, order placement, and order tracking. Registration can be done using a university email or phone number linked to the FPT Education system. After registration, you will receive a verification code to activate your account.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -369,7 +368,7 @@
                                     </div>
                                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper faucibus erat a efficitur. Praesent vulputate mauris eget augue semper, at eleifend enim aliquam. Vivamus suscipit lacinia neque eget suscipit. Morbi vitae nisl ac justo placerat vulputate ac quis lectus. Vestibulum pellentesque, orci eu ultrices molestie, nisi libero hendrerit eros, vel interdum augue tortor vel urna. Nullam enim dolor, pulvinar in metus vitae, tincidunt dignissim neque. Pellentesque tempor nulla eu neque hendrerit fringilla. Suspendisse ultricies venenatis maximus. Suspendisse erat elit, ultricies eu porta nec, luctus sit amet dui. Fusce feugiat odio semper, hendrerit lectus vitae, convallis nisl. Ut a justo diam. Donec vitae leo lorem. Cras pharetra libero ut urna condimentum, non imperdiet leo posuere.</p>
+                                            <p>If you forget your password, use the "Forgot Password" option on the login page to reset it. The system will send an OTP via email or SMS. For account issues, contact the FMart support team at FPT University via email at support@fmart.vn.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -383,7 +382,7 @@
                                     </div>
                                     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper faucibus erat a efficitur. Praesent vulputate mauris eget augue semper, at eleifend enim aliquam. Vivamus suscipit lacinia neque eget suscipit. Morbi vitae nisl ac justo placerat vulputate ac quis lectus. Vestibulum pellentesque, orci eu ultrices molestie, nisi libero hendrerit eros, vel interdum augue tortor vel urna. Nullam enim dolor, pulvinar in metus vitae, tincidunt dignissim neque. Pellentesque tempor nulla eu neque hendrerit fringilla. Suspendisse ultricies venenatis maximus. Suspendisse erat elit, ultricies eu porta nec, luctus sit amet dui. Fusce feugiat odio semper, hendrerit lectus vitae, convallis nisl. Ut a justo diam. Donec vitae leo lorem. Cras pharetra libero ut urna condimentum, non imperdiet leo posuere.</p>
+                                            <p>The FMart system supports payment via Momo e-wallet, bank cards, or cash on delivery within the FPT University campus. Students can link their FPT student wallet to receive discounts when shopping at FMart.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -397,7 +396,7 @@
                                     </div>
                                     <div id="collapsefour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingfour" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper faucibus erat a efficitur. Praesent vulputate mauris eget augue semper, at eleifend enim aliquam. Vivamus suscipit lacinia neque eget suscipit. Morbi vitae nisl ac justo placerat vulputate ac quis lectus. Vestibulum pellentesque, orci eu ultrices molestie, nisi libero hendrerit eros, vel interdum augue tortor vel urna. Nullam enim dolor, pulvinar in metus vitae, tincidunt dignissim neque. Pellentesque tempor nulla eu neque hendrerit fringilla. Suspendisse ultricies venenatis maximus. Suspendisse erat elit, ultricies eu porta nec, luctus sit amet dui. Fusce feugiat odio semper, hendrerit lectus vitae, convallis nisl. Ut a justo diam. Donec vitae leo lorem. Cras pharetra libero ut urna condimentum, non imperdiet leo posuere.</p>
+                                            <p>Delivery at FMart is available within the FPT University campus, with a delivery time of 1-2 hours depending on the area. Students can track delivery status via the FMart app or contact the logistics team at 1800-000-000.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -411,7 +410,7 @@
                                     </div>
                                     <div id="collapsefive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingfive" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper faucibus erat a efficitur. Praesent vulputate mauris eget augue semper, at eleifend enim aliquam. Vivamus suscipit lacinia neque eget suscipit. Morbi vitae nisl ac justo placerat vulputate ac quis lectus. Vestibulum pellentesque, orci eu ultrices molestie, nisi libero hendrerit eros, vel interdum augue tortor vel urna. Nullam enim dolor, pulvinar in metus vitae, tincidunt dignissim neque. Pellentesque tempor nulla eu neque hendrerit fringilla. Suspendisse ultricies venenatis maximus. Suspendisse erat elit, ultricies eu porta nec, luctus sit amet dui. Fusce feugiat odio semper, hendrerit lectus vitae, convallis nisl. Ut a justo diam. Donec vitae leo lorem. Cras pharetra libero ut urna condimentum, non imperdiet leo posuere.</p>
+                                            <p>To cancel an order, students must contact support within 30 minutes after placement. The FMart system at FPT University allows tracking of order history in the "My Orders" section on the app or website.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -425,7 +424,7 @@
                                     </div>
                                     <div id="collapsesix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingsix" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper faucibus erat a efficitur. Praesent vulputate mauris eget augue semper, at eleifend enim aliquam. Vivamus suscipit lacinia neque eget suscipit. Morbi vitae nisl ac justo placerat vulputate ac quis lectus. Vestibulum pellentesque, orci eu ultrices molestie, nisi libero hendrerit eros, vel interdum augue tortor vel urna. Nullam enim dolor, pulvinar in metus vitae, tincidunt dignissim neque. Pellentesque tempor nulla eu neque hendrerit fringilla. Suspendisse ultricies venenatis maximus. Suspendisse erat elit, ultricies eu porta nec, luctus sit amet dui. Fusce feugiat odio semper, hendrerit lectus vitae, convallis nisl. Ut a justo diam. Donec vitae leo lorem. Cras pharetra libero ut urna condimentum, non imperdiet leo posuere.</p>
+                                            <p>FMart customer service at FPT University operates from 8:00 AM to 10:00 PM. Students can submit feedback or complaints through the contact form on the website or directly at the support counter on campus.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -439,7 +438,7 @@
                                     </div>
                                     <div id="collapseseven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingseven" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper faucibus erat a efficitur. Praesent vulputate mauris eget augue semper, at eleifend enim aliquam. Vivamus suscipit lacinia neque eget suscipit. Morbi vitae nisl ac justo placerat vulputate ac quis lectus. Vestibulum pellentesque, orci eu ultrices molestie, nisi libero hendrerit eros, vel interdum augue tortor vel urna. Nullam enim dolor, pulvinar in metus vitae, tincidunt dignissim neque. Pellentesque tempor nulla eu neque hendrerit fringilla. Suspendisse ultricies venenatis maximus. Suspendisse erat elit, ultricies eu porta nec, luctus sit amet dui. Fusce feugiat odio semper, hendrerit lectus vitae, convallis nisl. Ut a justo diam. Donec vitae leo lorem. Cras pharetra libero ut urna condimentum, non imperdiet leo posuere.</p>
+                                            <p>Products at FMart can be returned within 7 days if there are defects from the supplier. Please bring the receipt and product to the support counter at FPT University for a refund or exchange.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -453,7 +452,7 @@
                                     </div>
                                     <div id="collapseeight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingeight" data-bs-parent="#accordion0">
                                         <div class="panel-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper faucibus erat a efficitur. Praesent vulputate mauris eget augue semper, at eleifend enim aliquam. Vivamus suscipit lacinia neque eget suscipit. Morbi vitae nisl ac justo placerat vulputate ac quis lectus. Vestibulum pellentesque, orci eu ultrices molestie, nisi libero hendrerit eros, vel interdum augue tortor vel urna. Nullam enim dolor, pulvinar in metus vitae, tincidunt dignissim neque. Pellentesque tempor nulla eu neque hendrerit fringilla. Suspendisse ultricies venenatis maximus. Suspendisse erat elit, ultricies eu porta nec, luctus sit amet dui. Fusce feugiat odio semper, hendrerit lectus vitae, convallis nisl. Ut a justo diam. Donec vitae leo lorem. Cras pharetra libero ut urna condimentum, non imperdiet leo posuere.</p>
+                                            <p>The FMart management system at FPT University operates on a technology platform developed by students, featuring inventory management, sales, and data analysis. Students can join the project to learn and enhance the system.</p>
                                         </div>
                                     </div>
                                 </div>							
@@ -469,16 +468,15 @@
         <!-- Footer End -->
 
         <!-- Javascripts -->
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-        <script src="vendor/OwlCarousel/owl.carousel.js"></script>
-        <script src="js/jquery.countdown.min.js"></script>
-        <script src="js/custom.js"></script>
-        <script src="js/product.thumbnail.slider.js"></script>
-        <script src="js/offset_overlay.js"></script>
-        <script src="js/night-mode.js"></script>
-
+        <script src="User/js/jquery.min.js"></script>
+        <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+        <script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
+        <script src="User/js/jquery.countdown.min.js"></script>
+        <script src="User/js/custom.js"></script>
+        <script src="User/js/product.thumbnail.slider.js"></script>
+        <script src="User/js/offset_overlay.js"></script>
+        <script src="User/js/night-mode.js"></script>
 
     </body>
 
