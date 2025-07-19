@@ -25,9 +25,9 @@
 <body>
     <!-- Thêm dữ liệu ảo -->
     <c:set var="blogList" value="${blogList == null ? [
-        {id: 1, title: 'Optimizing Inventory at FMart', date: '2025-07-18', category: 'FMart Operations', image: 'img-1.jpg', summary: 'Learn how FMart uses inventory techniques...', likes: 15},
-        {id: 2, title: 'Student Projects in FMart System', date: '2025-07-12', category: 'Student Projects', image: 'img-2.jpg', summary: 'Discover student contributions to FMart...', likes: 10},
-        {id: 3, title: 'Enhancing Delivery at FPT Campus', date: '2025-07-05', category: 'Delivery Solutions', image: 'img-3.jpg', summary: 'Explore delivery improvements at FMart...', likes: 8}
+        {id: 1, title: 'Optimizing Inventory at FMart', date: '2025-07-18', category: 'FMart Operations', image: 'User/images/blog/img-1.jpg', summary: 'Learn how FMart uses inventory techniques...', likes: 15},
+        {id: 2, title: 'Student Projects in FMart System', date: '2025-07-12', category: 'Student Projects', image: 'User/images/blog/img-2.jpg', summary: 'Discover student contributions to FMart...', likes: 10},
+        {id: 3, title: 'Enhancing Delivery at FPT Campus', date: '2025-07-05', category: 'Delivery Solutions', image: 'User/images/blog/img-3.jpg', summary: 'Explore delivery improvements at FMart...', likes: 8}
     ] : blogList}" />
 
     <jsp:include page="header.jsp" />
@@ -57,10 +57,23 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-7">
-                        <c:forEach var="blog" items="${blogList}">
+                        <c:forEach var="blog" items="${blogList}" varStatus="status">
                             <div class="blog-item">
                                 <a href="blog_detail_view.jsp?blogId=${blog.id}" class="blog-img">
-                                    <img src="User/images/blog/img-1.jpg" alt="${blog.title}">
+                                    <c:choose>
+                                        <c:when test="${status.count == 1}">
+                                            <img src="User/images/blog/img-1.jpg" alt="${blog.title}">
+                                        </c:when>
+                                        <c:when test="${status.count == 2}">
+                                            <img src="User/images/blog/img-2.jpg" alt="${blog.title}">
+                                        </c:when>
+                                        <c:when test="${status.count == 3}">
+                                            <img src="User/images/blog/img-3.jpg" alt="${blog.title}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="User/images/blog/img-5.jpg" alt="${blog.title}">
+                                        </c:otherwise>
+                                    </c:choose>
                                     <div class="blog-cate-badge">${blog.category}</div>
                                 </a>
                                 <div class="date-icons-group">
