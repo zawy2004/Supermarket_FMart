@@ -1,4 +1,3 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -102,7 +101,7 @@
                     <div class="col-md-12">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+                                <li class="breadcrumb-item"><a href="home">Home</a></li>
                                 <c:if test="${not empty category}">
                                     <li class="breadcrumb-item"><a href="shop?categoryId=${category.categoryID}">${category.categoryName}</a></li>
                                 </c:if>
@@ -132,7 +131,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="item">
-                                                    <img src="images/product/default.jpg" alt="Default Product Image">
+                                                    <img src="User/images/product/default.jpg" alt="Default Product Image">
                                                     <p style="display: none;">Debug: No images found for ProductID = ${product.productID}</p>
                                                 </div>
                                             </c:otherwise>
@@ -149,7 +148,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="item">
-                                                    <img src="images/product/default.jpg" alt="Default Product Image">
+                                                    <img src="User/images/product/default.jpg" alt="Default Product Image">
                                                 </div>
                                             </c:otherwise>
                                         </c:choose>

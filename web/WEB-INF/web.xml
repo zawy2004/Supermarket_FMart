@@ -119,6 +119,56 @@
     <servlet-name>press</servlet-name>
     <url-pattern>/press</url-pattern>
 </servlet-mapping>
+<!-- check-out -->
+<servlet-mapping>
+    <servlet-name>CheckoutServlet</servlet-name>
+    <url-pattern>/checkout</url-pattern>
+</servlet-mapping>
+<!-- SingleProductServlet -->
+<servlet>
+    <servlet-name>single_product_view</servlet-name>
+    <servlet-class>controller.user.SingleProductViewServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>single_product_view</servlet-name>
+    <url-pattern>/single_product_view</url-pattern>
+</servlet-mapping>
+<!-- Request_Product -->
+<servlet>
+    <servlet-name>request_product</servlet-name>
+    <servlet-class>controller.user.RequestProductServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>request_product</servlet-name>
+    <url-pattern>/request_product</url-pattern>
+</servlet-mapping>
+<!-- order_placed -->
+<servlet>
+    <servlet-name>order_placed</servlet-name>
+    <servlet-class>controller.user.OrderServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>order_placed</servlet-name>
+    <url-pattern>/order_placed</url-pattern>
+</servlet-mapping>
+<!-- bill -->
+<servlet>
+    <servlet-name>bill</servlet-name>
+    <servlet-class>controller.user.BillServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>bill</servlet-name>
+    <url-pattern>/bill</url-pattern>
+</servlet-mapping>
+<!-- forgot_password -->
+<servlet>
+    <servlet-name>forgot_password</servlet-name>
+    <servlet-class>controller.user.ForgotServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>forgot_password</servlet-name>
+    <url-pattern>/forgot_password</url-pattern>
+</servlet-mapping>
 
 <servlet>
     <servlet-name>blog_no_sidebar</servlet-name>

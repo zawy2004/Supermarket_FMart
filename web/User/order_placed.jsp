@@ -18,18 +18,18 @@
 
         <!-- Stylesheets -->
         <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-        <link href='vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/responsive.css" rel="stylesheet">
-        <link href="css/night-mode.css" rel="stylesheet">
-        <link href="css/step-wizard.css" rel="stylesheet">
+        <link href='User/vendor/unicons-2.0.1/css/unicons.css' rel='stylesheet'>
+        <link href="User/css/style.css" rel="stylesheet">
+        <link href="User/css/responsive.css" rel="stylesheet">
+        <link href="User/css/night-mode.css" rel="stylesheet">
+        <link href="User/css/step-wizard.css" rel="stylesheet">
 
         <!-- Vendor Stylesheets -->
-        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
-        <link href="vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
+        <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.carousel.css" rel="stylesheet">
+        <link href="User/vendor/OwlCarousel/assets/owl.theme.default.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 
     </head>
 
@@ -328,7 +328,7 @@
                         <div class="col-md-12">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="home">Home</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Order Placed</li>
                                 </ol>
                             </nav>
@@ -350,14 +350,14 @@
                                         <h4>Your order will be sent to this address</h4>
                                     </div>
                                     <ul class="address-placed-dt1">
-                                        <li><p><i class="uil uil-map-marker-alt"></i>Address :<span>#000, St 8, Sks Nagar, Near Pakhowal Road, Ldh, 141001</span></p></li>
-                                        <li><p><i class="uil uil-phone-alt"></i>Phone Number :<span>+919999999999</span></p></li>
-                                        <li><p><i class="uil uil-envelope"></i>Email Address :<span>johndoe@example.com</span></p></li>
+                                        <li><p><i class="uil uil-map-marker-alt"></i>Address :<span>123 Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh, Việt Nam</span></p></li>
+                                        <li><p><i class="uil uil-phone-alt"></i>Phone Number :<span>1800000000</span></p></li>
+                                        <li><p><i class="uil uil-envelope"></i>Email Address :<span>support@fmart.vn</span></p></li>
                                         <li><p><i class="uil uil-card-atm"></i>Payment Method :<span>Cash on Delivery</span></p></li>
                                     </ul>
                                     <div class="stay-invoice">
                                         <div class="st-hm">Stay Home<i class="uil uil-smile"></i></div>
-                                        <a href="bill.jsp" class="invc-link hover-btn" target="_blank">invoice</a>
+                                        <a href="bill" class="invc-link hover-btn" target="_blank">invoice</a>
                                     </div>
                                     <div class="placed-bottom-dt">
                                         The payment of <span>$16</span> you'll make when the deliver arrives with your order.
@@ -375,15 +375,15 @@
         <!-- Footer End -->
 
         <!-- Javascripts -->
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-        <script src="vendor/OwlCarousel/owl.carousel.js"></script>
-        <script src="js/jquery.countdown.min.js"></script>
-        <script src="js/custom.js"></script>
-        <script src="js/product.thumbnail.slider.js"></script>
-        <script src="js/offset_overlay.js"></script>
-        <script src="js/night-mode.js"></script>
+        <script src="User/js/jquery.min.js"></script>
+        <script src="User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+        <script src="User/vendor/OwlCarousel/owl.carousel.js"></script>
+        <script src="User/js/jquery.countdown.min.js"></script>
+        <script src="User/js/custom.js"></script>
+        <script src="User/js/product.thumbnail.slider.js"></script>
+        <script src="User/js/offset_overlay.js"></script>
+        <script src="User/js/night-mode.js"></script>
 
 
     </body>

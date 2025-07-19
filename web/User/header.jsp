@@ -567,14 +567,14 @@
                                     <li><a class="dropdown-item" href="User/dashboard_overview.jsp">Account</a></li>
                                     <li><a class="dropdown-item" href="about_us">About Us</a></li>
                                     <li><a class="dropdown-item" href="shop">Online Shop</a></li>
-                                    <li><a class="dropdown-item" href="User/single_product_view.jsp">Single Product View</a></li>
-                                    <li><a class="dropdown-item" href="User/checkout.jsp">Checkout</a></li>
-                                    <li><a class="dropdown-item" href="User/request_product.jsp">Product Request</a></li>
-                                    <li><a class="dropdown-item" href="User/order_placed.jsp">Order Placed</a></li>
-                                    <li><a class="dropdown-item" href="User/bill.jsp">Bill Slip</a></li>
+                                    <li><a class="dropdown-item" href="single_product_view">Single Product View</a></li>
+                                    <li><a class="dropdown-item" href="checkout">Checkout</a></li>
+                                    <li><a class="dropdown-item" href="request_product">Product Request</a></li>
+                                    <li><a class="dropdown-item" href="order_placed">Order Placed</a></li>
+                                    <li><a class="dropdown-item" href="bill">Bill Slip</a></li>
                                     <li><a class="dropdown-item" href="login">Sign In</a></li>
                                     <li><a class="dropdown-item" href="register">Sign Up</a></li>
-                                    <li><a class="dropdown-item" href="User/forgot_password.jsp">Forgot Password</a></li>
+                                    <li><a class="dropdown-item" href="forgot_password">Forgot Password</a></li>
                                 </ul>
                             </li>
                             <!-- Fix trong header.jsp - dòng cuối cùng -->
