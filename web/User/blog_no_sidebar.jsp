@@ -39,10 +39,10 @@
                         <div class="default_tabs">
                             <nav>
                                 <div class="nav nav-tabs tab_default justify-content-center">
-                                    <a class="nav-item nav-link" href="about_us.jsp">About</a>
+                                    <a class="nav-item nav-link" href="about_us">About</a>
                                     <a class="nav-item nav-link active" href="our_blog">Blog</a>
-                                    <a class="nav-item nav-link" href="career.jsp">Careers</a>
-                                    <a class="nav-item nav-link" href="press.jsp">Press</a>
+                                    <a class="nav-item nav-link" href="career">Careers</a>
+                                    <a class="nav-item nav-link" href="press">Press</a>
                                 </div>
                             </nav>
                         </div>

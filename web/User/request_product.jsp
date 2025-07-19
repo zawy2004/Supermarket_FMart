@@ -52,7 +52,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-1.svg" alt="">
+                                        <img src="User/images/category/icon-1.svg" alt="">
                                     </div>
                                     <div class="text"> Fruits and Vegetables </div>
                                 </a>
@@ -60,7 +60,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-2.svg" alt="">
+                                        <img src="User/images/category/icon-2.svg" alt="">
                                     </div>
                                     <div class="text"> Grocery & Staples </div>
                                 </a>
@@ -68,7 +68,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-3.svg" alt="">
+                                        <img src="User/images/category/icon-3.svg" alt="">
                                     </div>
                                     <div class="text"> Dairy & Eggs </div>
                                 </a>
@@ -76,7 +76,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-4.svg" alt="">
+                                        <img src="User/images/category/icon-4.svg" alt="">
                                     </div>
                                     <div class="text"> Beverages </div>
                                 </a>
@@ -84,7 +84,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-5.svg" alt="">
+                                        <img src="User/images/category/icon-5.svg" alt="">
                                     </div>
                                     <div class="text"> Snacks </div>
                                 </a>
@@ -92,7 +92,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-6.svg" alt="">
+                                        <img src="User/images/category/icon-6.svg" alt="">
                                     </div>
                                     <div class="text"> Home Care </div>
                                 </a>
@@ -100,7 +100,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-7.svg" alt="">
+                                        <img src="User/images/category/icon-7.svg" alt="">
                                     </div>
                                     <div class="text"> Noodles & Sauces </div>
                                 </a>
@@ -108,7 +108,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-8.svg" alt="">
+                                        <img src="User/images/category/icon-8.svg" alt="">
                                     </div>
                                     <div class="text"> Personal Care </div>
                                 </a>
@@ -116,7 +116,7 @@
                             <li>
                                 <a href="#" class="single-cat-item">
                                     <div class="icon">
-                                        <img src="images/category/icon-9.svg" alt="">
+                                        <img src="User/images/category/icon-9.svg" alt="">
                                     </div>
                                     <div class="text"> Pet Care </div>
                                 </a>
@@ -147,7 +147,7 @@
                         <div class="search-by-cat">
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-1.svg" alt="">
+                                    <img src="User/images/category/icon-1.svg" alt="">
                                 </div>
                                 <div class="text">
                                     Fruits and Vegetables
@@ -155,49 +155,49 @@
                             </a>
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-2.svg" alt="">
+                                    <img src="User/images/category/icon-2.svg" alt="">
                                 </div>
                                 <div class="text"> Grocery & Staples </div>
                             </a>
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-3.svg" alt="">
+                                    <img src="User/images/category/icon-3.svg" alt="">
                                 </div>
                                 <div class="text"> Dairy & Eggs </div>
                             </a>
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-4.svg" alt="">
+                                    <img src="User/images/category/icon-4.svg" alt="">
                                 </div>
                                 <div class="text"> Beverages </div>
                             </a>
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-5.svg" alt="">
+                                    <img src="User/images/category/icon-5.svg" alt="">
                                 </div>
                                 <div class="text"> Snacks </div>
                             </a>
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-6.svg" alt="">
+                                    <img src="User/images/category/icon-6.svg" alt="">
                                 </div>
                                 <div class="text"> Home Care </div>
                             </a>
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-7.svg" alt="">
+                                    <img src="User/images/category/icon-7.svg" alt="">
                                 </div>
                                 <div class="text"> Noodles & Sauces </div>
                             </a>
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-8.svg" alt="">
+                                    <img src="User/images/category/icon-8.svg" alt="">
                                 </div>
                                 <div class="text"> Personal Care </div>
                             </a>
                             <a href="#" class="single-cat">
                                 <div class="icon">
-                                    <img src="images/category/icon-9.svg" alt="">
+                                    <img src="User/images/category/icon-9.svg" alt="">
                                 </div>
                                 <div class="text"> Pet Care </div>
                             </a>
@@ -229,7 +229,7 @@
                 <div class="side-cart-items">
                     <div class="cart-item">
                         <div class="cart-product-img">
-                            <img src="images/product/img-1.jpg" alt="">
+                            <img src="User/images/product/img-1.jpg" alt="">
                             <div class="offer-badge">6% OFF</div>
                         </div>
                         <div class="cart-text">
@@ -268,7 +268,7 @@
                     </div>
                     <div class="cart-item">
                         <div class="cart-product-img">
-                            <img src="images/product/img-2.jpg" alt="">
+                            <img src="User/images/product/img-2.jpg" alt="">
                             <div class="offer-badge">6% OFF</div>
                         </div>
                         <div class="cart-text">
