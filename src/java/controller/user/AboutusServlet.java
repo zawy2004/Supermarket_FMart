@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.RequestDispatcher;
 
-public class CareerServlet extends HttpServlet {
+public class AboutusServlet extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -17,7 +17,7 @@ public class CareerServlet extends HttpServlet {
         // Ví dụ: lấy danh sách offers từ database
         
         // Forward đến JSP
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/User/career.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/User/about_us.jsp");
         dispatcher.forward(request, response);
     }
     

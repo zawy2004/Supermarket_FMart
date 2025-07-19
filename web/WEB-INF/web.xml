@@ -83,6 +83,7 @@
     <servlet-name>faq</servlet-name>
     <url-pattern>/faq</url-pattern>
 </servlet-mapping>
+<!-- our_blog-->
 <servlet>
     <servlet-name>our_blog</servlet-name>
     <servlet-class>controller.user.OurblogServlet</servlet-class>
@@ -90,5 +91,73 @@
 <servlet-mapping>
     <servlet-name>our_blog</servlet-name>
     <url-pattern>/our_blog</url-pattern>
+</servlet-mapping>
+<!-- about us -->
+<servlet>
+    <servlet-name>about_us</servlet-name>
+    <servlet-class>controller.user.AboutusServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>about_us</servlet-name>
+    <url-pattern>/about_us</url-pattern>
+</servlet-mapping>
+<!-- career-->
+<servlet>
+    <servlet-name>career</servlet-name>
+    <servlet-class>controller.user.CareerServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>career</servlet-name>
+    <url-pattern>/career</url-pattern>
+</servlet-mapping>
+<!-- press-->
+<servlet>
+    <servlet-name>press</servlet-name>
+    <servlet-class>controller.user.PressServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>press</servlet-name>
+    <url-pattern>/press</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>blog_no_sidebar</servlet-name>
+    <servlet-class>controller.user.BlognosidebarServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>blog_no_sidebar</servlet-name>
+    <url-pattern>/blog_no_sidebar</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>blog_left_sidebar</servlet-name>
+    <servlet-class>controller.user.BlogleftServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>blog_left_sidebar</servlet-name>
+    <url-pattern>/blog_left_sidebar</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>blog_right_sidebar</servlet-name>
+    <servlet-class>controller.user.BlogrightServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>blog_right_sidebar</servlet-name>
+    <url-pattern>/blog_right_sidebar</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>blog_detail_view</servlet-name>
+    <servlet-class>controller.user.BlogdetailviewServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>blog_detail_view</servlet-name>
+    <url-pattern>/blog_detail_view</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>blog_left_sidebar_single_view</servlet-name>
+    <servlet-class>controller.user.BlogleftsingleServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>blog_left_sidebar_single_view</servlet-name>
+    <url-pattern>/blog_left_sidebar_single_view</url-pattern>
 </servlet-mapping>
 </web-app>

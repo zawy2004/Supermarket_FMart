@@ -1,4 +1,4 @@
-    <%@page contentType="text/html" pageEncoding="UTF-8"%> 
+<%@page contentType="text/html" pageEncoding="UTF-8"%> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.User" %>
 <%
@@ -552,11 +552,11 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/our_blog">Our Blog</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_no_sidebar.jsp">Our Blog Two No Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_left_sidebar.jsp">Our Blog with Left Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_right_sidebar.jsp">Our Blog with Right Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_detail_view.jsp">Blog Detail View</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_left_sidebar_single_view.jsp">Blog Detail View with Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_no_sidebar">Our Blog Two No Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_left_sidebar">Our Blog with Left Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_right_sidebar">Our Blog with Right Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_detail_view">Blog Detail View</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_left_sidebar_single_view">Blog Detail View with Sidebar</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -565,14 +565,13 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a class="dropdown-item" href="User/dashboard_overview.jsp">Account</a></li>
-                                    <li><a class="dropdown-item" href="User/about_us.jsp">About Us</a></li>
+                                    <li><a class="dropdown-item" href="about_us">About Us</a></li>
                                     <li><a class="dropdown-item" href="shop">Online Shop</a></li>
                                     <li><a class="dropdown-item" href="User/single_product_view.jsp">Single Product View</a></li>
                                     <li><a class="dropdown-item" href="User/checkout.jsp">Checkout</a></li>
                                     <li><a class="dropdown-item" href="User/request_product.jsp">Product Request</a></li>
                                     <li><a class="dropdown-item" href="User/order_placed.jsp">Order Placed</a></li>
                                     <li><a class="dropdown-item" href="User/bill.jsp">Bill Slip</a></li>
-                                    <li><a class="dropdown-item" href="User/job_detail_view.jsp">Job Detail View</a></li>
                                     <li><a class="dropdown-item" href="login">Sign In</a></li>
                                     <li><a class="dropdown-item" href="register">Sign Up</a></li>
                                     <li><a class="dropdown-item" href="User/forgot_password.jsp">Forgot Password</a></li>
