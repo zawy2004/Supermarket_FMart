@@ -63,6 +63,19 @@
             color: #28a745;
             font-weight: 500;
         }
+        .section-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        .payment-description {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -154,279 +167,118 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-7">
-                        <div id="checkout_wizard" class="checkout accordion left-chck145">
-                            <div class="checkout-step">
-                                <div class="checkout-card" id="headingOne"> 
-                                    <span class="checkout-step-number">1</span>
-                                    <h4 class="checkout-step-title"> 
-                                        <button class="wizard-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Xác minh số điện thoại</button>
-                                    </h4>
+                        <form id="checkoutForm" action="${pageContext.request.contextPath}/processCheckout" method="post">
+                            <div class="pdpt-bg">
+                                <div class="pdpt-title">
+                                    <h4>Thông tin thanh toán</h4>
                                 </div>
-                                <div id="collapseOne" class="collapse show" data-bs-parent="#checkout_wizard">
-                                    <div class="checkout-step-body">
-                                        <p>Số điện thoại của bạn được sử dụng để gửi thông báo đơn hàng và liên kết với ví ZaloPay (nếu chọn thanh toán ZaloPay).</p>
-                                        <c:if test="${not empty sessionScope.userPhone}">
-                                            <p class="phone-verified">Số điện thoại: <span id="phoneDisplay">${sessionScope.userPhone}</span> <i class="fas fa-check-circle"></i> <a class="edit-no-btn hover-btn" data-bs-toggle="collapse" href="#edit-number">Chỉnh sửa</a></p>
-                                        </c:if>
-                                        <c:if test="${empty sessionScope.userPhone}">
-                                            <p class="text-muted">Chưa có số điện thoại được xác minh. Vui lòng nhập số điện thoại.</p>
-                                        </c:if>
-                                        <div class="collapse ${empty sessionScope.userPhone ? 'show' : ''}" id="edit-number">
-                                            <div class="row">
-                                                <div class="col-lg-8">
-                                                    <div class="checkout-login">
-                                                        <form id="phoneForm">
-                                                            <div class="login-phone">
-                                                                <input type="text" id="phoneInput" class="form-control" placeholder="Số điện thoại" value="${sessionScope.userPhone}">
-                                                            </div>
-                                                            <button type="button" class="chck-btn hover-btn" onclick="sendVerificationCode()">Gửi mã xác minh</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="otp-verifaction" style="display: none;" id="otpSection">
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="form-group mb-0">
-                                                        <label class="control-label">Nhập mã xác minh (4 chữ số)</label>
-                                                        <ul class="code-alrt-inputs">
-                                                            <li><input id="code1" name="code" type="text" maxlength="1" class="form-control input-md" required=""></li>
-                                                            <li><input id="code2" name="code" type="text" maxlength="1" class="form-control input-md" required=""></li>
-                                                            <li><input id="code3" name="code" type="text" maxlength="1" class="form-control input-md" required=""></li>
-                                                            <li><input id="code4" name="code" type="text" maxlength="1" class="form-control input-md" required=""></li>
-                                                            <li>
-                                                                <button type="button" class="chck-btn hover-btn" onclick="verifyCode()">Xác minh</button>
-                                                            </li>
-                                                        </ul>
-                                                        <a href="#" class="resend-link" onclick="sendVerificationCode()">Gửi lại mã</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <c:if test="${not empty sessionScope.userPhone}">
-                                            <button class="next-btn16 hover-btn" data-bs-toggle="collapse" data-bs-target="#collapseTwo">Tiếp tục</button>
-                                        </c:if>
+                                <div class="pdpt-body">
+                                    <!-- Xác minh số điện thoại -->
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Số điện thoại*</label>
+                                        <input id="phone" name="phone" type="text" placeholder="Số điện thoại" class="form-control" value="${sessionScope.userPhone}" required>
+                                        <small class="form-text text-muted">Số điện thoại dùng để gửi thông báo đơn hàng.</small>
                                     </div>
+
+                                    <!-- Họ và tên -->
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Họ và tên*</label>
+                                        <input id="name" name="name" type="text" placeholder="Họ và tên" class="form-control" required>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Email*</label>
+                                        <input id="email" name="email" type="email" placeholder="Email" class="form-control" required>
+                                    </div>
+
+                                    <!-- Địa chỉ -->
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Tỉnh/Thành phố*</label>
+                                        <input id="province" name="province" type="text" placeholder="Tỉnh/Thành phố" class="form-control" required>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Quận/Huyện*</label>
+                                        <input id="district" name="district" type="text" placeholder="Quận/Huyện" class="form-control" required>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Phường/Xã*</label>
+                                        <input id="ward" name="ward" type="text" placeholder="Phường/Xã" class="form-control" required>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Số nhà và tên đường*</label>
+                                        <input id="street" name="street" type="text" placeholder="Số nhà và tên đường" class="form-control" required>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Ghi chú</label>
+                                        <textarea name="notes" class="form-control" placeholder="Ghi chú cho đơn hàng"></textarea>
+                                    </div>
+
+                                    <!-- Thời gian giao hàng -->
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Ngày giao hàng*</label>
+                                        <select name="deliveryDate" class="form-control" required>
+                                            <option value="">Chọn ngày</option>
+                                            <option value="today">Hôm nay</option>
+                                            <option value="tomorrow">Ngày mai</option>
+                                            <c:forEach begin="2" end="7" var="i">
+                                                <option value="${i} days"><fmt:formatDate value="${java.time.LocalDate.now().plusDays(i)}" pattern="dd MMM yyyy"/></option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Giờ giao hàng*</label>
+                                        <select name="deliveryTime" class="form-control" required>
+                                            <option value="">Chọn giờ</option>
+                                            <option value="08:00-10:00">8:00 - 10:00</option>
+                                            <option value="10:00-12:00">10:00 - 12:00</option>
+                                            <option value="12:00-14:00">12:00 - 14:00</option>
+                                            <option value="14:00-16:00">14:00 - 16:00</option>
+                                            <option value="16:00-18:00">16:00 - 18:00</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Phương thức thanh toán -->
+                                    <div class="form-group mt-3">
+                                        <label class="control-label">Phương thức thanh toán*</label>
+                                        <div class="product-radio">
+                                            <ul class="product-now payment-method-radio">
+                                                <li>
+                                                    <input type="radio" id="cod" name="paymentmethod" value="cod" checked>
+                                                    <label for="cod"><img src="${pageContext.request.contextPath}/User/images/icons/cod.png" alt=""> Thanh toán khi nhận hàng</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" id="vnpay" name="paymentmethod" value="vnpay">
+                                                    <label for="vnpay"><img src="${pageContext.request.contextPath}/User/images/icons/vnpay.png" alt=""> VNPay</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" id="payos" name="paymentmethod" value="payos">
+                                                    <label for="payos"><img src="${pageContext.request.contextPath}/User/images/icons/payos.png" alt=""> PayOS</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div id="payment-cod" class="payment-description">Thanh toán trực tiếp khi nhận hàng. Không phí thêm.</div>
+                                        <div id="payment-vnpay" class="payment-description">Thanh toán qua VNPay. An toàn và nhanh chóng.</div>
+                                        <div id="payment-payos" class="payment-description">Thanh toán qua PayOS. Hỗ trợ nhiều ngân hàng.</div>
+                                    </div>
+
+                                    <!-- Hidden fields for cart -->
+                                    <c:forEach var="item" items="${cartItems}">
+                                        <input type="hidden" name="productId" value="${item.productID}"/>
+                                        <input type="hidden" name="productName" value="${item.productName}"/>
+                                        <input type="hidden" name="unit" value="${item.unit}"/>
+                                        <input type="hidden" name="quantity" value="${item.quantity}"/>
+                                        <input type="hidden" name="price" value="${item.sellingPrice}"/>
+                                    </c:forEach>
+                                    <input type="hidden" name="cartTotal" value="${cartTotal}"/>
+
+                                    <button type="button" class="next-btn16 hover-btn mt-4" onclick="showConfirmModal()">Đặt hàng</button>
                                 </div>
                             </div>
-                            <div class="checkout-step">
-                                <div class="checkout-card" id="headingTwo">
-                                    <span class="checkout-step-number">2</span>
-                                    <h4 class="checkout-step-title">
-                                        <button class="wizard-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Địa chỉ giao hàng</button>
-                                    </h4>
-                                </div>
-                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#checkout_wizard">
-                                    <div class="checkout-step-body">
-                                        <div class="checout-address-step">
-                                            <div class="row">
-                                                <div class="col-lg-12">                                                
-                                                    <form id="addressForm">
-                                                        <div class="form-group">
-                                                            <div class="product-radio">
-                                                                <ul class="product-now">
-                                                                    <li>
-                                                                        <input type="radio" id="ad1" name="addressType" value="home" checked>
-                                                                        <label for="ad1">Nhà riêng</label>
-                                                                    </li>
-                                                                    <li>
-                                                                        <input type="radio" id="ad2" name="addressType" value="office">
-                                                                        <label for="ad2">Văn phòng</label>
-                                                                    </li>
-                                                                    <li>
-                                                                        <input type="radio" id="ad3" name="addressType" value="other">
-                                                                        <label for="ad3">Khác</label>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                        <div class="address-fieldset">
-                                                            <div class="row">
-                                                                <div class="col-lg-6 col-md-12">
-                                                                    <div class="form-group mt-30">
-                                                                        <label class="control-label">Họ và tên*</label>
-                                                                        <input id="name" name="name" type="text" placeholder="Họ và tên" class="form-control input-md" required="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-6 col-md-12">
-                                                                    <div class="form-group mt-30">
-                                                                        <label class="control-label">Email*</label>
-                                                                        <input id="email" name="email" type="email" placeholder="Địa chỉ email" class="form-control input-md" required="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-12 col-md-12">
-                                                                    <div class="form-group mt-30">
-                                                                        <label class="control-label">Số nhà / Tòa nhà / Văn phòng*</label>
-                                                                        <input id="flat" name="flat" type="text" placeholder="Địa chỉ" class="form-control input-md" required="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-12 col-md-12">
-                                                                    <div class="form-group mt-30">
-                                                                        <label class="control-label">Tên đường / Khu vực / Tên văn phòng*</label>
-                                                                        <input id="street" name="street" type="text" placeholder="Địa chỉ đường" class="form-control input-md">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-6 col-md-12">
-                                                                    <div class="form-group mt-30">
-                                                                        <label class="control-label">Mã bưu điện*</label>
-                                                                        <input id="pincode" name="pincode" type="text" placeholder="Mã bưu điện" class="form-control input-md" required="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-6 col-md-12">
-                                                                    <div class="form-group mt-30">
-                                                                        <label class="control-label">Khu vực*</label>
-                                                                        <input id="locality" name="locality" type="text" placeholder="Thành phố" class="form-control input-md" required="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-12 col-md-12">
-                                                                    <div class="form-group mt-30">
-                                                                        <div class="address-btns">
-                                                                            <button type="button" class="save-btn14 hover-btn" onclick="saveAddress()">Lưu</button>
-                                                                            <a class="collapsed ms-auto next-btn16 hover-btn" role="button" data-bs-toggle="collapse" data-bs-parent="#checkout_wizard" href="#collapseThree">Tiếp tục</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="checkout-step">
-                                <div class="checkout-card" id="headingThree"> 
-                                    <span class="checkout-step-number">3</span>
-                                    <h4 class="checkout-step-title">
-                                        <button class="wizard-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Thời gian & Ngày giao hàng</button>
-                                    </h4>
-                                </div>
-                                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#checkout_wizard">
-                                    <div class="checkout-step-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Chọn ngày và giờ*</label>
-                                                    <div class="date-slider-group">
-                                                        <div class="owl-carousel date-slider owl-theme">
-                                                            <div class="item">
-                                                                <div class="date-now">
-                                                                    <input type="radio" id="dd1" name="deliveryDate" value="today" checked>
-                                                                    <label for="dd1">Hôm nay</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="item">
-                                                                <div class="date-now">
-                                                                    <input type="radio" id="dd2" name="deliveryDate" value="tomorrow">
-                                                                    <label for="dd2">Ngày mai</label>
-                                                                </div>
-                                                            </div>
-                                                            <c:forEach begin="2" end="7" var="i">
-                                                                <div class="item">
-                                                                    <div class="date-now">
-                                                                        <input type="radio" id="dd${i+1}" name="deliveryDate" value="${i} days">
-                                                                        <label for="dd${i+1}"><fmt:formatDate value="${java.time.LocalDate.now().plusDays(i)}" pattern="dd MMM yyyy"/></label>
-                                                                    </div>
-                                                                </div>
-                                                            </c:forEach>
-                                                        </div>
-                                                    </div>
-                                                    <div class="time-radio mt-4">
-                                                        <div class="grouped fields">
-                                                            <div class="form-check mb-3">
-                                                                <input class="form-check-input" type="radio" name="deliveryTime" id="time1" value="08:00-10:00" checked>
-                                                                <label class="form-check-label ms-1" for="time1">8:00 - 10:00</label>
-                                                            </div>
-                                                            <div class="form-check mb-3">
-                                                                <input class="form-check-input" type="radio" name="deliveryTime" id="time2" value="10:00-12:00">
-                                                                <label class="form-check-label ms-1" for="time2">10:00 - 12:00</label>
-                                                            </div>
-                                                            <div class="form-check mb-3">
-                                                                <input class="form-check-input" type="radio" name="deliveryTime" id="time3" value="12:00-14:00">
-                                                                <label class="form-check-label ms-1" for="time3">12:00 - 14:00</label>
-                                                            </div>
-                                                            <div class="form-check mb-3">
-                                                                <input class="form-check-input" type="radio" name="deliveryTime" id="time4" value="14:00-16:00">
-                                                                <label class="form-check-label ms-1" for="time4">14:00 - 16:00</label>
-                                                            </div>
-                                                            <div class="form-check mb-3">
-                                                                <input class="form-check-input" type="radio" name="deliveryTime" id="time5" value="16:00-18:00">
-                                                                <label class="form-check-label ms-1" for="time5">16:00 - 18:00</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <a class="collapsed next-btn16 mt-4 hover-btn" role="button" data-bs-toggle="collapse" href="#collapseFour">Tiến hành thanh toán</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="checkout-step">
-                                <div class="checkout-card" id="headingFour">
-                                    <span class="checkout-step-number">4</span>
-                                    <h4 class="checkout-step-title"> 
-                                        <button class="wizard-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">Thanh toán</button>
-                                    </h4>
-                                </div>
-                                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-bs-parent="#checkout_wizard">
-                                    <div class="checkout-step-body">
-                                        <div class="payment_method-checkout">    
-                                            <div class="row">    
-                                                <div class="col-md-12">
-                                                    <div class="rpt100">                                                    
-                                                        <ul class="radio--group-inline-container_1 payment-method-radio">
-                                                            <li>
-                                                                <div class="radio-item_1">
-                                                                    <input id="cashondelivery" value="cod" name="paymentmethod" type="radio" checked>
-                                                                    <label for="cashondelivery" class="radio-label_1">
-                                                                        <img src="${pageContext.request.contextPath}/User/images/icons/cod.png" alt="COD"> Thanh toán khi nhận hàng
-                                                                    </label>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="radio-item_1">
-                                                                    <input id="zalopay" value="zalopay" name="paymentmethod" type="radio">
-                                                                    <label for="zalopay" class="radio-label_1">
-                                                                        <img src="${pageContext.request.contextPath}/User/images/icons/zalopay.png" alt="ZaloPay"> Thanh toán qua ZaloPay
-                                                                    </label>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="form-group return-departure-dts" data-method="cod" style="display: block;">                                                            
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="pymnt_title">
-                                                                    <h4>Thanh toán khi nhận hàng</h4>
-                                                                    <p>Thanh toán khi nhận hàng không áp dụng cho đơn hàng trên 10 triệu đồng.</p>
-                                                                </div>
-                                                            </div>                                                        
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group return-departure-dts main-form" data-method="zalopay" style="display: none;">                                                            
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="pymnt_title mb-0">
-                                                                    <h4 class="mb-0">Thanh toán qua ZaloPay</h4>
-                                                                    <p>Thanh toán an toàn và nhanh chóng qua ví ZaloPay hoặc các phương thức khác.</p>
-                                                                </div>
-                                                            </div>                                                        
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="next-btn16 hover-btn" onclick="placeOrder()">Đặt hàng</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="col-lg-4 col-md-5">
-                        <div class="pdpt-bg mt-0">
+                        <div class="pdpt-bg mt-0" id="order-summary">
                             <div class="pdpt-title">
                                 <h4>Tóm tắt đơn hàng</h4>
                             </div>
@@ -470,7 +322,7 @@
                             </div>
                             <div class="main-total-cart p-4">
                                 <h2>Tổng cộng</h2>
-                                <span><fmt:formatNumber value="${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 30000) : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                <span id="total-amount"><fmt:formatNumber value="${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 30000) : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
                             </div>
                             <div class="payment-secure">
                                 <i class="uil uil-padlock"></i>Thanh toán an toàn
@@ -486,318 +338,201 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Promo Code Modal -->
-    <div class="modal fade" id="promoCodeModal" tabindex="-1" aria-labelledby="promoCodeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="promoCodeModalLabel">Áp dụng mã khuyến mãi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="promoCodeInput">Mã khuyến mãi</label>
-                        <input type="text" class="form-control" id="promoCodeInput" placeholder="Nhập mã khuyến mãi">
+        <!-- Promo Code Modal -->
+        <div class="modal fade" id="promoCodeModal" tabindex="-1" aria-labelledby="promoCodeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="promoCodeModalLabel">Áp dụng mã khuyến mãi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-primary" onclick="applyPromoCode()">Áp dụng</button>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="promoCodeInput">Mã khuyến mãi</label>
+                            <input type="text" class="form-control" id="promoCodeInput" placeholder="Nhập mã khuyến mãi">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" onclick="applyPromoCode()">Áp dụng</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Body End -->
-    <!-- Footer Start -->
-    <jsp:include page="footer.jsp"></jsp:include>
-    <!-- Footer End -->
 
-    <!-- Javascripts -->
-    <script src="${pageContext.request.contextPath}/User/js/jquery.min.js"></script>
-    <script src="${pageContext.request.contextPath}/User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="${pageContext.request.contextPath}/User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-    <script src="${pageContext.request.contextPath}/User/vendor/OwlCarousel/owl.carousel.js"></script>
-    <script src="${pageContext.request.contextPath}/User/js/custom.js"></script>
-    <script src="${pageContext.request.contextPath}/User/js/product.thumbnail.slider.js"></script>
-    <script src="${pageContext.request.contextPath}/User/js/offset_overlay.js"></script>
-    <script src="${pageContext.request.contextPath}/User/js/night-mode.js"></script>
-    <script>
-        // Format price as VND
-        function formatVND(price) {
-            return price.toLocaleString('vi-VN', { 
-                style: 'decimal', 
-                minimumFractionDigits: 0, 
-                maximumFractionDigits: 0 
-            }) + ' ₫';
-        }
+        <!-- Confirm Payment Modal -->
+        <div class="modal fade" id="confirmPaymentModal" tabindex="-1" aria-labelledby="confirmPaymentModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmPaymentModalLabel">Xác nhận thanh toán</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Chi tiết đơn hàng</h5>
+                        <div id="confirm-order-summary"></div> <!-- Sao chép từ order-summary -->
+                        <hr>
+                        <p><strong>Phương thức thanh toán:</strong> <span id="confirm-payment-method"></span></p>
+                        <p><strong>Tổng cộng:</strong> <span id="confirm-total-amount"></span></p>
+                        <p>Bạn chắc chắn muốn đặt hàng?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" onclick="submitCheckoutForm()">Xác nhận và thanh toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Body End -->
+        <!-- Footer Start -->
+        <jsp:include page="footer.jsp"></jsp:include>
+        <!-- Footer End -->
 
-        // Show Notification
-        function showNotification(message, type) {
-            const existingNotifications = document.querySelectorAll('.toast-notification');
-            existingNotifications.forEach(notif => notif.remove());
-
-            const notification = document.createElement('div');
-            const alertType = type === 'success' ? 'success' : type === 'info' ? 'info' : 'danger';
-            notification.className = 'alert alert-' + alertType + ' alert-dismissible fade show toast-notification';
-            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
-
-            const icon = type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-circle';
-            notification.innerHTML = 
-                '<i class="fas fa-' + icon + ' me-2"></i>' + 
-                message + 
-                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
-
-            document.body.appendChild(notification);
-
-            setTimeout(function() {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 3000);
-        }
-
-        // Update Cart
-        function updateCart(cartId, quantity) {
-            if (quantity < 1) {
-                removeFromCart(cartId);
-                return;
-            }
-            $.ajax({
-                url: '${pageContext.request.contextPath}/cart',
-                type: 'POST',
-                data: {
-                    action: 'update',
-                    cartId: cartId,
-                    quantity: quantity
-                },
-                success: function(response) {
-                    showNotification('Cập nhật giỏ hàng thành công!', 'success');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    showNotification('Lỗi khi cập nhật giỏ hàng: ' + xhr.responseText, 'error');
-                }
-            });
-        }
-
-        // Remove from Cart
-        function removeFromCart(cartId) {
-            $.ajax({
-                url: '${pageContext.request.contextPath}/cart',
-                type: 'POST',
-                data: {
-                    action: 'remove',
-                    cartId: cartId
-                },
-                success: function(response) {
-                    showNotification('Xóa sản phẩm khỏi giỏ hàng!', 'success');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    showNotification('Lỗi khi xóa sản phẩm: ' + xhr.responseText, 'error');
-                }
-            });
-        }
-
-        // Apply Promo Code
-        function applyPromoCode() {
-            const promoCode = document.getElementById('promoCodeInput').value;
-            if (!promoCode) {
-                showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
-                return;
-            }
-            $.ajax({
-                url: '${pageContext.request.contextPath}/cart',
-                type: 'POST',
-                data: {
-                    action: 'applyPromo',
-                    promoCode: promoCode
-                },
-                success: function(response) {
-                    showNotification('Áp dụng mã khuyến mãi thành công!', 'success');
-                    $('#promoCodeModal').modal('hide');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    showNotification('Lỗi khi áp dụng mã khuyến mãi: ' + xhr.responseText, 'error');
-                }
-            });
-        }
-
-        // Send Verification Code
-        function sendVerificationCode() {
-            const phone = document.getElementById('phoneInput').value;
-            if (!phone || !/^\+?\d{10,12}$/.test(phone)) {
-                showNotification('Vui lòng nhập số điện thoại hợp lệ!', 'error');
-                return;
-            }
-            $.ajax({
-                url: '${pageContext.request.contextPath}/sendVerificationCode',
-                type: 'POST',
-                data: { phone: phone },
-                success: function(response) {
-                    showNotification('Mã xác minh đã được gửi!', 'success');
-                    document.getElementById('phoneDisplay').textContent = phone;
-                    $('#edit-number').collapse('hide');
-                    document.getElementById('otpSection').style.display = 'block';
-                },
-                error: function(xhr) {
-                    showNotification('Lỗi khi gửi mã xác minh: ' + xhr.responseText, 'error');
-                }
-            });
-        }
-
-        // Verify Code
-        function verifyCode() {
-            const code = document.getElementById('code1').value + 
-                         document.getElementById('code2').value + 
-                         document.getElementById('code3').value + 
-                         document.getElementById('code4').value;
-            if (code.length !== 4) {
-                showNotification('Vui lòng nhập mã xác minh 4 chữ số!', 'error');
-                return;
-            }
-            $.ajax({
-                url: '${pageContext.request.contextPath}/verifyCode',
-                type: 'POST',
-                data: { 
-                    code: code,
-                    phone: document.getElementById('phoneDisplay').textContent
-                },
-                success: function(response) {
-                    showNotification('Xác minh thành công!', 'success');
-                    $('#collapseOne').collapse('hide');
-                    $('#collapseTwo').collapse('show');
-                    document.getElementById('otpSection').style.display = 'none';
-                    // Update phone display with verified status
-                    document.getElementById('phoneDisplay').parentElement.classList.add('phone-verified');
-                },
-                error: function(xhr) {
-                    showNotification('Mã xác minh không đúng: ' + xhr.responseText, 'error');
-                }
-            });
-        }
-
-        // Save Address
-        function saveAddress() {
-            const addressData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                flat: document.getElementById('flat').value,
-                street: document.getElementById('street').value,
-                pincode: document.getElementById('pincode').value,
-                locality: document.getElementById('locality').value,
-                addressType: document.querySelector('input[name="addressType"]:checked').value
-            };
-            if (!addressData.name || !addressData.email || !addressData.flat || !addressData.pincode || !addressData.locality) {
-                showNotification('Vui lòng điền đầy đủ thông tin địa chỉ!', 'error');
-                return;
-            }
-            $.ajax({
-                url: '${pageContext.request.contextPath}/saveAddress',
-                type: 'POST',
-                data: addressData,
-                success: function(response) {
-                    showNotification('Lưu địa chỉ thành công!', 'success');
-                    $('#collapseTwo').collapse('hide');
-                    $('#collapseThree').collapse('show');
-                },
-                error: function(xhr) {
-                    showNotification('Lỗi khi lưu địa chỉ: ' + xhr.responseText, 'error');
-                }
-            });
-        }
-
-        // Place Order
-        function placeOrder() {
-            if (!${not empty cartItems}) {
-                showNotification('Giỏ hàng trống! Vui lòng thêm sản phẩm.', 'error');
-                return;
-            }
-            if (!document.getElementById('phoneDisplay').parentElement.classList.contains('phone-verified')) {
-                showNotification('Vui lòng xác minh số điện thoại trước khi đặt hàng!', 'error');
-                return;
+        <!-- Javascripts -->
+        <script src="${pageContext.request.contextPath}/User/js/jquery.min.js"></script>
+        <script src="${pageContext.request.contextPath}/User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="${pageContext.request.contextPath}/User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+        <script src="${pageContext.request.contextPath}/User/vendor/OwlCarousel/owl.carousel.js"></script>
+        <script src="${pageContext.request.contextPath}/User/js/custom.js"></script>
+        <script src="${pageContext.request.contextPath}/User/js/product.thumbnail.slider.js"></script>
+        <script src="${pageContext.request.contextPath}/User/js/offset_overlay.js"></script>
+        <script src="${pageContext.request.contextPath}/User/js/night-mode.js"></script>
+        <script>
+            // Format price as VND
+            function formatVND(price) {
+                return price.toLocaleString('vi-VN', { 
+                    style: 'decimal', 
+                    minimumFractionDigits: 0, 
+                    maximumFractionDigits: 0 
+                }) + ' ₫';
             }
 
-            const paymentMethod = document.querySelector('input[name="paymentmethod"]:checked').value;
-            const orderData = {
-                paymentMethod: paymentMethod,
-                deliveryDate: document.querySelector('input[name="deliveryDate"]:checked').value,
-                deliveryTime: document.querySelector('input[name="deliveryTime"]:checked').value,
-                phone: document.getElementById('phoneDisplay').textContent,
-                cartItems: [
-                    <c:forEach var="cartItem" items="${cartItems}" varStatus="status">
-                        {
-                            productId: '${cartItem.productID}',
-                            productName: '${cartItem.productName}',
-                            quantity: ${cartItem.quantity},
-                            unit: '${cartItem.unit}',
-                            sellingPrice: ${cartItem.sellingPrice}
-                        }<c:if test="${!status.last}">,</c:if>
-                    </c:forEach>
-                ],
-                cartTotal: ${cartTotal != null ? cartTotal : 0},
-                deliveryCharge: ${deliveryCharge != null ? deliveryCharge : 30000},
-                total: ${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 30000) : 0},
-                appTransId: 'FMART_' + Date.now()
-            };
+            // Show Notification
+            function showNotification(message, type) {
+                const existingNotifications = document.querySelectorAll('.toast-notification');
+                existingNotifications.forEach(notif => notif.remove());
 
-            $.ajax({
-                url: '${pageContext.request.contextPath}/processCheckout',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(orderData),
-                success: function(response) {
-                    if (paymentMethod === 'zalopay' && response.orderUrl) {
-                        showNotification('Đang chuyển hướng đến cổng thanh toán ZaloPay...', 'info');
-                        setTimeout(() => {
-                            window.location.href = response.orderUrl;
-                        }, 1000);
-                    } else if (paymentMethod === 'cod') {
-                        showNotification('Đặt hàng thành công!', 'success');
-                        setTimeout(() => {
-                            window.location.href = '${pageContext.request.contextPath}/order_confirmation?orderId=' + response.orderId;
-                        }, 2000);
-                    } else {
-                        showNotification('Lỗi: Không nhận được URL thanh toán từ ZaloPay.', 'error');
+                const notification = document.createElement('div');
+                const alertType = type === 'success' ? 'success' : type === 'info' ? 'info' : 'danger';
+                notification.className = 'alert alert-' + alertType + ' alert-dismissible fade show toast-notification';
+                notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+
+                const icon = type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-circle';
+                notification.innerHTML = 
+                    '<i class="fas fa-' + icon + ' me-2"></i>' + 
+                    message + 
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+
+                document.body.appendChild(notification);
+
+                setTimeout(function() {
+                    if (notification.parentNode) {
+                        notification.remove();
                     }
-                },
-                error: function(xhr) {
-                    showNotification('Lỗi khi đặt hàng: ' + xhr.responseText, 'error');
-                }
-            });
-        }
+                }, 3000);
+            }
 
-        // Toggle Payment Method Form
-        $(document).ready(function() {
-            $('.date-slider').owlCarousel({
-                loop: false,
-                margin: 10,
-                nav: false,
-                dots: false,
-                responsive: {
-                    0: { items: 3 },
-                    600: { items: 4 },
-                    1000: { items: 5 },
-                    1200: { items: 6 },
-                    1400: { items: 7 }
+            // Update Cart
+            function updateCart(cartId, quantity) {
+                if (quantity < 1) {
+                    removeFromCart(cartId);
+                    return;
                 }
-            });
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/cart',
+                    type: 'POST',
+                    data: {
+                        action: 'update',
+                        cartId: cartId,
+                        quantity: quantity
+                    },
+                    success: function(response) {
+                        showNotification('Cập nhật giỏ hàng thành công!', 'success');
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        showNotification('Lỗi khi cập nhật giỏ hàng: ' + xhr.responseText, 'error');
+                    }
+                });
+            }
 
-            $('input[name="paymentmethod"]').on('change', function() {
-                const method = $(this).val();
-                $('.return-departure-dts').hide();
-                $(`.return-departure-dts[data-method="${method}"]`).show();
-            });
+            // Remove from Cart
+            function removeFromCart(cartId) {
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/cart',
+                    type: 'POST',
+                    data: {
+                        action: 'remove',
+                        cartId: cartId
+                    },
+                    success: function(response) {
+                        showNotification('Xóa sản phẩm khỏi giỏ hàng!', 'success');
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        showNotification('Lỗi khi xóa sản phẩm: ' + xhr.responseText, 'error');
+                    }
+                });
+            }
 
-            // Auto-focus OTP inputs
-            $('.code-alrt-inputs input').on('input', function() {
-                if (this.value.length === 1) {
-                    $(this).next('input').focus();
+            // Apply Promo Code
+            function applyPromoCode() {
+                const promoCode = document.getElementById('promoCodeInput').value;
+                if (!promoCode) {
+                    showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
+                    return;
                 }
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/cart',
+                    type: 'POST',
+                    data: {
+                        action: 'applyPromo',
+                        promoCode: promoCode
+                    },
+                    success: function(response) {
+                        showNotification('Áp dụng mã khuyến mãi thành công!', 'success');
+                        $('#promoCodeModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        showNotification('Lỗi khi áp dụng mã khuyến mãi: ' + xhr.responseText, 'error');
+                    }
+                });
+            }
+
+            // Show Confirm Modal
+            function showConfirmModal() {
+                // Sao chép tóm tắt đơn hàng vào modal
+                const summary = document.getElementById('order-summary').innerHTML;
+                document.getElementById('confirm-order-summary').innerHTML = summary;
+
+                // Lấy phương thức thanh toán đã chọn
+                const selectedPayment = document.querySelector('input[name="paymentmethod"]:checked').nextElementSibling.textContent;
+                document.getElementById('confirm-payment-method').textContent = selectedPayment;
+
+                // Lấy tổng giá
+                const totalAmount = document.getElementById('total-amount').textContent;
+                document.getElementById('confirm-total-amount').textContent = totalAmount;
+
+                // Hiện modal
+                $('#confirmPaymentModal').modal('show');
+            }
+
+            // Submit Form sau xác nhận
+            function submitCheckoutForm() {
+                document.getElementById('checkoutForm').submit();
+            }
+
+            // Toggle Payment Method Description
+            $(document).ready(function() {
+                $('input[name="paymentmethod"]').on('change', function() {
+                    const method = $(this).val();
+                    $('.payment-description').hide();
+                    $('#payment-' + method).show();
+                });
+                // Mặc định hiển thị cho COD
+                $('#payment-cod').show();
             });
-        });
-    </script>
-</body>
+        </script>
+    </body>
 </html>

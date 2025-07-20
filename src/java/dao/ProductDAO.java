@@ -402,26 +402,27 @@ public static List<Product> smartSearch(String keyword) {
 
     // 16. Lấy sản phẩm liên quan (cùng category, trừ sản phẩm hiện tại)
     public static List<Product> getRelatedProducts(int productID, int limit) {
-        List<Product> products = new ArrayList<>();
-        String sql = "SELECT TOP " + limit + " p.* FROM " + TABLE + " p " +
-                    "JOIN " + TABLE + " current ON p.categoryID = current.categoryID " +
-                    "WHERE p.isActive = 1 AND p.productID != ? AND current.productID = ? " +
-                    "ORDER BY p.createdDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, productID);
-            stmt.setInt(2, productID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Product product = extractProductFromResultSet(rs);
-                    products.add(product);
-                }
+    List<Product> products = new ArrayList<>();
+    String sql = "SELECT TOP " + limit + " p.* FROM " + TABLE + " p " +
+            "JOIN " + TABLE + " ref ON p.categoryID = ref.categoryID " +
+            "WHERE p.isActive = 1 AND p.productID != ? AND ref.productID = ? " +
+            "ORDER BY p.createdDate DESC";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, productID); // p.productID != ?
+        stmt.setInt(2, productID); // ref.productID = ?
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Product product = extractProductFromResultSet(rs);
+                products.add(product);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return products;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return products;
+}
+
 
     // 17. Lấy sản phẩm active
     public static List<Product> getActiveProducts() {
