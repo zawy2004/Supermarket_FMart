@@ -27,24 +27,11 @@
     </style>
 
     <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
-            <a class="navbar-brand logo-brand" href="index.jsp">FMart Supermarket</a>
-            <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
-            <a href="index.jsp" class="frnt-link"><i class="fas fa-external-link-alt"></i>Home</a>
-            <ul class="navbar-nav ms-auto mr-md-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <a class="dropdown-item admin-dropdown-item" href="edit_profile.jsp">Edit Profile</a>
-                        <a class="dropdown-item admin-dropdown-item" href="change_password.jsp">Change Password</a>
-                        <a class="dropdown-item admin-dropdown-item" href="login.jsp">Logout</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
+       <!-- Header -->
+            <jsp:include page="header.jsp"></jsp:include>
         <div id="layoutSidenav">
-            <jsp:include page="adminsidebar.jsp"></jsp:include>
+            <!-- Sidebar -->
+            <jsp:include page="managersidebar.jsp"></jsp:include>
                 <div id="layoutSidenav_content">
                     <main>
                         <div class="container-fluid">

@@ -15,14 +15,11 @@
     <link href="Admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 </head>
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
-        <a class="navbar-brand logo-brand" href="index.jsp">FMart Supermarket</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
-        <a href="index.jsp" class="frnt-link"><i class="fas fa-external-link-alt"></i> Home</a>
-    </nav>
-
-    <div id="layoutSidenav">
-        <jsp:include page="adminsidebar.jsp"></jsp:include>
+  <!-- Header -->
+            <jsp:include page="header.jsp"></jsp:include>
+        <div id="layoutSidenav">
+            <!-- Sidebar -->
+            <jsp:include page="managersidebar.jsp"></jsp:include>
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid">

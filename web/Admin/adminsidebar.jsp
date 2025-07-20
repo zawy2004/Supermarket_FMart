@@ -48,46 +48,6 @@
                                     <a class="nav-link sub_nav_link" href="add_area.jsp">Add Area</a>
                                 </nav>
                             </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategories" aria-expanded="false" aria-controls="collapseCategories">
-                                <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                                Categories
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseCategories" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link sub_nav_link" href="CategoryServlet">All Categories</a>
-                                    <a class="nav-link sub_nav_link" href="CategoryServlet?action=add">Add Category</a>
-                                </nav>
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseShops" aria-expanded="false" aria-controls="collapseShops">
-                                <div class="sb-nav-link-icon"><i class="fas fa-store"></i></div>
-                                Inventory
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                          <div class="collapse" id="collapseShops" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link sub_nav_link" href="InventoryManagementServlet">Inventory</a>
-                                    <a class="nav-link sub_nav_link" href="StockMovementServlet">Stock Movement</a>
-                                    <a class="nav-link sub_nav_link" href="ImportReceiptServlet">Import Receipt</a>
-                                    <a class="nav-link sub_nav_link" href="DispatchReceiptServlet">Dispart Receipt</a>
-                                    
-                                </nav>
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
-                                Products
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseProducts" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link sub_nav_link" href="ProductServlet">All Products</a>
-                                    <a class="nav-link sub_nav_link" href="ProductServlet?action=add">Add Product</a>
-                                </nav>
-                            </div>
-                            <a class="nav-link" href="orders.jsp">
-                                <div class="sb-nav-link-icon"><i class="fas fa-cart-arrow-down"></i></div>
-                                Orders
-                            </a>
                             <a class="nav-link" href="UserManagementServlet">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 User

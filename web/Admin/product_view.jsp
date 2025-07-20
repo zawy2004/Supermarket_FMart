@@ -17,15 +17,11 @@
 </head>
 
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
-        <a class="navbar-brand logo-brand" href="index.jsp">FMart Supermarket</a>
-        <!-- Navigation Menu -->
-    </nav>
-
-    <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <!-- Sidebar Menu -->
-        </div>
+   <!-- Header -->
+            <jsp:include page="header.jsp"></jsp:include>
+        <div id="layoutSidenav">
+            <!-- Sidebar -->
+            <jsp:include page="managersidebar.jsp"></jsp:include>
 
         <div id="layoutSidenav_content">
             <main>
