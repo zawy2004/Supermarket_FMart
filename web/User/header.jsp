@@ -1,4 +1,4 @@
-    <%@page contentType="text/html" pageEncoding="UTF-8"%> 
+<%@page contentType="text/html" pageEncoding="UTF-8"%> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.User" %>
 <%
@@ -419,10 +419,10 @@
                         <a href="#" class="offer-link"><i class="uil uil-phone-alt"></i>1800-000-000</a>
                     </li>
                     <li>
-                        <a href="User/offers.jsp" class="offer-link"><i class="uil uil-gift"></i>Offers</a>
+                        <a href="${pageContext.request.contextPath}/offers" class="offer-link"><i class="uil uil-gift"></i>Offers</a>
                     </li>
                     <li>
-                        <a href="User/faq.jsp" class="offer-link"><i class="uil uil-question-circle"></i>Help</a>
+                        <a href="${pageContext.request.contextPath}/faq" class="offer-link"><i class="uil uil-question-circle"></i>Help</a>
                     </li>
                     <li>
                         <a href="wishlist" class="option_links" title="Wishlist"><i class='uil uil-heart icon_wishlist'></i><span class="noti_count1">3</span></a>
@@ -481,8 +481,8 @@
                             <a href="wishlist" class="channel_item"><i class="uil uil-heart icon__1"></i>My Wishlist</a>
                             <a href="profile?action=wallet" class="channel_item"><i class="uil uil-usd-circle icon__1"></i>My Wallet</a>
                             <a href="profile?action=addresses" class="channel_item"><i class="uil uil-location-point icon__1"></i>My Address</a>
-                            <a href="User/offers.jsp" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>
-                            <a href="User/faq.jsp" class="channel_item"><i class="uil uil-info-circle icon__1"></i>Faq</a>
+                            <a href="${pageContext.request.contextPath}/offers" class="channel_item"><i class="uil uil-gift icon__1"></i>Offers</a>
+                            <a href="${pageContext.request.contextPath}/faq" class="channel_item"><i class="uil uil-info-circle icon__1"></i>Faq</a>
                             <a href="logout" class="channel_item"><i class="uil uil-lock-alt icon__1"></i>Logout</a>
                         </div>
                         <% }%>
@@ -551,12 +551,12 @@
                                     Blog
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a class="dropdown-item" href="User/our_blog.jsp">Our Blog</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_no_sidebar.jsp">Our Blog Two No Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_left_sidebar.jsp">Our Blog with Left Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_right_sidebar.jsp">Our Blog with Right Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_detail_view.jsp">Blog Detail View</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_left_sidebar_single_view.jsp">Blog Detail View with Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/our_blog">Our Blog</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_no_sidebar">Our Blog Two No Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_left_sidebar">Our Blog with Left Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_right_sidebar">Our Blog with Right Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_detail_view">Blog Detail View</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_left_sidebar_single_view">Blog Detail View with Sidebar</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -565,17 +565,16 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a class="dropdown-item" href="User/dashboard_overview.jsp">Account</a></li>
-                                    <li><a class="dropdown-item" href="User/about_us.jsp">About Us</a></li>
+                                    <li><a class="dropdown-item" href="about_us">About Us</a></li>
                                     <li><a class="dropdown-item" href="shop">Online Shop</a></li>
-                                    <li><a class="dropdown-item" href="User/single_product_view.jsp">Single Product View</a></li>
-                                    <li><a class="dropdown-item" href="User/checkout.jsp">Checkout</a></li>
-                                    <li><a class="dropdown-item" href="User/request_product.jsp">Product Request</a></li>
-                                    <li><a class="dropdown-item" href="User/order_placed.jsp">Order Placed</a></li>
-                                    <li><a class="dropdown-item" href="User/bill.jsp">Bill Slip</a></li>
-                                    <li><a class="dropdown-item" href="User/job_detail_view.jsp">Job Detail View</a></li>
+                                    <li><a class="dropdown-item" href="single_product_view">Single Product View</a></li>
+                                    <li><a class="dropdown-item" href="checkout">Checkout</a></li>
+                                    <li><a class="dropdown-item" href="request_product">Product Request</a></li>
+                                    <li><a class="dropdown-item" href="order_placed">Order Placed</a></li>
+                                    <li><a class="dropdown-item" href="bill">Bill Slip</a></li>
                                     <li><a class="dropdown-item" href="login">Sign In</a></li>
                                     <li><a class="dropdown-item" href="register">Sign Up</a></li>
-                                    <li><a class="dropdown-item" href="User/forgot_password.jsp">Forgot Password</a></li>
+                                    <li><a class="dropdown-item" href="forgot_password">Forgot Password</a></li>
                                 </ul>
                             </li>
                             <!-- Fix trong header.jsp - dòng cuối cùng -->
@@ -587,8 +586,8 @@
                         <div class="d-block d-lg-none">
                             <ul class="offcanvas-help-links">
                                 <li><a href="#" class="offer-link"><i class="uil uil-phone-alt"></i>1800-000-000</a></li>
-                                <li><a href="User/offers.jsp" class="offer-link"><i class="uil uil-gift"></i>Offers</a></li>
-                                <li><a href="User/faq.jsp" class="offer-link"><i class="uil uil-question-circle"></i>Help</a></li>
+                                <li><a href="${pageContext.request.contextPath}/offers" class="offer-link"><i class="uil uil-gift"></i>Offers</a></li>
+                                <li><a href="${pageContext.request.contextPath}/faq" class="offer-link"><i class="uil uil-question-circle"></i>Help</a></li>
                             </ul>
                             <div class="offcanvas-copyright">
                                 <i class="uil uil-copyright"></i>Copyright 2022 <b>FMartlthemes</b> . All rights reserved

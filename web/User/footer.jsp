@@ -51,6 +51,11 @@
                             <li><a href="${pageContext.request.contextPath}/shop?sortBy=discount">Featured Products</a></li>
                             <li><a href="${pageContext.request.contextPath}/User/offers.jsp">Offers</a></li>
                             <li><a href="${pageContext.request.contextPath}/User/our_blog.jsp">Blog</a></li>
+                            <li><a href="${pageContext.request.contextPath}/User/blog_no_sidebar.jsp">Blog</a></li>
+                            <li><a href="${pageContext.request.contextPath}/User/blog_left_sidebar.jsp">Blog</a></li>
+                            <li><a href="${pageContext.request.contextPath}/User/blog_right_sidebar.jsp">Blog</a></li>
+                            <li><a href="${pageContext.request.contextPath}/User/blog_detail_view.jsp">Blog</a></li>
+                            <li><a href="${pageContext.request.contextPath}/User/blog_left_sidebar_single_view.jsp">Blog</a></li>
                             <li><a href="${pageContext.request.contextPath}/User/faq.jsp">Faq</a></li>
                             <li><a href="${pageContext.request.contextPath}/User/career.jsp">Careers</a></li>
                             <li><a href="${pageContext.request.contextPath}/contact">Contact Us</a></li>
@@ -122,7 +127,7 @@
                     <div class="footer-bottom-group">
                         <div class="footer-bottom-links">
                             <ul>
-                                <li><a href="${pageContext.request.contextPath}/User/about_us.jsp">About</a></li>
+                                <li><a href="${pageContext.request.contextPath}/about_us">About</a></li>
                                 <li><a href="${pageContext.request.contextPath}/contact">Contact</a></li>
                                 <li><a href="${pageContext.request.contextPath}/User/privacy_policy.jsp">Privacy Policy</a></li>
                                 <li><a href="${pageContext.request.contextPath}/User/term_and_conditions.jsp">Term & Conditions</a></li>
