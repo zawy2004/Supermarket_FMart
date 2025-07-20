@@ -1,287 +1,156 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description-gambolthemes" content="">
+        <meta name="author-gambolthemes" content="">
+        <title>FMart Supermarket Admin</title>
+        <link href="Admin/css/styles.css" rel="stylesheet">
+        <link href="Admin/css/admin-style.css" rel="stylesheet">
 
-<!-- Mirrored from gambolthemes.net/html-items/gambo_admin_new/order_edit.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:10:13 GMT -->
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description-gambolthemes" content="">
-	<meta name="author-gambolthemes" content="">
-	<title>FMart Supermarket Admin</title>
-	<link href="css/styles.css" rel="stylesheet">
-	<link href="css/admin-style.css" rel="stylesheet">
-	
-	<!-- Vendor Stylesheets -->
-	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-	
-</head>
-
+        <!-- Vendor Stylesheets -->
+        <link href="Admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="Admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    </head>
     <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
-            <a class="navbar-brand logo-brand" href="index.jsp">FMart Supermarket</a>
-			<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
-            <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/index.jsp" class="frnt-link"><i class="fas fa-external-link-alt"></i>Home</a>
-            <ul class="navbar-nav ms-auto mr-md-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <a class="dropdown-item admin-dropdown-item" href="edit_profile.jsp">Edit Profile</a>
-						<a class="dropdown-item admin-dropdown-item" href="change_password.jsp">Change Password</a>
-                        <a class="dropdown-item admin-dropdown-item" href="login.jsp">Logout</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-        <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <a class="nav-link" href="index.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
-							</a>
-                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-								<div class="sb-nav-link-icon"><i class="fas fa-newspaper"></i></div>
-                                Posts
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="posts.jsp">All Posts</a>
-									<a class="nav-link sub_nav_link" href="add_post.jsp">Add New</a>
-									<a class="nav-link sub_nav_link" href="post_categories.jsp">Categories</a>
-									<a class="nav-link sub_nav_link" href="post_tags.jsp">Tags</a>
-								</nav>
-                            </div>		
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLocations" aria-expanded="false" aria-controls="collapseLocations">
-								<div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
-                                Locations
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseLocations" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="locations.jsp">All Locations</a>
-									<a class="nav-link sub_nav_link" href="add_location.jsp">Add Location</a>
-								</nav>
-                            </div>		
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAreas" aria-expanded="false" aria-controls="collapseAreas">
-								<div class="sb-nav-link-icon"><i class="fas fa-map-marked-alt"></i></div>
-                                Areas
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseAreas" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="areas.jsp">All Areas</a>
-									<a class="nav-link sub_nav_link" href="add_area.jsp">Add Area</a>
-								</nav>
+        <jsp:include page="header.jsp"></jsp:include>
+
+            <div id="layoutSidenav">
+            <jsp:include page="staffsidebar.jsp"></jsp:include>
+                <div id="layoutSidenav_content">
+                    <main>
+                        <div class="container-fluid">
+                            <h2 class="mt-30 page-title">Order Edit</h2>
+                            <ol class="breadcrumb mb-30">
+                                <li class="breadcrumb-item"><a href="AdminServlet">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="OrderManagementServlet">Orders</a></li>
+                                <li class="breadcrumb-item active">Order Edit</li>
+                            </ol>
+
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12">
+                                    <div class="card card-static-2 mb-30">
+                                        <div class="card-title-2">
+                                            <h2 class="title1458">Invoice</h2>
+                                            <span class="order-id">Order #${order.orderNumber}</span>
+                                    </div>
+                                    <form action="OrderManagementServlet" method="post">
+                                        <input type="hidden" name="action" value="update" />
+                                        <input type="hidden" name="id" value="${order.orderID}" />
+                                        <div class="invoice-content">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-sm-6">
+                                                    <div class="ordr-date">
+                                                        <b>Order Date :</b>
+                                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy" />
+                                                    </div>
+                                                    <div>
+                                                        <b>Order Type:</b> ${order.orderType}
+                                                    </div>
+                                                    <div>
+                                                        <b>Status:</b> 
+                                                        <select name="status" class="form-control">
+                                                            <option value="Pending" ${order.status == 'Pending' ? 'selected' : ''}>Pending</option>
+                                                            <option value="Confirmed" ${order.status == 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                                                            <option value="Processing" ${order.status == 'Processing' ? 'selected' : ''}>Processing</option>
+                                                            <option value="Completed" ${order.status == 'Completed' ? 'selected' : ''}>Completed</option>
+                                                            <option value="Cancelled" ${order.status == 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-6">
+                                                    <div class="ordr-date right-text">
+                                                        <b>Delivery Address:</b><br>
+                                                        ${order.deliveryAddress}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-30">
+                                                <div class="col-lg-12">
+                                                    <div class="card card-static-2 mb-30">
+                                                        <div class="card-title-2">
+                                                            <h4>Order Details</h4>
+                                                        </div>
+                                                        <div class="card-body-table">
+                                                            <div class="table-responsive">
+                                                                <table class="table ucp-table table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Item</th>
+                                                                            <th class="text-center">Price</th>
+                                                                            <th class="text-center">Qty</th>
+                                                                            <th class="text-center">Total</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <c:forEach var="item" items="${orderDetails}">
+                                                                            <tr>
+                                                                                <td>${item.orderDetailID}</td>
+                                                                                <td>Product #${item.productID}</td>
+                                                                                <td class="text-center">$<fmt:formatNumber value="${item.unitPrice}" type="number" minFractionDigits="2" /></td>
+                                                                                <td class="text-center">${item.quantity}</td>
+                                                                                <td class="text-center">$<fmt:formatNumber value="${item.totalPrice}" type="number" minFractionDigits="2" /></td>
+                                                                            </tr>
+                                                                        </c:forEach>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-7"></div>
+                                                <div class="col-lg-5">
+                                                    <div class="order-total-dt">
+                                                        <div class="order-total-left-text">
+                                                            Sub Total
+                                                        </div>
+                                                        <div class="order-total-right-text">
+                                                            $<fmt:formatNumber value="${order.totalAmount}" type="number" minFractionDigits="2" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="order-total-dt">
+                                                        <div class="order-total-left-text">
+                                                            Delivery Fees
+                                                        </div>
+                                                        <div class="order-total-right-text">
+                                                            $0
+                                                        </div>
+                                                    </div>
+                                                    <div class="order-total-dt">
+                                                        <div class="order-total-left-text fsz-18">
+                                                            Total Amount
+                                                        </div>
+                                                        <div class="order-total-right-text fsz-18">
+                                                            $<fmt:formatNumber value="${order.finalAmount}" type="number" minFractionDigits="2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-30">
+                                                <div class="col-lg-12 text-right">
+                                                    <button type="submit" class="btn btn-primary">Update Order</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategories" aria-expanded="false" aria-controls="collapseCategories">
-								<div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                                Categories
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseCategories" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="category.jsp">All Categories</a>
-									<a class="nav-link sub_nav_link" href="add_category.jsp">Add Category</a>
-								</nav>
-                            </div>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseShops" aria-expanded="false" aria-controls="collapseShops">
-								<div class="sb-nav-link-icon"><i class="fas fa-store"></i></div>
-                                Shops
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseShops" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="shops.jsp">All Shops</a>
-									<a class="nav-link sub_nav_link" href="add_shop.jsp">Add Shop</a>
-								</nav>
-                            </div>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">
-								<div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
-                                Products
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseProducts" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="products.jsp">All Products</a>
-									<a class="nav-link sub_nav_link" href="add_product.jsp">Add Product</a>
-								</nav>
-                            </div>
-							<a class="nav-link active" href="orders.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-cart-arrow-down"></i></div>
-                                Orders
-							</a>
-							<a class="nav-link" href="customers.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                Customers
-							</a>
-							<a class="nav-link" href="offers.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-gift"></i></div>
-                                Offers
-							</a>
-							<a class="nav-link" href="pages.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Pages
-							</a>
-                            <a class="nav-link" href="menu.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-layer-group"></i></div>
-                                Menu
-							</a>
-							<a class="nav-link" href="updater.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                Updater
-							</a>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings">
-								<div class="sb-nav-link-icon"><i class="fas fa-cog"></i></div>
-                                Setting
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseSettings" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="general_setting.jsp">General Settings</a>
-									<a class="nav-link sub_nav_link" href="payment_setting.jsp">Payment Settings</a>
-									<a class="nav-link sub_nav_link" href="email_setting.jsp">Email Settings</a>
-								</nav>
-                            </div>
-							<a class="nav-link" href="reports.jsp">
-								<div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
-                                Reports
-							</a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid">
-                        <h2 class="mt-30 page-title">Orders</h2>
-                        <ol class="breadcrumb mb-30">
-                            <li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="orders.jsp">Orders</a></li>
-                            <li class="breadcrumb-item active">Order Edit</li>
-                        </ol>
-                        <div class="row">
-							<div class="col-xl-12 col-md-12">
-								<div class="card card-static-2 mb-30">
-									<div class="card-title-2">
-										<h2 class="title1458">Invoice</h2>
-										<span class="order-id">Order #ORDR-123456</span> 
-									</div>
-									<div class="invoice-content">
-										<div class="row">
-											<div class="col-lg-6 col-sm-6">
-												<div class="ordr-date">
-													<b>Order Date :</b> 29 May 2020
-												</div>
-											</div>
-											<div class="col-lg-6 col-sm-6">
-												<div class="ordr-date right-text">
-													<b>Order Date :</b><br>
-													#0000, St No. 8,<br>
-													Shahid Karnail Singh Nagar,<br>
-													MBD Mall,<br>
-													Frozpur road,<br>
-													Ludhiana,<br>
-													141001<br>
-												</div>
-											</div>
-											<div class="col-lg-12">
-												<div class="card card-static-2 mb-30 mt-30">
-													<div class="card-title-2">
-														<h4>Recent Orders</h4>
-													</div>
-													<div class="card-body-table">
-														<div class="table-responsive">
-															<table class="table ucp-table table-hover">
-																<thead>
-																	<tr>
-																		<th style="width:130px">#</th>
-																		<th>Item</th>
-																		<th style="width:150px" class="text-center">Price</th>
-																		<th style="width:150px" class="text-center">Qty</th>
-																		<th style="width:100px" class="text-center">Total</th>
-																	</tr>
-																</thead>
-																<tbody>
-																	<tr>
-																		<td>1</td>
-																		<td>
-																			<a href="#" target="_blank">Product Title Here</a>
-																		</td>
-																		<td class="text-center">$15</td>
-																		<td class="text-center">1</td>
-																		<td class="text-center">$15</td>
-																	</tr>
-																	<tr>
-																		<td>2</td>
-																		<td>
-																			<a href="#" target="_blank">Product Title Here</a>
-																		</td>
-																		<td class="text-center">$12</td>
-																		<td class="text-center">1</td>
-																		<td class="text-center">$12</td>
-																	</tr>
-																</tbody>
-															</table>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="col-lg-7"></div>
-											<div class="col-lg-5">
-												<div class="order-total-dt">
-													<div class="order-total-left-text">
-														Sub Total
-													</div>
-													<div class="order-total-right-text">
-														$27
-													</div>
-												</div>
-												<div class="order-total-dt">
-													<div class="order-total-left-text">
-														Delivery Fees
-													</div>
-													<div class="order-total-right-text">
-														$0
-													</div>
-												</div>
-												<div class="order-total-dt">
-													<div class="order-total-left-text fsz-18">
-														Total Amount
-													</div>
-													<div class="order-total-right-text fsz-18">
-														$27
-													</div>
-												</div>
-											</div>
-											<div class="col-lg-7"></div>
-											<div class="col-lg-5">
-												<div class="select-status">
-													<label for="status">Status*</label>
-													<div class="input-group">
-														<select id="status" name="status" class="custom-select">
-															<option selected>Pending</option>
-															<option value="1">Cancel</option>
-															<option value="2">Progress</option>
-															<option value="3">Completed</option>
-														</select>
-														<div class="input-group-append">
-															<button class="status-btn hover-btn" type="submit">Submit</button>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
                         </div>
                     </div>
                 </main>
+
                 <footer class="py-4 bg-footer mt-auto">
                     <div class="container-fluid">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -295,11 +164,9 @@
                 </footer>
             </div>
         </div>
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="js/scripts.js"></script>
-       
-    </body>
 
-<!-- Mirrored from gambolthemes.net/html-items/gambo_admin_new/order_edit.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:10:13 GMT -->
+        <script src="Admin/js/jquery.min.js"></script>
+        <script src="Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="Admin/js/scripts.js"></script>
+    </body>
 </html>

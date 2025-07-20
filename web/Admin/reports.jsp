@@ -1,157 +1,37 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>FMart Supermarket Reports</title>
+        <link href="Admin/css/styles.css" rel="stylesheet">
+        <link href="Admin/css/admin-style.css" rel="stylesheet">
+        <link href="Admin/css/datepicker.min.css" rel="stylesheet">
 
-<!-- Mirrored from gambolthemes.net/html-items/gambo_admin_new/reports.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:10:12 GMT -->
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description-gambolthemes" content="">
-	<meta name="author-gambolthemes" content="">
-	<title>FMart Supermarket Admin</title>
-	<link href="css/styles.css" rel="stylesheet">
-	<link href="css/admin-style.css" rel="stylesheet">
-	<link href="css/datepicker.min.css" rel="stylesheet">
-	
-	<!-- Vendor Stylesheets -->
-	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-	
-</head>
+        <!-- Vendor Stylesheets -->
+        <link href="Admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="Admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    </head>
 
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
             <a class="navbar-brand logo-brand" href="index.html">FMart Supermarket</a>
-			<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+            <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
             <a href="http://gambolthemes.net/html-items/gambo_supermarket_demo/index.html" class="frnt-link"><i class="fas fa-external-link-alt"></i>Home</a>
-            <ul class="navbar-nav ms-auto mr-md-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <a class="dropdown-item admin-dropdown-item" href="edit_profile.html">Edit Profile</a>
-						<a class="dropdown-item admin-dropdown-item" href="change_password.html">Change Password</a>
-                        <a class="dropdown-item admin-dropdown-item" href="login.html">Logout</a>
-                    </div>
-                </li>
-            </ul>
         </nav>
+
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
+                <!-- Sidebar navigation -->
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <a class="nav-link" href="index.html">
-								<div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
-							</a>
-                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-								<div class="sb-nav-link-icon"><i class="fas fa-newspaper"></i></div>
-                                Posts
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="posts.html">All Posts</a>
-									<a class="nav-link sub_nav_link" href="add_post.html">Add New</a>
-									<a class="nav-link sub_nav_link" href="post_categories.html">Categories</a>
-									<a class="nav-link sub_nav_link" href="post_tags.html">Tags</a>
-								</nav>
-                            </div>		
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLocations" aria-expanded="false" aria-controls="collapseLocations">
-								<div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
-                                Locations
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseLocations" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="locations.html">All Locations</a>
-									<a class="nav-link sub_nav_link" href="add_location.html">Add Location</a>
-								</nav>
-                            </div>		
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAreas" aria-expanded="false" aria-controls="collapseAreas">
-								<div class="sb-nav-link-icon"><i class="fas fa-map-marked-alt"></i></div>
-                                Areas
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseAreas" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="areas.html">All Areas</a>
-									<a class="nav-link sub_nav_link" href="add_area.html">Add Area</a>
-								</nav>
-                            </div>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategories" aria-expanded="false" aria-controls="collapseCategories">
-								<div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                                Categories
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseCategories" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="category.html">All Categories</a>
-									<a class="nav-link sub_nav_link" href="add_category.html">Add Category</a>
-								</nav>
-                            </div>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseShops" aria-expanded="false" aria-controls="collapseShops">
-								<div class="sb-nav-link-icon"><i class="fas fa-store"></i></div>
-                                Shops
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseShops" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="shops.html">All Shops</a>
-									<a class="nav-link sub_nav_link" href="add_shop.html">Add Shop</a>
-								</nav>
-                            </div>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">
-								<div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
-                                Products
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseProducts" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="products.html">All Products</a>
-									<a class="nav-link sub_nav_link" href="add_product.html">Add Product</a>
-								</nav>
-                            </div>
-							<a class="nav-link" href="orders.html">
-								<div class="sb-nav-link-icon"><i class="fas fa-cart-arrow-down"></i></div>
-                                Orders
-							</a>
-							<a class="nav-link" href="customers.html">
-								<div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                Customers
-							</a>
-							<a class="nav-link" href="offers.html">
-								<div class="sb-nav-link-icon"><i class="fas fa-gift"></i></div>
-                                Offers
-							</a>
-							<a class="nav-link" href="pages.html">
-								<div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Pages
-							</a>
-                            <a class="nav-link" href="menu.html">
-								<div class="sb-nav-link-icon"><i class="fas fa-layer-group"></i></div>
-                                Menu
-							</a>
-							<a class="nav-link" href="updater.html">
-								<div class="sb-nav-link-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                Updater
-							</a>
-							<a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings">
-								<div class="sb-nav-link-icon"><i class="fas fa-cog"></i></div>
-                                Setting
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-							</a>
-                            <div class="collapse" id="collapseSettings" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-									<a class="nav-link sub_nav_link" href="general_setting.html">General Settings</a>
-									<a class="nav-link sub_nav_link" href="payment_setting.html">Payment Settings</a>
-									<a class="nav-link sub_nav_link" href="email_setting.html">Email Settings</a>
-								</nav>
-                            </div>
-							<a class="nav-link active" href="reports.html">
-								<div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
-                                Reports
-							</a>
+                            <!-- Sidebar content here... -->
                         </div>
                     </div>
                 </nav>
@@ -164,230 +44,184 @@
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
                             <li class="breadcrumb-item active">All Report</li>
                         </ol>
-						<div class="row">
-							<div class="col-lg-4 col-md-5">
-								<div class="card card-static-2 mb-30">
-									<div class="card-title-2">
-										<h4>Add New Product</h4>
-									</div>
-									<div class="card-body-table">
-										<div class="news-content-right pd-20">
-											<div class="form-group">
-												<label class="form-label">Select a Rent*</label>
-												<select id="categeory" name="categeory" class="form-control">
-													<option selected>--Select a report type--</option>
-													<option value="1">Reort 1</option>
-													<option value="2">Reort 2</option>
-													<option value="3">Reort 3</option>
-													<option value="4">Reort 4</option>
-													<option value="5">Reort 5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label class="form-label">Select a Branch*</label>
-												<select id="status" name="status" class="form-control">
-													<option selected>Ludhiana</option>
-													<option value="1">Chandigarh</option>
-													<option value="2">New Delhi</option>
-													<option value="3">Bangluru</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label class="form-label">Start Date*</label>
-												<input type="text" class="form-control datepicker-here" data-language='en' placeholder="Start Date">
-											</div>
-											<div class="form-group">
-												<label class="form-label">End Date*</label>
-												<input type="text" class="form-control datepicker-here" data-language='en' placeholder="End Date">
-											</div>
-											<button class="save-btn hover-btn" type="submit">Search Filter</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-8 col-md-7">
-								<div class="all-cate-tags">
-									<div class="row">										
-										<div class="col-lg-12 col-md-12">
-											<div class="card card-static-2 mb-30">
-												<div class="card-title-2 pb-3">
-													<h4>Orders Per Hours</h4>
-												</div>
-												<div class="card-body-table">
-													<div class="table-responsive">
-														<table class="table ucp-table table-hover">
-															<thead>
-																<tr>
-																	<th>Hours</th>
-																	<th>Total Orders</th>
-																	<th>Total Sales</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>00.00</td>
-																	<td>5</td>
-																	<td>$50</td>
-																</tr>
-																<tr>
-																	<td>01.00</td>
-																	<td>4</td>
-																	<td>$35</td>
-																</tr>
-																<tr>
-																	<td>02.00</td>
-																	<td>1</td>
-																	<td>$13</td>
-																</tr>
-																<tr>
-																	<td>03.00</td>
-																	<td>8</td>
-																	<td>$150</td>
-																</tr>
-																<tr>
-																	<td>04.00</td>
-																	<td>4</td>
-																	<td>$45</td>
-																</tr>
-																<tr>
-																	<td>05.00</td>
-																	<td>7</td>
-																	<td>$80</td>
-																</tr>
-															</tbody>
-														</table>
-													</div>
-												</div>
-												<div class="card-body-table-footer">
-													<ul>
-														<li><button class="download-btn hover-btn">Download JPG</button></li>
-														<li><button class="download-btn hover-btn">Download PNG</button></li>
-														<li><button class="download-btn hover-btn">Export to Excel</button></li>
-													</ul>
-												</div>
-											</div>
-											<div class="card card-static-2 mb-30">
-												<div class="card-title-2 pb-3">
-													<h4>Orders Per Day</h4>
-												</div>
-												<div class="card-body-table">
-													<div class="table-responsive">
-														<table class="table ucp-table table-hover">
-															<thead>
-																<tr>
-																	<th>Year</th>
-																	<th>Month</th>
-																	<th>Day</th>
-																	<th>Total Orders</th>
-																	<th>Total Sales</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>2020</td>
-																	<td>5</td>
-																	<td>15</td>
-																	<td>25</td>
-																	<td>$523</td>
-																</tr>
-																<tr>
-																	<td>2020</td>
-																	<td>4</td>
-																	<td>20</td>
-																	<td>32</td>
-																	<td>$723</td>
-																</tr>
-															</tbody>
-														</table>
-													</div>
-												</div>
-												<div class="card-body-table-footer">
-													<ul>
-														<li><button class="download-btn hover-btn">Download JPG</button></li>
-														<li><button class="download-btn hover-btn">Download PNG</button></li>
-														<li><button class="download-btn hover-btn">Export to Excel</button></li>
-													</ul>
-												</div>
-											</div>
-											<div class="card card-static-2 mb-30">
-												<div class="card-title-2 pb-3">
-													<h4>Orders Per Month</h4>
-												</div>
-												<div class="card-body-table">
-													<div class="table-responsive">
-														<table class="table ucp-table table-hover">
-															<thead>
-																<tr>
-																	<th>Year</th>
-																	<th>Month</th>
-																	<th>Total Orders</th>
-																	<th>Total Sales</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>2020</td>
-																	<td>5</td>
-																	<td>400</td>
-																	<td>$25523</td>
-																</tr>
-																<tr>
-																	<td>2020</td>
-																	<td>4</td>
-																	<td>250</td>
-																	<td>$10723</td>
-																</tr>
-															</tbody>
-														</table>
-													</div>
-												</div>
-												<div class="card-body-table-footer">
-													<ul>
-														<li><button class="download-btn hover-btn">Download JPG</button></li>
-														<li><button class="download-btn hover-btn">Download PNG</button></li>
-														<li><button class="download-btn hover-btn">Export to Excel</button></li>
-													</ul>
-												</div>
-											</div>
-											<div class="card card-static-2 mb-30">
-												<div class="card-title-2 pb-3">
-													<h4>Most Selling Branch</h4>
-												</div>
-												<div class="card-body-table">
-													<div class="table-responsive">
-														<table class="table ucp-table table-hover">
-															<thead>
-																<tr>
-																	<th>Name</th>
-																	<th>Total Orders</th>
-																	<th>Total Sales</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>Ludhiana</td>
-																	<td>2530</td>
-																	<td>$125523</td>
-																</tr>
-															</tbody>
-														</table>
-													</div>
-												</div>
-												<div class="card-body-table-footer">
-													<ul>
-														<li><button class="download-btn hover-btn">Download JPG</button></li>
-														<li><button class="download-btn hover-btn">Download PNG</button></li>
-														<li><button class="download-btn hover-btn">Export to Excel</button></li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
+
+                        <!-- Search Form -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-5">
+                                <div class="card card-static-2 mb-30">
+                                    <div class="card-title-2">
+                                        <h4>Search Reports</h4>
+                                    </div>
+                                    <div class="card-body-table">
+                                        <form action="ReportServlet" method="get">
+                                            <div class="form-group">
+                                                <label for="searchName">Search by Customer Name</label>
+                                                <input type="text" name="searchName" value="${searchName}" class="form-control" placeholder="Search by Customer Name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="status">Order Status</label>
+                                                <select id="status" name="status" class="form-control">
+                                                    <option value="">All Status</option>
+                                                    <option value="Pending" ${status == 'Pending' ? 'selected' : ''}>Pending</option>
+                                                    <option value="Confirmed" ${status == 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                                                    <option value="Processing" ${status == 'Processing' ? 'selected' : ''}>Processing</option>
+                                                    <option value="Completed" ${status == 'Completed' ? 'selected' : ''}>Completed</option>
+                                                    <option value="Cancelled" ${status == 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="startDate">Start Date</label>
+                                                <input type="date" class="form-control" id="startDate" name="startDate" value="${startDate}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="endDate">End Date</label>
+                                                <input type="date" class="form-control" id="endDate" name="endDate" value="${endDate}">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Search Orders</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Report Table -->
+                            <div class="col-lg-8 col-md-7">
+                                <div class="all-cate-tags">
+                                    <div class="row">
+                                        <!-- Report for Orders Per Hour -->
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="card card-static-2 mb-30">
+                                                <div class="card-title-2 pb-3">
+                                                    <h4>Orders Per Hour</h4>
+                                                </div>
+                                                <div class="card-body-table">
+                                                    <div class="table-responsive">
+                                                        <table class="table ucp-table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Hours</th>
+                                                                    <th>Total Orders</th>
+                                                                    <th>Total Sales</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <c:forEach var="report" items="${ordersPerHour}">
+                                                                    <tr>
+                                                                        <td>${report.hour}</td>
+                                                                        <td>${report.totalOrders}</td>
+                                                                        <td>$<fmt:formatNumber value="${report.totalSales}" type="number" minFractionDigits="2" /></td>
+                                                                    </tr>
+                                                                </c:forEach>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Report for Orders Per Day -->
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="card card-static-2 mb-30">
+                                                <div class="card-title-2 pb-3">
+                                                    <h4>Orders Per Day</h4>
+                                                </div>
+                                                <div class="card-body-table">
+                                                    <div class="table-responsive">
+                                                        <table class="table ucp-table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Year</th>
+                                                                    <th>Month</th>
+                                                                    <th>Day</th>
+                                                                    <th>Total Orders</th>
+                                                                    <th>Total Sales</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <c:forEach var="report" items="${ordersPerDay}">
+                                                                    <tr>
+                                                                        <td>${report.year}</td>
+                                                                        <td>${report.month}</td>
+                                                                        <td>${report.day}</td>
+                                                                        <td>${report.totalOrders}</td>
+                                                                        <td>$<fmt:formatNumber value="${report.totalSales}" type="number" minFractionDigits="2" /></td>
+                                                                    </tr>
+                                                                </c:forEach>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Export to Excel -->
+                                        <form action="ReportServlet" method="get">
+                                            <input type="hidden" name="export" value="excel">
+                                            <input type="hidden" name="searchName" value="${searchName}">
+                                            <input type="hidden" name="status" value="${status}">
+                                            <input type="hidden" name="startDate" value="${startDate}">
+                                            <input type="hidden" name="endDate" value="${endDate}">
+                                            <button class="download-btn hover-btn" type="submit">Export to Excel</button>
+                                        </form>
+
+
+                                        <!-- Report for Orders Per Month -->
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="card card-static-2 mb-30">
+                                                <div class="card-title-2 pb-3">
+                                                    <h4>Orders Per Month</h4>
+                                                </div>
+                                                <div class="card-body-table">
+                                                    <div class="table-responsive">
+                                                        <table class="table ucp-table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Year</th>
+                                                                    <th>Month</th>
+                                                                    <th>Total Orders</th>
+                                                                    <th>Total Sales</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <c:forEach var="report" items="${ordersPerMonth}">
+                                                                    <tr>
+                                                                        <td>${report.year}</td>
+                                                                        <td>${report.month}</td>
+                                                                        <td>${report.totalOrders}</td>
+                                                                        <td>$<fmt:formatNumber value="${report.totalSales}" type="number" minFractionDigits="2" /></td>
+                                                                    </tr>
+                                                                </c:forEach>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link" href="ReportServlet?page=${currentPage - 1}&searchName=${searchName}&status=${status}&startDate=${startDate}&endDate=${endDate}">Previous</a>
+                                </li>
+                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                        <a class="page-link" href="ReportServlet?page=${i}&searchName=${searchName}&status=${status}&startDate=${startDate}&endDate=${endDate}">${i}</a>
+                                    </li>
+                                </c:forEach>
+                                <li class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
+                                    <a class="page-link" href="ReportServlet?page=${currentPage + 1}&searchName=${searchName}&status=${status}&startDate=${startDate}&endDate=${endDate}">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+
                     </div>
                 </main>
+
                 <footer class="py-4 bg-footer mt-auto">
                     <div class="container-fluid">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -401,13 +235,13 @@
                 </footer>
             </div>
         </div>
-        <script src="js/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="js/scripts.js"></script>
-		<script src="js/datepicker.min.js"></script>
-		<script src="js/i18n/datepicker.en.js"></script>
-       
+
+        <script src="Admin/js/jquery.min.js"></script>
+        <script src="Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="Admin/js/scripts.js"></script>
+        <script src="Admin/js/datepicker.min.js"></script>
+        <script src="Admin/js/i18n/datepicker.en.js"></script>
+
     </body>
 
-<!-- Mirrored from gambolthemes.net/html-items/gambo_admin_new/reports.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:10:13 GMT -->
 </html>

@@ -70,14 +70,11 @@
     </head>
 
     <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
-            <a class="navbar-brand logo-brand" href="index.jsp">FMart Supermarket</a>
-            <button class="btn btn-link btn-sm" id="sidebarToggle"><i class="fas fa-bars"></i></button>
-            <a href="index.jsp" class="frnt-link"><i class="fas fa-external-link-alt"></i>Home</a>
-        </nav>
-
+       <!-- Header -->
+            <jsp:include page="header.jsp"></jsp:include>
         <div id="layoutSidenav">
-            <jsp:include page="adminsidebar.jsp"/>
+            <!-- Sidebar -->
+            <jsp:include page="managersidebar.jsp"></jsp:include>
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
