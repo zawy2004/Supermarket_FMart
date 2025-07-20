@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import model.OrderReport;
 
 public class OrderDAO {
 
@@ -267,6 +268,128 @@ public int getTotalOrders(String searchName, String status, String fromDate, Str
     }
 
     return totalOrders;
+}
+   public List<OrderReport> getOrdersPerHour(String searchName, String status, String startDate, String endDate) {
+        List<OrderReport> reports = new ArrayList<>();
+        
+        String sql = "SELECT HOUR(orderDate) as hour, COUNT(*) as totalOrders, SUM(finalAmount) as totalSales " +
+                     "FROM Orders WHERE orderDate BETWEEN ? AND ? ";
+
+        if (status != null && !status.isEmpty()) {
+            sql += " AND status = ? ";
+        }
+
+        sql += " GROUP BY HOUR(orderDate) ORDER BY hour";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
+
+            if (status != null && !status.isEmpty()) {
+                ps.setString(3, status);
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int hour = rs.getInt("hour");
+                int totalOrders = rs.getInt("totalOrders");
+                double totalSales = rs.getDouble("totalSales");
+
+                reports.add(new OrderReport(hour, totalOrders, totalSales));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reports;
+    }
+    // Lấy các đơn hàng theo ngày
+    public List<OrderReport> getOrdersPerDay(String searchName, String status, String startDate, String endDate) {
+    List<OrderReport> reports = new ArrayList<>();
+
+    String sql = "SELECT YEAR(orderDate) as year, MONTH(orderDate) as month, DAY(orderDate) as day, " +
+                 "COUNT(*) as totalOrders, SUM(finalAmount) as totalSales " +
+                 "FROM Orders WHERE orderDate BETWEEN ? AND ? ";
+
+    if (status != null && !status.isEmpty()) {
+        sql += " AND status = ? ";
+    }
+
+    sql += " GROUP BY YEAR(orderDate), MONTH(orderDate), DAY(orderDate) ORDER BY year, month, day";
+
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, startDate);
+        ps.setString(2, endDate);
+
+        if (status != null && !status.isEmpty()) {
+            ps.setString(3, status);
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int year = rs.getInt("year");
+            int month = rs.getInt("month");
+            int day = rs.getInt("day");
+            int totalOrders = rs.getInt("totalOrders");
+            double totalSales = rs.getDouble("totalSales");
+
+            reports.add(new OrderReport(year, month, day, totalOrders, totalSales));
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return reports;
+}
+
+
+   public List<OrderReport> getOrdersPerMonth(String searchName, String status, String startDate, String endDate) {
+    List<OrderReport> reports = new ArrayList<>();
+
+    String sql = "SELECT YEAR(orderDate) as year, MONTH(orderDate) as month, " +
+                 "COUNT(*) as totalOrders, SUM(finalAmount) as totalSales " +
+                 "FROM Orders WHERE orderDate BETWEEN ? AND ? ";
+
+    if (status != null && !status.isEmpty()) {
+        sql += " AND status = ? ";
+    }
+
+    sql += " GROUP BY YEAR(orderDate), MONTH(orderDate) ORDER BY year, month";
+
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, startDate);
+        ps.setString(2, endDate);
+
+        if (status != null && !status.isEmpty()) {
+            ps.setString(3, status);
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int year = rs.getInt("year");
+            int month = rs.getInt("month");
+            int totalOrders = rs.getInt("totalOrders");
+            double totalSales = rs.getDouble("totalSales");
+
+            reports.add(new OrderReport(year, month, totalOrders, totalSales));
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return reports;
 }
 
 
