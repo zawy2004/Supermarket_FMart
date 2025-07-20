@@ -204,7 +204,7 @@
                         <a href="User/faq.jsp" class="offer-link"><i class="uil uil-question-circle"></i>Help</a>
                     </li>
                     <li>
-                        <a href="User/dashboard_my_wishlist.jsp" class="option_links" title="Wishlist"><i class='uil uil-heart icon_wishlist'></i><span class="noti_count1">3</span></a>
+                        <a href="wishlist" class="option_links" title="Wishlist"><i class='uil uil-heart icon_wishlist'></i><span class="noti_count1"></span></a>
                     </li>	
                     <li class="dropdown account-dropdown">
                         <a href="#" class="opts_account" role="button" id="accountClick" data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">

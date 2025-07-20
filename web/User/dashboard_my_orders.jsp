@@ -2,9 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 ﻿<!DOCTYPE html>
 <html lang="en">
-
-
-    <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/dashboard_my_orders.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:01:13 GMT -->
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -328,7 +325,7 @@
                             <div class="col-md-12">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="home">Home</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">My Orders</li>
                                     </ol>
                                 </nav>
@@ -550,6 +547,4 @@
 
 
     </body>
-
-    <!-- Mirrored from gambolthemes.net/html-items/gambo_supermarket_demo_new/dashboard_my_orders.jsp by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Jun 2025 12:01:13 GMT -->
 </html>

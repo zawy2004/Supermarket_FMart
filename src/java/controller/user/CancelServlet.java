@@ -31,7 +31,7 @@ public class CancelServlet extends HttpServlet {
         response.getWriter().println("<h1>Thanh toán bị hủy!</h1>");
         response.getWriter().println("<p><strong>Mã đơn hàng:</strong> " + (orderCode != null ? orderCode : "Không rõ") + "</p>");
         response.getWriter().println("<p><strong>Trạng thái:</strong> " + (status != null ? status : "Không rõ") + "</p>");
-        response.getWriter().println("<a class='btn' href='" + request.getContextPath() + "/User/index.jsp'>Tiếp tục mua sắm</a>");
+        response.getWriter().println("<a class='btn' href='" + request.getContextPath() + "/shop'>Tiếp tục mua sắm</a>");
         response.getWriter().println("</body>");
         response.getWriter().println("</html>");
     }

@@ -102,7 +102,7 @@
                     <div class="col-md-12">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+                                <li class="breadcrumb-item"><a href="home">Home</a></li>
                                 <c:if test="${not empty category}">
                                     <li class="breadcrumb-item"><a href="shop?categoryId=${category.categoryID}">${category.categoryName}</a></li>
                                 </c:if>
