@@ -31,6 +31,54 @@
     <link href="${pageContext.request.contextPath}/User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 
     <style>
+        /* Container cho toàn bộ danh sách */
+.payment-method-radio {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 100px; /* khoảng cách giữa các tùy chọn */
+}
+
+/* Từng mục chọn */
+.payment-method-radio li {
+    position: relative;
+}
+
+/* Ẩn input radio */
+.payment-method-radio input[type="radio"] {
+    display: none;
+}
+
+/* Style cho label để tạo hình nút */
+.payment-method-radio label {
+    display: flex;
+    flex-direction: column; /* xếp ảnh trên, chữ dưới nếu cần */
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    height: 40px;
+}
+
+/* Ảnh */
+.payment-method-radio label img {
+    width: 50px;
+    height: auto;
+    margin-bottom: 5px;
+}
+
+/* Khi được chọn */
+.payment-method-radio input[type="radio"]:checked + label {
+    border-color: #28a745;
+    background-color: #e9f8ef;
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.3);
+}
+
         .toast-notification {
             position: fixed;
             top: 20px;
@@ -245,15 +293,15 @@
                                             <ul class="product-now payment-method-radio">
                                                 <li>
                                                     <input type="radio" id="cod" name="paymentmethod" value="cod" checked>
-                                                    <label for="cod"><img src="${pageContext.request.contextPath}/User/images/icons/cod.png" alt=""> Thanh toán khi nhận hàng</label>
+                                                    <label for="cod"><img src="${pageContext.request.contextPath}/User/images/cod.png" alt=""> </label>
                                                 </li>
-                                                <li>
+<!--                                                <li>
                                                     <input type="radio" id="vnpay" name="paymentmethod" value="vnpay">
                                                     <label for="vnpay"><img src="${pageContext.request.contextPath}/User/images/icons/vnpay.png" alt=""> VNPay</label>
-                                                </li>
+                                                </li>-->
                                                 <li>
                                                     <input type="radio" id="payos" name="paymentmethod" value="payos">
-                                                    <label for="payos"><img src="${pageContext.request.contextPath}/User/images/icons/payos.png" alt=""> PayOS</label>
+                                                    <label for="payos"><img src="${pageContext.request.contextPath}/User/images/payos.png" alt=""> </label>
                                                 </li>
                                             </ul>
                                         </div>
