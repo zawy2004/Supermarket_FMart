@@ -94,7 +94,7 @@
                     Updater
                 </a>
 
-                <a class="nav-link" href="reports.jsp">
+                <a class="nav-link" href="ReportServlet">
                     <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
                     Reports
                 </a>

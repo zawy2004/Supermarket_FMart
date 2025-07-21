@@ -9,10 +9,7 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <a class="nav-link active" href="AdminServlet">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
-                            </a>
+                           
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-newspaper"></i></div>
                                 Posts
@@ -80,10 +77,7 @@
                                     <a class="nav-link sub_nav_link" href="email_setting.jsp">Email Settings</a>
                                 </nav>
                             </div>
-                            <a class="nav-link" href="reports.jsp">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
-                                Reports
-                            </a>
+                           
                         </div>
                     </div>
                 </nav>

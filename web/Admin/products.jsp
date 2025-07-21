@@ -23,11 +23,14 @@
     </head>
 
     <body class="sb-nav-fixed">
-      <!-- Header -->
+        <body class="sb-nav-fixed">
+        <!-- Header -->
             <jsp:include page="header.jsp"></jsp:include>
         <div id="layoutSidenav">
             <!-- Sidebar -->
             <jsp:include page="managersidebar.jsp"></jsp:include>
+            
+
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
@@ -57,18 +60,24 @@
                             </div>
                             <div class="col-lg-5 col-md-6">
                                 <div class="bulk-section mt-30">
-                                    <div class="search-by-name-input">
-                                        <input type="text" class="form-control" placeholder="Search">
-                                    </div>
-                                    <div class="input-group">
-                                        <select id="category" name="category" class="form-control">
-                                            <option selected>Active</option>
-                                            <option value="1">Inactive</option>
+                                    <form action="ProductServlet" method="get" class="form-inline" style="gap: 8px;">
+                                        <input type="hidden" name="action" value="list" />
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="keyword"
+                                            placeholder="Search by name, SKU, brand..."
+                                            value="${param.keyword != null ? param.keyword : ''}"
+                                            style="min-width: 160px;"
+                                            />
+                                        <select name="categoryId" class="form-control" style="min-width: 120px;">
+                                            <option value="">All Categories</option>
+                                            <c:forEach var="cat" items="${categories}">
+                                                <option value="${cat.categoryID}" <c:if test="${param.categoryId == cat.categoryID}">selected</c:if>>${cat.categoryName}</option>
+                                            </c:forEach>
                                         </select>
-                                        <div class="input-group-append">
-                                            <button class="status-btn hover-btn" type="submit">Search Area</button>
-                                        </div>
-                                    </div>
+                                        <button class="status-btn hover-btn btn btn-primary" type="submit">Search</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +100,7 @@
                                                 <th>Created</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
-                                            </tr>
+                                            </tr>  
                                         </thead>
                                         <tbody>
                                             <c:forEach var="product" items="${products}">
@@ -100,7 +109,7 @@
                                                     <td>${product.productID}</td>
                                                     <td>
                                                         <div class="cate-img-5">
-                                                            <img src="Admin/images/product/img-1.jpg" alt="">
+                                                            <img src="User/${productMainImages[product.productID]}" alt="${product.productName}" style="max-width: 60px; max-height: 60px;">
                                                         </div>
                                                     </td>
                                                     <td>${product.productName}</td>
@@ -131,18 +140,50 @@
                                         </tbody>
                                     </table>
                                 </div>
+
                                 <nav aria-label="Page navigation" class="mt-4">
                                     <ul class="pagination justify-content-center">
                                         <li class="page-item <c:if test='${page == 1}'>disabled</c:if>'">
-                                            <a class="page-link" href="?page=${page-1}">Previous</a>
+                                                <a class="page-link"
+                                                   href="?page=${page-1}&keyword=${param.keyword}&categoryId=${param.categoryId}">Previous</a>
                                         </li>
-                                        <c:forEach begin="1" end="${totalPages}" var="i">
-                                            <li class="page-item <c:if test='${i == page}'>active</c:if>'">
-                                                <a class="page-link" href="?page=${i}">${i}</a>
-                                            </li>
-                                        </c:forEach>
+                                        <c:choose>
+                                            <c:when test="${totalPages <= 7}">
+                                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                                    <li class="page-item <c:if test='${i == page}'>active</c:if>'">
+                                                            <a class="page-link"
+                                                               href="?page=${i}&keyword=${param.keyword}&categoryId=${param.categoryId}">${i}</a>
+                                                    </li>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <li class="page-item <c:if test='${1 == page}'>active</c:if>'">
+                                                        <a class="page-link"
+                                                           href="?page=1&keyword=${param.keyword}&categoryId=${param.categoryId}">1</a>
+                                                </li>
+                                                <c:if test="${page > 4}">
+                                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                    </c:if>
+                                                    <c:forEach var="i" begin="${page-1}" end="${page+1}">
+                                                        <c:if test="${i > 1 && i < totalPages}">
+                                                        <li class="page-item <c:if test='${i == page}'>active</c:if>'">
+                                                                <a class="page-link"
+                                                                   href="?page=${i}&keyword=${param.keyword}&categoryId=${param.categoryId}">${i}</a>
+                                                        </li>
+                                                    </c:if>
+                                                </c:forEach>
+                                                <c:if test="${page < totalPages - 3}">
+                                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                    </c:if>
+                                                <li class="page-item <c:if test='${totalPages == page}'>active</c:if>'">
+                                                        <a class="page-link"
+                                                           href="?page=${totalPages}&keyword=${param.keyword}&categoryId=${param.categoryId}">${totalPages}</a>
+                                                </li>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <li class="page-item <c:if test='${page == totalPages || totalPages == 0}'>disabled</c:if>'">
-                                            <a class="page-link" href="?page=${page+1}">Next</a>
+                                                <a class="page-link"
+                                                   href="?page=${page+1}&keyword=${param.keyword}&categoryId=${param.categoryId}">Next</a>
                                         </li>
                                     </ul>
                                 </nav>

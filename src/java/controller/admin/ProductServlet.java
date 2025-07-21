@@ -1,18 +1,21 @@
 package controller.admin;
 
 import dao.CategoryDAO;
+import dao.ProductDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import dao.ProductDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import model.Category;
 import model.Product;
+import model.ProductImage;
+import service.ProductService;
 
 public class ProductServlet extends HttpServlet {
 
@@ -29,6 +32,8 @@ public class ProductServlet extends HttpServlet {
 
         try {
             if (action == null) {
+                handleProductList(request, response);
+            } else if ("list".equals(action)) {
                 handleProductList(request, response);
             } else if ("view".equals(action)) {
                 handleViewProduct(request, response);
@@ -61,13 +66,12 @@ public class ProductServlet extends HttpServlet {
 
     private void handleProductList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Phân trang
         int page = 1;
-        int pageSize = 5; // Tùy chỉnh số sản phẩm/trang
+        int pageSize = 5;
         String pageParam = request.getParameter("page");
         if (pageParam != null) {
             try {
-                page = Integer.parseInt(pageParam);
+page = Integer.parseInt(pageParam);
                 if (page < 1) {
                     page = 1;
                 }
@@ -77,16 +81,50 @@ public class ProductServlet extends HttpServlet {
         }
         int offset = (page - 1) * pageSize;
 
-        // Lấy sản phẩm theo trang
-        List<Product> products = ProductDAO.getProductsByPage(offset, pageSize); // Cần viết hàm này ở DAO
-        int totalProducts = ProductDAO.getTotalProducts(); // Cần viết hàm này ở DAO
+        // Nhận filter từ form
+        String keyword = request.getParameter("keyword");
+        String categoryId = request.getParameter("categoryId");
+
+        List<Product> products;
+        int totalProducts;
+
+        if ((keyword != null && !keyword.isEmpty()) || (categoryId != null && !categoryId.isEmpty())) {
+            products = ProductDAO.searchProductsPaged(keyword, categoryId, offset, pageSize);
+            totalProducts = ProductDAO.countSearchProducts(keyword, categoryId);
+        } else {
+            products = ProductDAO.getProductsByPage(offset, pageSize);
+            totalProducts = ProductDAO.getTotalProducts();
+        }
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+        // ======= BỔ SUNG PHẦN LẤY ẢNH ĐẠI DIỆN =======
+        ProductService productService = new ProductService();
+        Map<Integer, String> productMainImages = new HashMap<>();
+        for (Product p : products) {
+            List<ProductImage> imgs = productService.getProductImagesByProductId(p.getProductID());
+            String imgUrl = "images/product/default.jpg"; // Đường dẫn ảnh mặc định
+            boolean foundMain = false;
+            for (ProductImage img : imgs) {
+                if (img.isIsMainImage()) {
+                    imgUrl = img.getImageUrl();
+                    foundMain = true;
+                    break;
+                }
+            }
+            if (!foundMain && imgs.size() > 0) {
+                imgUrl = imgs.get(0).getImageUrl();
+            }
+            productMainImages.put(p.getProductID(), imgUrl);
+        }
+        request.setAttribute("productMainImages", productMainImages);
+        // ==============================================
 
         request.setAttribute("products", products);
         request.setAttribute("page", page);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("keyword", keyword);
+        request.setAttribute("categoryId", categoryId);
 
-        // Lấy category
         List<Category> categories = CategoryDAO.getAllCategories();
         request.setAttribute("categories", categories);
 
@@ -95,24 +133,39 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void handleViewProduct(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String productIdParam = request.getParameter("productId");
+        throws ServletException, IOException {
+    String productIdParam = request.getParameter("productId");
 
-        if (productIdParam != null && !productIdParam.isEmpty()) {
-            int productID = Integer.parseInt(productIdParam);
-            Product product = ProductDAO.getProductById(productID);
+    if (productIdParam != null && !productIdParam.isEmpty()) {
+        int productID = Integer.parseInt(productIdParam);
+        Product product = ProductDAO.getProductById(productID);
 
-            if (product != null) {
-                request.setAttribute("product", product);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/product_view.jsp");
-                dispatcher.forward(request, response);
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found.");
+        if (product != null) {
+// ====== LẤY ẢNH CHÍNH SẢN PHẨM (giống ở products.jsp) =======
+            ProductService productService = new ProductService();
+            List<ProductImage> productImages = productService.getProductImagesByProductId(productID);
+            String mainImageUrl = "images/product/default.jpg";
+            if (productImages != null && !productImages.isEmpty()) {
+                ProductImage mainImage = productImages.stream()
+                        .filter(ProductImage::isIsMainImage)
+                        .findFirst()
+                        .orElse(productImages.get(0));
+                mainImageUrl = mainImage.getImageUrl();
             }
+            request.setAttribute("productMainImage", mainImageUrl);
+            // ===========================================================
+
+            request.setAttribute("product", product);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Admin/product_view.jsp");
+            dispatcher.forward(request, response);
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID.");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found.");
         }
+    } else {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing product ID.");
     }
+}
+
 
     private void handleEditProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -152,7 +205,7 @@ public class ProductServlet extends HttpServlet {
                 request.getSession().setAttribute("msg", "Product updated successfully!");
                 response.sendRedirect("ProductServlet");
             } else if ("add".equals(action)) {
-                try {
+try {
 
                     String productName = request.getParameter("productName");
                     String sku = request.getParameter("sku");
@@ -203,7 +256,7 @@ public class ProductServlet extends HttpServlet {
         int categoryID = parseIntSafe(request.getParameter("categoryID"));
         int supplierID = parseIntSafe(request.getParameter("supplierID"));
         String description = request.getParameter("description");
-        String unit = request.getParameter("unit");
+String unit = request.getParameter("unit");
         double costPrice = parseDoubleSafe(request.getParameter("costPrice"));
         double sellingPrice = parseDoubleSafe(request.getParameter("sellingPrice"));
         int minStockLevel = parseIntSafe(request.getParameter("minStockLevel"));
@@ -234,5 +287,4 @@ public class ProductServlet extends HttpServlet {
             return 0.0;
         }
     }
-
 }

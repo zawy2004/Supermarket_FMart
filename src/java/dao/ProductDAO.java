@@ -404,13 +404,13 @@ public static List<Product> smartSearch(String keyword) {
     public static List<Product> getRelatedProducts(int productID, int limit) {
     List<Product> products = new ArrayList<>();
     String sql = "SELECT TOP " + limit + " p.* FROM " + TABLE + " p " +
-            "JOIN " + TABLE + " ref ON p.categoryID = ref.categoryID " +
-            "WHERE p.isActive = 1 AND p.productID != ? AND ref.productID = ? " +
-            "ORDER BY p.createdDate DESC";
+                 "JOIN " + TABLE + " curr ON p.categoryID = curr.categoryID " +
+                 "WHERE p.isActive = 1 AND p.productID != ? AND curr.productID = ? " +
+                 "ORDER BY p.createdDate DESC";
     try (Connection conn = DatabaseConfig.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, productID); // p.productID != ?
-        stmt.setInt(2, productID); // ref.productID = ?
+        stmt.setInt(1, productID);
+        stmt.setInt(2, productID);
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
@@ -419,10 +419,10 @@ public static List<Product> smartSearch(String keyword) {
         }
     } catch (SQLException e) {
         e.printStackTrace();
+        System.err.println("Error in getRelatedProducts: " + e.getMessage());
     }
     return products;
 }
-
 
     // 17. Lấy sản phẩm active
     public static List<Product> getActiveProducts() {
@@ -593,4 +593,75 @@ public static Product getProductWithMainImage(int productID) {
     }
     return product;
    }
+public static List<Product> searchProductsPaged(String keyword, String categoryId, int offset, int pageSize) {
+        List<Product> products = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Products WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (productName LIKE ? OR sku LIKE ? OR brand LIKE ? OR description LIKE ?)");
+            String key = "%" + keyword.trim() + "%";
+            for (int i = 0; i < 4; i++) {
+                params.add(key);
+            }
+        }
+        if (categoryId != null && !categoryId.isEmpty()) {
+            sql.append(" AND categoryID = ?");
+            params.add(Integer.parseInt(categoryId));
+        }
+        sql.append(" ORDER BY productID DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add(offset);
+        params.add(pageSize);
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Product product = extractProductFromResultSet(rs);
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+//
+
+    //// Đếm số sản phẩm thỏa điều kiện tìm kiếm
+public static int countSearchProducts(String keyword, String categoryId) {
+        int count = 0;
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Products WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (productName LIKE ? OR sku LIKE ? OR brand LIKE ? OR description LIKE ?)");
+            String key = "%" + keyword.trim() + "%";
+            for (int i = 0; i < 4; i++) {
+                params.add(key);
+            }
+        }
+        if (categoryId != null && !categoryId.isEmpty()) {
+            sql.append(" AND categoryID = ?");
+            params.add(Integer.parseInt(categoryId));
+        }
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+
 }

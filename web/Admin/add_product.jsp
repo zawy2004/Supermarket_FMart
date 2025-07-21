@@ -19,58 +19,61 @@
         <link href="Admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     </head>
 
+   
+        
     <body class="sb-nav-fixed">
         <!-- Header -->
-            <jsp:include page="header.jsp"></jsp:include>
-        <div id="layoutSidenav">
-            <!-- Sidebar -->
+        <jsp:include page="header.jsp"></jsp:include>
+            <div id="layoutSidenav">
+                <!-- Sidebar -->
             <jsp:include page="managersidebar.jsp"></jsp:include>
-            <!-- Main content -->
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid">
-                        <h2 class="mt-30 page-title">Add New Product</h2>
-                        <ol class="breadcrumb mb-30">
-                            <li class="breadcrumb-item"><a href="products.jsp">Products</a></li>
-                            <li class="breadcrumb-item active">Add Product</li>
-                        </ol>
-                        <div class="row">
-                            <div class="col-xl-10 col-md-12">
-                                <div class="card card-static-2 mb-30">
-                                    <div class="card-body-table">
-                                        <form action="ProductServlet" method="post">
-                                            <input type="hidden" name="action" value="add">
+                
+                <!-- Main content -->
+                <div id="layoutSidenav_content">
+                    <main>
+                        <div class="container-fluid">
+                            <h2 class="mt-30 page-title">Add New Product</h2>
+                            <ol class="breadcrumb mb-30">
+                                <li class="breadcrumb-item"><a href="products.jsp">Products</a></li>
+                                <li class="breadcrumb-item active">Add Product</li>
+                            </ol>
+                            <div class="row">
+                                <div class="col-xl-10 col-md-12">
+                                    <div class="card card-static-2 mb-30">
+                                        <div class="card-body-table">
+                                            <form action="ProductServlet" method="post">
+                                                <input type="hidden" name="action" value="add">
 
-                                            <div class="form-group mb-3">
-                                                <label for="productName">Product Name</label>
-                                                <input type="text" class="form-control" id="productName" name="productName" required>
-                                            </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="productName">Product Name</label>
+                                                    <input type="text" class="form-control" id="productName" name="productName" required>
+                                                </div>
 
-                                            <div class="form-group mb-3">
-                                                <label for="sku">SKU</label>
-                                                <input type="text" class="form-control" id="sku" name="sku" required>
-                                            </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="sku">SKU</label>
+                                                    <input type="text" class="form-control" id="sku" name="sku" required>
+                                                </div>
 
-                                            <div class="form-group mb-3">
-                                                <label for="sellingPrice">Selling Price</label>
-                                                <input type="number" step="0.01" class="form-control" id="sellingPrice" name="sellingPrice" required>
-                                            </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="sellingPrice">Selling Price</label>
+                                                    <input type="number" step="0.01" class="form-control" id="sellingPrice" name="sellingPrice" required>
+                                                </div>
 
-                                            <div class="form-group mb-3">
-                                                <label for="costPrice">Cost Price</label>
-                                                <input type="number" step="0.01" class="form-control" id="costPrice" name="costPrice" required>
-                                            </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="costPrice">Cost Price</label>
+                                                    <input type="number" step="0.01" class="form-control" id="costPrice" name="costPrice" required>
+                                                </div>
 
-                                            <div class="form-group mb-3">
-                                                <label for="categoryID">Category</label>
-                                                <select class="form-control" id="categoryID" name="categoryID" required>
+                                                <div class="form-group mb-3">
+                                                    <label for="categoryID">Category</label>
+                                                    <select class="form-control" id="categoryID" name="categoryID" required>
                                                     <c:forEach var="cat" items="${categories}">
-                                                        
-                                                             <option value="${cat.categoryID}">${cat.categoryName}</option>
+
+                                                        <option value="${cat.categoryID}">${cat.categoryName}</option>
                                                     </c:forEach>
 
-                                                   
-                                                    
+
+
                                                 </select>
                                             </div>
 

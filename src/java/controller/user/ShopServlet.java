@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.Product;
 import model.Category;
 import service.ProductService;
@@ -13,12 +14,15 @@ import service.CategoryService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import model.ShoppingCart;
+import service.ShoppingCartService;
 
 @WebServlet(name = "ShopServlet", urlPatterns = {"/shop", "/shop_grid"})
 public class ShopServlet extends HttpServlet {
     
     private ProductService productService;
     private CategoryService categoryService;
+    private ShoppingCartService cartService;
     private static final int PRODUCTS_PER_PAGE = 12;
     
     @Override
@@ -27,6 +31,7 @@ public class ShopServlet extends HttpServlet {
         try {
             productService = new ProductService();
             categoryService = new CategoryService();
+            cartService = new ShoppingCartService();
             System.out.println("ShopServlet initialized successfully!");
         } catch (Exception e) {
             System.err.println("Error initializing ShopServlet: " + e.getMessage());
@@ -193,6 +198,36 @@ public class ShopServlet extends HttpServlet {
             
             // Lấy số lượng sản phẩm theo category
             Map<Integer, Integer> categoryProductCount = productService.getProductCountByCategory();
+             HttpSession session = request.getSession(false);
+            Integer userId = (session != null) ? (Integer) session.getAttribute("userId") : null;
+            System.out.println("SingleProductServlet: userId = " + userId);
+            
+            List<ShoppingCart> cartItems = null;
+            double cartTotal = 0.0;
+            double totalSaving = 0.0;
+            double deliveryCharge = 30000;
+            
+            if (userId != null) {
+                cartItems = cartService.getCartItemsByUserId(userId);
+                for (ShoppingCart item : cartItems) {
+                    Product p = productService.getProductById(item.getProductID());
+                    if (p != null) {
+                        cartTotal += p.getSellingPrice() * item.getQuantity();
+                        if (p.getCostPrice() > p.getSellingPrice()) {
+                            totalSaving += (p.getCostPrice() - p.getSellingPrice()) * item.getQuantity();
+                        }
+                        item.setProductName(p.getProductName());
+                        item.setSellingPrice(p.getSellingPrice());
+                        item.setCostPrice(p.getCostPrice());
+                    }
+                }
+            }
+            
+
+            request.setAttribute("cartItems", cartItems);
+            request.setAttribute("cartTotal", cartTotal);
+            request.setAttribute("totalSaving", totalSaving);
+            request.setAttribute("deliveryCharge", deliveryCharge);
             
             // ===== SET ENHANCED ATTRIBUTES =====
             request.setAttribute("products", pageProducts);

@@ -6,9 +6,33 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
+import model.Product;
+import model.ShoppingCart;
+import service.CategoryService;
+import service.ProductService;
+import service.ShoppingCartService;
 
 @WebServlet(name = "HomeServlet", urlPatterns = {"/home"})
 public class HomeServlet extends HttpServlet {
+    
+    private ProductService productService;
+    private CategoryService categoryService;
+    private ShoppingCartService cartService;
+    
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        try {
+            productService = new ProductService();
+            categoryService = new CategoryService();
+            cartService = new ShoppingCartService();
+            System.out.println("SingleProductServlet initialized successfully!");
+        } catch (Exception e) {
+            System.err.println("Error initializing SingleProductServlet: " + e.getMessage());
+            throw new ServletException("Failed to initialize SingleProductServlet", e);
+        }
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,6 +59,36 @@ public class HomeServlet extends HttpServlet {
                                  ", Email: " + session.getAttribute("userEmail"));
             }
             
+            Integer userId = (session != null) ? (Integer) session.getAttribute("userId") : null;
+            System.out.println("SingleProductServlet: userId = " + userId);
+            
+            List<ShoppingCart> cartItems = null;
+            double cartTotal = 0.0;
+            double totalSaving = 0.0;
+            double deliveryCharge = 30000;
+            
+            if (userId != null) {
+                cartItems = cartService.getCartItemsByUserId(userId);
+                for (ShoppingCart item : cartItems) {
+                    Product p = productService.getProductById(item.getProductID());
+                    if (p != null) {
+                        cartTotal += p.getSellingPrice() * item.getQuantity();
+                        if (p.getCostPrice() > p.getSellingPrice()) {
+                            totalSaving += (p.getCostPrice() - p.getSellingPrice()) * item.getQuantity();
+                        }
+                        item.setProductName(p.getProductName());
+                        item.setSellingPrice(p.getSellingPrice());
+                        item.setCostPrice(p.getCostPrice());
+                    }
+                }
+            }
+            
+
+            request.setAttribute("cartItems", cartItems);
+            request.setAttribute("cartTotal", cartTotal);
+            request.setAttribute("totalSaving", totalSaving);
+            request.setAttribute("deliveryCharge", deliveryCharge);
+            
             // Kiểm tra có thông báo logout không (từ URL parameter)
             String logoutMessage = request.getParameter("logout");
             if ("success".equals(logoutMessage)) {
@@ -53,6 +107,10 @@ public class HomeServlet extends HttpServlet {
             request.setAttribute("errorMessage", "Có lỗi xảy ra khi tải trang chủ.");
             request.getRequestDispatcher("/User/index.jsp").forward(request, response);
         }
+        
+       
+           
+            
     }
     
     @Override
