@@ -10,6 +10,10 @@ public class DatabaseConfig {
     private static final String URL = "jdbc:sqlserver://DEMO\\SQLEXPRESS;databaseName=Fmart;encrypt=false";
     private static final String USER = "sa";
     private static final String PASSWORD = "1234";
+    private static final String URL = "jdbc:sqlserver://DESKTOP-MK7ODO2;databaseName=FmartDB;encrypt=false";
+private static final String USER = "sa";
+private static final String PASSWORD = "123456";
+>>>>>>> manage-couponcode
 
 
     private static Connection connection = null;
