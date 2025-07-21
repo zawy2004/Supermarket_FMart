@@ -23,6 +23,22 @@
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/service/ShoppingCartService.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/src/java/controller/user/SingleProductServlet.java</file>
             <file>file:/D:/sieuthifmart/Supermarket_FMart/nbproject/build-impl.xml</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/web/Admin/shops.jsp</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/controller/user/LoginFacebookServlet.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/controller/user/ShopServlet.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/web/User/checkout.jsp</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/web/User/css/style.css</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/model/CouponUsage.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/web/META-INF/context.xml</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/controller/user/HomeServlet.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/config/DatabaseConfig.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/dao/CouponUsageDAO.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/controller/user/PayOSServlet.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/dao/CouponDAO.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/controller/admin/LocationManagementServlet.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/controller/user/ForgotPasswordServlet.java</file>
+            <file>file:/C:/Users/Dell/IdeaSnapshots/Supermarket_FMart/src/java/model/Coupon.java</file>
         </group>
     </open-files>
 </project-private>
