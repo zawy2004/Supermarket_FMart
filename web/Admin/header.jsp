@@ -36,8 +36,8 @@
                 </i>
             </a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <a class="dropdown-item admin-dropdown-item" href="edit_profile.jsp">Edit Profile</a>
-                <a class="dropdown-item admin-dropdown-item" href="change_password.jsp">Change Password</a>
+<!--                <a class="dropdown-item admin-dropdown-item" href="edit_profile.jsp">Edit Profile</a>
+                <a class="dropdown-item admin-dropdown-item" href="change_password.jsp">Change Password</a>-->
                 <a class="dropdown-item admin-dropdown-item" href="logout">Logout</a>
             </div>
         </li>

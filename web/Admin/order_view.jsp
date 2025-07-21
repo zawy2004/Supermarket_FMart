@@ -116,7 +116,8 @@
                                                         Sub Total
                                                     </div>
                                                     <div class="order-total-right-text">
-                                                        $<fmt:formatNumber value="${order.totalAmount}" type="number" minFractionDigits="2" />
+                                                       
+                                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" groupingUsed="true" minFractionDigits="0"/>
                                                     </div>
                                                 </div>
                                                 <div class="order-total-dt">
@@ -140,7 +141,7 @@
                                                         Total Amount
                                                     </div>
                                                     <div class="order-total-right-text fsz-18">
-                                                        $<fmt:formatNumber value="${order.finalAmount}" type="number" minFractionDigits="2" />
+                                                         <fmt:formatNumber value="${order.finalAmount}" type="currency" currencySymbol="₫" groupingUsed="true" minFractionDigits="0"/>
                                                     </div>
                                                 </div>
                                             </div>

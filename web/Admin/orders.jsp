@@ -163,7 +163,8 @@
                                                             <td>
                                                                 <span class="badge-item badge-status">${order.status}</span>
                                                             </td>
-                                                            <td>$<fmt:formatNumber value="${order.finalAmount}" type="number" minFractionDigits="2" /></td>
+                                                           
+                                                            <td> <fmt:formatNumber value="${order.finalAmount}" type="currency" currencySymbol="₫" groupingUsed="true" minFractionDigits="0"/></td>
                                                             <td class="action-btns">
                                                                 <a href="OrderManagementServlet?action=view&id=${order.orderID}" class="views-btn">
                                                                     <i class="fas fa-eye"></i>

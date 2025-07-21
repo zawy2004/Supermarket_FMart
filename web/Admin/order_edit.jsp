@@ -95,9 +95,11 @@
                                                                             <tr>
                                                                                 <td>${item.orderDetailID}</td>
                                                                                 <td>Product #${item.productID}</td>
-                                                                                <td class="text-center">$<fmt:formatNumber value="${item.unitPrice}" type="number" minFractionDigits="2" /></td>
+
+                                                                                <td class="text-center"> <fmt:formatNumber value="${item.unitPrice}" type="currency" currencySymbol="₫" groupingUsed="true" minFractionDigits="0"/></td>
                                                                                 <td class="text-center">${item.quantity}</td>
-                                                                                <td class="text-center">$<fmt:formatNumber value="${item.totalPrice}" type="number" minFractionDigits="2" /></td>
+
+                                                                                <td class="text-center"> <fmt:formatNumber value="${item.totalPrice}" type="currency" currencySymbol="₫" groupingUsed="true" minFractionDigits="0"/></td>
                                                                             </tr>
                                                                         </c:forEach>
                                                                     </tbody>
@@ -116,7 +118,8 @@
                                                             Sub Total
                                                         </div>
                                                         <div class="order-total-right-text">
-                                                            $<fmt:formatNumber value="${order.totalAmount}" type="number" minFractionDigits="2" />
+
+                                                            <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" groupingUsed="true" minFractionDigits="0"/>
                                                         </div>
                                                     </div>
                                                     <div class="order-total-dt">
@@ -132,7 +135,8 @@
                                                             Total Amount
                                                         </div>
                                                         <div class="order-total-right-text fsz-18">
-                                                            $<fmt:formatNumber value="${order.finalAmount}" type="number" minFractionDigits="2" />
+                                                     
+                                                             <fmt:formatNumber value="${order.finalAmount}" type="currency" currencySymbol="₫" groupingUsed="true" minFractionDigits="0"/>
                                                         </div>
                                                     </div>
                                                 </div>
