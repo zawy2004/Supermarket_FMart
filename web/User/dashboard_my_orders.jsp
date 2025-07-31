@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%-- fallback nếu user null --%>
+<%-- fallback náº¿u user null --%>
 <%
     model.User user = (model.User) session.getAttribute("user");
     if (user == null) {
@@ -29,6 +29,30 @@
         <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
         <style>
+            .order-detail-table th, .order-detail-table td {
+                vertical-align: middle;
+            }
+            .order-detail-table img {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+            .order-detail-section {
+                border-bottom: 1px solid #e9ecef;
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+            }
+            .order-detail-section:last-child {
+                border-bottom: none;
+            }
+            .order-detail-section h6 {
+                margin-bottom: 10px;
+                color: #007bff;
+            }
+            .order-detail-section p {
+                margin-bottom: 5px;
+            }
             .order-card {
                 border: 1px solid #e9ecef;
                 border-radius: 10px;
@@ -45,14 +69,35 @@
                 border-radius: 20px;
                 font-weight: 500;
             }
-            .status-pending { background: #fff3cd; color: #856404; }
-            .status-processing { background: #d1ecf1; color: #0c5460; }
-            .status-shipped { background: #d4edda; color: #155724; }
-            .status-delivered { background: #d1ecf1; color: #0c5460; }
-            .status-cancelled { background: #f8d7da; color: #721c24; }
-            .payment-success { color: #28a745; }
-            .payment-pending { color: #ffc107; }
-            .payment-failed { color: #dc3545; }
+            .status-pending {
+                background: #fff3cd;
+                color: #856404;
+            }
+            .status-processing {
+                background: #d1ecf1;
+                color: #0c5460;
+            }
+            .status-shipped {
+                background: #d4edda;
+                color: #155724;
+            }
+            .status-delivered {
+                background: #d1ecf1;
+                color: #0c5460;
+            }
+            .status-cancelled {
+                background: #f8d7da;
+                color: #721c24;
+            }
+            .payment-success {
+                color: #28a745;
+            }
+            .payment-pending {
+                color: #ffc107;
+            }
+            .payment-failed {
+                color: #dc3545;
+            }
             .order-number {
                 color: #007bff;
                 font-weight: 600;
@@ -71,6 +116,12 @@
                 color: #dee2e6;
                 margin-bottom: 20px;
             }
+            .order-detail-table img {
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+                border-radius: 5px;
+            }
         </style>
     </head>
     <body>
@@ -85,7 +136,7 @@
                     </ol>
                 </div>
             </div>
-            
+
             <div class="dashboard-group">
                 <div class="container">
                     <div class="row">
@@ -125,7 +176,7 @@
                                     <h4>Order History</h4>
                                     <p class="text-muted">Track and manage your orders</p>
                                 </div>
-                                
+
                                 <c:choose>
                                     <c:when test="${empty orders}">
                                         <div class="empty-orders">
@@ -171,13 +222,14 @@
                                                             </div>
                                                             <div class="col-md-2 text-end">
                                                                 <div class="order-total mb-2">${order.finalAmount}VND</div>
-                                                                <a href="order_detail?orderID=${order.orderID}" 
-                                                                   class="btn btn-outline-primary btn-sm">
+                                                                <button class="btn btn-outline-primary btn-sm view-details-btn" 
+                                                                        data-order-id="${order.orderID}"
+                                                                        data-bs-toggle="modal" data-bs-target="#orderDetailModal">
                                                                     <i class="uil uil-eye"></i> View Details
-                                                                </a>
+                                                                </button>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <!-- Order Actions -->
                                                         <div class="row mt-3">
                                                             <div class="col-12">
@@ -205,7 +257,7 @@
                                                 </div>
                                             </c:forEach>
                                         </div>
-                                        
+
                                         <!-- Pagination -->
                                         <c:if test="${totalPages > 1}">
                                             <nav class="mt-4">
@@ -220,7 +272,7 @@
                                         </c:if>
                                     </c:otherwise>
                                 </c:choose>
-                                
+
                                 <!-- Success/Error Messages -->
                                 <c:if test="${not empty success}">
                                     <div class="alert alert-success mt-3 alert-dismissible fade show">
@@ -241,6 +293,31 @@
             </div>  
         </div>
 
+        <!-- Order Detail Modal -->
+        <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderDetailModalLabel">Order Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="order-details-content">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p>Loading order details...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <jsp:include page="footer.jsp"/>
 
         <script src="User/js/jquery.min.js"></script>
@@ -251,31 +328,146 @@
         <script src="User/js/custom.js"></script>
         <script src="User/js/offset_overlay.js"></script>
         <script src="User/js/night-mode.js"></script>
-        
+
         <script>
-            function cancelOrder(orderID) {
-                if (confirm('Are you sure you want to cancel this order?')) {
-                    $.ajax({
-                        url: 'orders',
-                        type: 'POST',
-                        data: {
-                            action: 'cancel',
-                            orderID: orderID
-                        },
-                        success: function(response) {
-                            location.reload();
-                        },
-                        error: function() {
-                            alert('Failed to cancel order. Please try again.');
+                function cancelOrder(orderID) {
+                    if (confirm('Are you sure you want to cancel this order?')) {
+                        $.ajax({
+                            url: 'orders',
+                            type: 'POST',
+                            data: {
+                                action: 'cancel',
+                                orderID: orderID
+                            },
+                            success: function (response) {
+                                location.reload();
+                            },
+                            error: function () {
+                                alert('Failed to cancel order. Please try again.');
+                            }
+                        });
+                    }
+                }
+
+                // View Order Details
+                $(document).ready(function () {
+                    $('.view-details-btn').click(function () {
+                        var orderID = $(this).data('order-id');
+                        $('#order-details-content').html(`
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Loading order details...</p>
+            </div>
+        `);
+
+            $.ajax({
+                url: 'order_detail',
+                type: 'GET',
+                data: {orderID: orderID},
+                dataType: 'json',
+                success: function (response) {
+                    if (response && response.orderNumber) {
+                        // Basic order info
+                        var orderNumber = response.orderNumber || 'N/A';
+                        var orderDate = response.orderDate || 'N/A';
+                        var paymentMethod = response.paymentMethod || 'N/A';
+                        var paymentStatus = response.paymentStatus || 'N/A';
+                        var orderStatus = response.status || 'N/A';
+                        var finalAmount = response.finalAmount || 0;
+                        var shippingAddress = response.shippingAddress || 'N/A';
+
+                        // Generate content
+                        var content = `
+                        <div class="order-detail-section">
+                            <h6>Order Information</h6>
+                            <p><strong>Order #:</strong> ${orderNumber}</p>
+                            <p><strong>Date:</strong> ${orderDate}</p>
+                            <p><strong>Payment Method:</strong> ${paymentMethod}
+                                <span class="payment-${paymentStatus.toLowerCase()}">
+                                    (${paymentStatus})
+                                </span>
+                            </p>
+                            <p><strong>Status:</strong>
+                                <span class="order-status status-${orderStatus.toLowerCase().replace(' ', '-')}">
+            ${orderStatus}
+                                </span>
+                            </p>
+                            <p><strong>Total:</strong> ${finalAmount} VND</p>
+                        </div>
+                        <div class="order-detail-section">
+                            <h6>Shipping Address</h6>
+                            <p>${shippingAddress}</p>
+                        </div>
+                        <div class="order-detail-section">
+                            <h6>Products</h6>
+                            <table class="table order-detail-table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Product Name</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                            // Product list
+                            if (response.products && response.products.length > 0) {
+                                response.products.forEach(function (product) {
+                                    var image = product.image || 'images/no-image.png';
+                                    var name = product.name || 'Unnamed Product';
+                                    var qty = product.quantity || 0;
+                                    var price = product.price || 0;
+                                    var total = qty * price;
+
+                                    content += `
+                        <tr>
+                                    <td><img src="${image}" alt="${name}" title="${name}"></td>
+                                    <td>${name}</td>
+                                    <td>${qty}</td>
+                                    <td>${price} VND</td>
+                                    <td>${total} VND</td>
+                                </tr>
+                            `;
+                                });
+                            } else {
+                                content += `
+                            <tr>
+                                <td colspan="5" class="text-center">No products found for this order.</td>
+                            </tr>
+                        `;
+                        }
+
+                        content += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+
+                            $('#order-details-content').html(content);
+                        } else {
+                            $('#order-details-content').html('<p class="text-danger">No order details available.</p>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#order-details-content').html(`
+                    <p class="text-danger">Failed to load order details. Please try again later.</p>
+                    <p><small>Error: ${xhr.status} - ${error}</small></p>
+                `);
                         }
                     });
-                }
-            }
-            
-            // Auto-hide alerts after 5 seconds
-            setTimeout(function() {
-                $('.alert').fadeOut('slow');
-            }, 5000);
+                });
+
+                // Auto-hide alerts
+                setTimeout(function () {
+                    $('.alert').fadeOut('slow');
+                }, 5000);
+            });
         </script>
+
     </body>
 </html>

@@ -11,6 +11,7 @@ import config.DatabaseConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import model.OrderDetail;
 import model.OrderReport;
 
 public class OrderDAO {
@@ -562,6 +563,58 @@ public List<Order> getOrdersByCustomerId(int customerId) {
 
     return orders;
 }
+public Order getOrderByID(int orderID) {
+        String sql = "SELECT * FROM Orders WHERE OrderID = ?";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Order order = new Order();
+                order.setOrderID(rs.getInt("OrderID"));
+                order.setOrderNumber(rs.getString("OrderNumber"));
+                order.setOrderDate(rs.getDate("OrderDate"));
+                order.setPaymentMethod(rs.getString("PaymentMethod"));
+                order.setPaymentStatus(rs.getString("PaymentStatus"));
+                order.setStatus(rs.getString("Status"));
+                order.setFinalAmount(rs.getDouble("FinalAmount"));
+                return order;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<OrderDetail> getOrderDetails(int orderID) throws SQLException {
+        List<OrderDetail> details = new ArrayList<>();
+        String sql = "SELECT od.*, p.ProductName, p.ImageUrl "
+                + "FROM OrderDetails od "
+                + "JOIN Products p ON od.ProductID = p.ProductID "
+                + "WHERE od.OrderID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    OrderDetail od = new OrderDetail();
+                    od.setOrderDetailID(rs.getInt("OrderDetailID"));
+                    od.setOrderID(rs.getInt("OrderID"));
+                    od.setProductID(rs.getInt("ProductID"));
+                    od.setProductName(rs.getString("ProductName")); // <-- fix lỗi cũ
+                    od.setQuantity(rs.getInt("Quantity"));
+                    od.setUnitPrice(rs.getDouble("UnitPrice"));
+                    od.setDiscountPercent(rs.getDouble("DiscountPercent"));
+                    od.setDiscountAmount(rs.getDouble("DiscountAmount"));
+                    od.setTotalPrice(rs.getDouble("TotalPrice"));
+                    // Nếu muốn thêm ImageUrl, bạn nên dùng một Map hoặc DTO ngoài
+                    details.add(od);
+                }
+            }
+        }
+        return details;
+    }
 
 
 }

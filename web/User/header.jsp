@@ -452,7 +452,7 @@
                                     Pages
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a class="dropdown-item" href="User/dashboard_overview.jsp">Account</a></li>
+                                   
                                     <li><a class="dropdown-item" href="about_us">About Us</a></li>
                                     <li><a class="dropdown-item" href="shop">Online Shop</a></li>
                                     <li><a class="dropdown-item" href="single_product_view">Single Product View</a></li>

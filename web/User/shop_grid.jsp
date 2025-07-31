@@ -639,7 +639,7 @@
             
             // Set price inputs
             document.getElementById('filter-min-price').value = min > 0 ? min : '';
-            document.getElementById('filter-max-price').value = max < 999 ? max : '';
+            document.getElementById('filter-max-price').value = max < 100000000 ? max : '';
         }
         
         // Apply Filters
@@ -795,7 +795,7 @@
         // Initialize price range highlighting
         document.addEventListener('DOMContentLoaded', function() {
             var minPrice = parseFloat('${minPrice}') || 0;
-            var maxPrice = parseFloat('${maxPrice}') || 999;
+            var maxPrice = parseFloat('${maxPrice}') || 100000000;
             
             // Highlight active price range button
             var quickPriceBtns = document.querySelectorAll('.quick-price-btn');
@@ -808,7 +808,7 @@
                         var btnMin = parseInt(matches[1]);
                         var btnMax = parseInt(matches[2]);
                         
-                        if (minPrice === btnMin && (maxPrice === btnMax || (btnMax === 999 && maxPrice >= 999))) {
+                        if (minPrice === btnMin && (maxPrice === btnMax || (btnMax === 100000000 && maxPrice >= 100000000))) {
                             btn.classList.add('active');
                         }
                     }

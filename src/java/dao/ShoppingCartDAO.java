@@ -131,4 +131,15 @@ public class ShoppingCartDAO {
         }
         return cartItems;
     }
+    public void removeAllCartItemsByUserId(int userId) {
+    String sql = "DELETE FROM ShoppingCart WHERE UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, userId);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        System.err.println("Error in removeAllCartItemsByUserId: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
 }
