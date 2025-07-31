@@ -45,6 +45,8 @@ public class ContactService {
             boolean saved = contactDAO.createContactMessage(contact);
             
             if (saved) {
+                SimpleEmailService.sendNotificationToManagement(contact);
+
                 result.setSuccess(true);
                 result.setMessage("Your message has been submitted successfully. We will get back to you within 24-48 hours.");
                 result.setMessageID(contact.getMessageID());
