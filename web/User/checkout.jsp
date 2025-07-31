@@ -570,19 +570,19 @@
         <!-- Search Model End -->
         <!-- Cart Sidebar Offcanvas Start -->
         <jsp:include page="cart_sidebar.jsp"></jsp:include>
-            <!-- Header Start -->
+        <!-- Header Start -->
         <jsp:include page="search_model.jsp"></jsp:include>
         <jsp:include page="header.jsp"></jsp:include>
-            <!-- Header End -->
-            <!-- Body Start -->
-            <div class="wrapper">
-                <div class="gambo-Breadcrumb">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
+        <!-- Header End -->
+        <!-- Body Start -->
+        <div class="wrapper">
+            <div class="gambo-Breadcrumb">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Thanh toán</li>
                                 </ol>
                             </nav>
@@ -804,6 +804,8 @@
                                             <input type="hidden" name="price" value="${item.sellingPrice}"/>
                                         </c:forEach>
                                         <input type="hidden" name="cartTotal" value="${cartTotal}"/>
+                                        <input type="hidden" name="subtotal" value="${cartTotal / 1.10}"/>
+                                        <input type="hidden" name="vatAmount" value="${cartTotal - (cartTotal / 1.10)}"/>
 
                                         <button type="button" class="enhanced-submit-btn" onclick="showConfirmModal()">
                                             <i class="fas fa-shopping-bag"></i>
@@ -845,8 +847,12 @@
                                 </div>
                                 <div class="total-checkout-group">
                                     <div class="cart-total-dil">
-                                        <h4>Tổng giỏ hàng</h4>
-                                        <span><fmt:formatNumber value="${cartTotal != null ? cartTotal : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                        <h4>Tổng chưa thuế</h4>
+                                        <span><fmt:formatNumber value="${cartTotal != null ? cartTotal / 1.10 : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                    </div>
+                                    <div class="cart-total-dil pt-3">
+                                        <h4>Thuế VAT (10%)</h4>
+                                        <span><fmt:formatNumber value="${cartTotal != null ? cartTotal - (cartTotal / 1.10) : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
                                     </div>
                                     <div class="cart-total-dil pt-3">
                                         <h4>Phí giao hàng</h4>
@@ -923,10 +929,10 @@
             <!-- Body End -->
             <!-- Footer Start -->
             <jsp:include page="footer.jsp"></jsp:include>
-                <!-- Footer End -->
+            <!-- Footer End -->
 
-                <!-- Javascripts -->
-                <script src="${pageContext.request.contextPath}/User/js/jquery.min.js"></script>
+            <!-- Javascripts -->
+            <script src="${pageContext.request.contextPath}/User/js/jquery.min.js"></script>
             <script src="${pageContext.request.contextPath}/User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
             <script src="${pageContext.request.contextPath}/User/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
             <script src="${pageContext.request.contextPath}/User/vendor/OwlCarousel/owl.carousel.js"></script>
@@ -935,177 +941,177 @@
             <script src="${pageContext.request.contextPath}/User/js/offset_overlay.js"></script>
             <script src="${pageContext.request.contextPath}/User/js/night-mode.js"></script>
             <script>
-                                // Format price as VND
-                                function formatVND(price) {
-                                    return price.toLocaleString('vi-VN', {
-                                        style: 'decimal',
-                                        minimumFractionDigits: 0,
-                                        maximumFractionDigits: 0
-                                    }) + ' ₫';
-                                }
+                // Format price as VND
+                function formatVND(price) {
+                    return price.toLocaleString('vi-VN', {
+                        style: 'decimal',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }) + ' ₫';
+                }
 
-                                // Show Notification
-                                function showNotification(message, type) {
-                                    const existingNotifications = document.querySelectorAll('.toast-notification');
-                                    existingNotifications.forEach(notif => notif.remove());
+                // Show Notification
+                function showNotification(message, type) {
+                    const existingNotifications = document.querySelectorAll('.toast-notification');
+                    existingNotifications.forEach(notif => notif.remove());
 
-                                    const notification = document.createElement('div');
-                                    const alertType = type === 'success' ? 'success' : type === 'info' ? 'info' : 'danger';
-                                    notification.className = 'alert alert-' + alertType + ' alert-dismissible fade show toast-notification';
-                                    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+                    const notification = document.createElement('div');
+                    const alertType = type === 'success' ? 'success' : type === 'info' ? 'info' : 'danger';
+                    notification.className = 'alert alert-' + alertType + ' alert-dismissible fade show toast-notification';
+                    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
 
-                                    const icon = type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-circle';
-                                    notification.innerHTML =
-                                            '<i class="fas fa-' + icon + ' me-2"></i>' +
-                                            message +
-                                            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+                    const icon = type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-circle';
+                    notification.innerHTML =
+                            '<i class="fas fa-' + icon + ' me-2"></i>' +
+                            message +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
 
-                                    document.body.appendChild(notification);
+                    document.body.appendChild(notification);
 
-                                    setTimeout(function () {
-                                        if (notification.parentNode) {
-                                            notification.remove();
-                                        }
-                                    }, 3000);
-                                }
+                    setTimeout(function () {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 3000);
+                }
 
-                                // Update Cart
-                                function updateCart(cartId, quantity) {
-                                    if (quantity < 1) {
-                                        removeFromCart(cartId);
-                                        return;
-                                    }
-                                    $.ajax({
-                                        url: '${pageContext.request.contextPath}/cart',
-                                        type: 'POST',
-                                        data: {
-                                            action: 'update',
-                                            cartId: cartId,
-                                            quantity: quantity
-                                        },
-                                        success: function (response) {
-                                            showNotification('Cập nhật giỏ hàng thành công!', 'success');
-                                            location.reload();
-                                        },
-                                        error: function (xhr) {
-                                            showNotification('Lỗi khi cập nhật giỏ hàng: ' + xhr.responseText, 'error');
-                                        }
-                                    });
-                                }
+                // Update Cart
+                function updateCart(cartId, quantity) {
+                    if (quantity < 1) {
+                        removeFromCart(cartId);
+                        return;
+                    }
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/cart',
+                        type: 'POST',
+                        data: {
+                            action: 'update',
+                            cartId: cartId,
+                            quantity: quantity
+                        },
+                        success: function (response) {
+                            showNotification('Cập nhật giỏ hàng thành công!', 'success');
+                            location.reload();
+                        },
+                        error: function (xhr) {
+                            showNotification('Lỗi khi cập nhật giỏ hàng: ' + xhr.responseText, 'error');
+                        }
+                    });
+                }
 
-                                // Remove from Cart
-                                function removeFromCart(cartId) {
-                                    $.ajax({
-                                        url: '${pageContext.request.contextPath}/cart',
-                                        type: 'POST',
-                                        data: {
-                                            action: 'remove',
-                                            cartId: cartId
-                                        },
-                                        success: function (response) {
-                                            showNotification('Xóa sản phẩm khỏi giỏ hàng!', 'success');
-                                            location.reload();
-                                        },
-                                        error: function (xhr) {
-                                            showNotification('Lỗi khi xóa sản phẩm: ' + xhr.responseText, 'error');
-                                        }
-                                    });
-                                }
+                // Remove from Cart
+                function removeFromCart(cartId) {
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/cart',
+                        type: 'POST',
+                        data: {
+                            action: 'remove',
+                            cartId: cartId
+                        },
+                        success: function (response) {
+                            showNotification('Xóa sản phẩm khỏi giỏ hàng!', 'success');
+                            location.reload();
+                        },
+                        error: function (xhr) {
+                            showNotification('Lỗi khi xóa sản phẩm: ' + xhr.responseText, 'error');
+                        }
+                    });
+                }
 
-                                // Apply Promo Code
-                                function applyPromoCode() {
-                                    const promoCode = document.getElementById('promoCodeInput').value;
-                                    if (!promoCode) {
-                                        showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
-                                        return;
-                                    }
-                                    $.ajax({
-                                        url: '${pageContext.request.contextPath}/cart',
-                                        type: 'POST',
-                                        data: {
-                                            action: 'applyPromo',
-                                            promoCode: promoCode
-                                        },
-                                        success: function (response) {
-                                            showNotification('Áp dụng mã khuyến mãi thành công!', 'success');
-                                            $('#promoCodeModal').modal('hide');
-                                            location.reload();
-                                        },
-                                        error: function (xhr) {
-                                            showNotification('Lỗi khi áp dụng mã khuyến mãi: ' + xhr.responseText, 'error');
-                                        }
-                                    });
-                                }
+                // Apply Promo Code
+                function applyPromoCode() {
+                    const promoCode = document.getElementById('promoCodeInput').value;
+                    if (!promoCode) {
+                        showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
+                        return;
+                    }
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/cart',
+                        type: 'POST',
+                        data: {
+                            action: 'applyPromo',
+                            promoCode: promoCode
+                        },
+                        success: function (response) {
+                            showNotification('Áp dụng mã khuyến mãi thành công!', 'success');
+                            $('#promoCodeModal').modal('hide');
+                            location.reload();
+                        },
+                        error: function (xhr) {
+                            showNotification('Lỗi khi áp dụng mã khuyến mãi: ' + xhr.responseText, 'error');
+                        }
+                    });
+                }
 
-                                // Show Confirm Modal
-                                function showConfirmModal() {
-                                    // Sao chép tóm tắt đơn hàng vào modal
-                                    const summary = document.getElementById('order-summary').innerHTML;
-                                    document.getElementById('confirm-order-summary').innerHTML = summary;
+                // Show Confirm Modal
+                function showConfirmModal() {
+                    // Sao chép tóm tắt đơn hàng vào modal
+                    const summary = document.getElementById('order-summary').innerHTML;
+                    document.getElementById('confirm-order-summary').innerHTML = summary;
 
-                                    // Lấy phương thức thanh toán đã chọn
-                                    const selectedPayment = document.querySelector('input[name="paymentmethod"]:checked').nextElementSibling.querySelector('.payment-card-title').textContent;
-                                    document.getElementById('confirm-payment-method').textContent = selectedPayment;
+                    // Lấy phương thức thanh toán đã chọn
+                    const selectedPayment = document.querySelector('input[name="paymentmethod"]:checked').nextElementSibling.querySelector('.payment-card-title').textContent;
+                    document.getElementById('confirm-payment-method').textContent = selectedPayment;
 
-                                    // Lấy tổng giá
-                                    const totalAmount = document.getElementById('total-amount').textContent;
-                                    document.getElementById('confirm-total-amount').textContent = totalAmount;
+                    // Lấy tổng giá
+                    const totalAmount = document.getElementById('total-amount').textContent;
+                    document.getElementById('confirm-total-amount').textContent = totalAmount;
 
-                                    // Hiện modal
-                                    $('#confirmPaymentModal').modal('show');
-                                }
+                    // Hiện modal
+                    $('#confirmPaymentModal').modal('show');
+                }
 
-                                // Submit Form sau xác nhận
-                                function submitCheckoutForm() {
-                                    document.getElementById('checkoutForm').submit();
-                                }
+                // Submit Form sau xác nhận
+                function submitCheckoutForm() {
+                    document.getElementById('checkoutForm').submit();
+                }
 
-                                // Enhanced Payment Method Selection
-                                $(document).ready(function () {
-                                    // Payment method selection
-                                    $('.payment-method-card').on('click', function() {
-                                        // Remove selected class from all cards
-                                        $('.payment-method-card').removeClass('selected');
-                                        
-                                        // Add selected class to clicked card
-                                        $(this).addClass('selected');
-                                        
-                                        // Check the radio button
-                                        $(this).find('input[type="radio"]').prop('checked', true);
-                                        
-                                        // Hide all payment descriptions
-                                        $('.payment-description').removeClass('active');
-                                        
-                                        // Show selected payment description
-                                        const method = $(this).find('input[type="radio"]').val();
-                                        $('#payment-' + method).addClass('active');
-                                    });
+                // Enhanced Payment Method Selection
+                $(document).ready(function () {
+                    // Payment method selection
+                    $('.payment-method-card').on('click', function() {
+                        // Remove selected class from all cards
+                        $('.payment-method-card').removeClass('selected');
+                        
+                        // Add selected class to clicked card
+                        $(this).addClass('selected');
+                        
+                        // Check the radio button
+                        $(this).find('input[type="radio"]').prop('checked', true);
+                        
+                        // Hide all payment descriptions
+                        $('.payment-description').removeClass('active');
+                        
+                        // Show selected payment description
+                        const method = $(this).find('input[type="radio"]').val();
+                        $('#payment-' + method).addClass('active');
+                    });
 
-                                    // Form validation enhancements
-                                    $('.enhanced-form-control').on('focus', function() {
-                                        $(this).closest('.enhanced-form-group').addClass('focused');
-                                    });
+                    // Form validation enhancements
+                    $('.enhanced-form-control').on('focus', function() {
+                        $(this).closest('.enhanced-form-group').addClass('focused');
+                    });
 
-                                    $('.enhanced-form-control').on('blur', function() {
-                                        $(this).closest('.enhanced-form-group').removeClass('focused');
-                                        
-                                        // Add validation feedback
-                                        if ($(this).prop('required') && !$(this).val()) {
-                                            $(this).addClass('is-invalid');
-                                        } else {
-                                            $(this).removeClass('is-invalid').addClass('is-valid');
-                                        }
-                                    });
+                    $('.enhanced-form-control').on('blur', function() {
+                        $(this).closest('.enhanced-form-group').removeClass('focused');
+                        
+                        // Add validation feedback
+                        if ($(this).prop('required') && !$(this).val()) {
+                            $(this).addClass('is-invalid');
+                        } else {
+                            $(this).removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
 
-                                    // Form submission with loading state
-                                    $('#checkoutForm').on('submit', function() {
-                                        $('.enhanced-submit-btn').addClass('loading').prop('disabled', true);
-                                    });
+                    // Form submission with loading state
+                    $('#checkoutForm').on('submit', function() {
+                        $('.enhanced-submit-btn').addClass('loading').prop('disabled', true);
+                    });
 
-                                    // Initialize payment method
-                                    const defaultMethod = $('input[name="paymentmethod"]:checked').val();
-                                    $('#payment-' + defaultMethod).addClass('active');
-                                });
+                    // Initialize payment method
+                    const defaultMethod = $('input[name="paymentmethod"]:checked').val();
+                    $('#payment-' + defaultMethod).addClass('active');
+                });
             </script>
     </body>
 </html>
