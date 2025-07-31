@@ -75,7 +75,7 @@ public class UserManagementServlet extends HttpServlet {
         }
     }
 
-      private void listUsers(HttpServletRequest request, HttpServletResponse response)
+    private void listUsers(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
         int page = 1;
         int pageSize = 5;
@@ -105,10 +105,10 @@ public class UserManagementServlet extends HttpServlet {
         // Lấy số lượng người dùng theo từng role
         int customerCount = userDAO.countUsersByRole(1); // Assuming roleID for customers is 1
         int staffCount = userDAO.countUsersByRole(2);    // Assuming roleID for staff is 2
-        int managerCount = userDAO.countUsersByRole(3);  // Assuming roleID for managers is 3
-        int adminCount = userDAO.countUsersByRole(4);    // Assuming roleID for admins is 4
+        int managerCount = userDAO.countUsersByRole(4);  // Assuming roleID for managers is 3
+        int adminCount = userDAO.countUsersByRole(3);    // Assuming roleID for admins is 4
         int totaluserCount = userDAO.getTotalUsers();
-        
+
         request.setAttribute("userList", users);
         request.setAttribute("page", page);
         request.setAttribute("totalPages", totalPages);
@@ -127,29 +127,28 @@ public class UserManagementServlet extends HttpServlet {
 
     private void viewUser(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-    String idStr = request.getParameter("id");
-    int id = -1;
-    
-    try {
-        id = Integer.parseInt(idStr);
-    } catch (NumberFormatException e) {
-        request.setAttribute("error", "Invalid user ID");
-        request.getRequestDispatcher("/Admin/customers.jsp").forward(request, response);
-        return;
-    }
-    
-    User user = userDAO.getUserById(id);
-    
-    if (user == null) {
-        request.setAttribute("error", "User not found");
-        request.getRequestDispatcher("/Admin/customers.jsp").forward(request, response);
-        return;
-    }
-    
-    request.setAttribute("user", user);
-    request.getRequestDispatcher("/Admin/customer_view.jsp").forward(request, response);
-}
+        String idStr = request.getParameter("id");
+        int id = -1;
 
+        try {
+            id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Invalid user ID");
+            request.getRequestDispatcher("/Admin/customers.jsp").forward(request, response);
+            return;
+        }
+
+        User user = userDAO.getUserById(id);
+
+        if (user == null) {
+            request.setAttribute("error", "User not found");
+            request.getRequestDispatcher("/Admin/customers.jsp").forward(request, response);
+            return;
+        }
+
+        request.setAttribute("user", user);
+        request.getRequestDispatcher("/Admin/customer_view.jsp").forward(request, response);
+    }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
@@ -171,8 +170,19 @@ public class UserManagementServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String dobStr = request.getParameter("dateOfBirth");
         Date dateOfBirth = null;
-
       
+
+        if (dobStr != null && !dobStr.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date parsedDate = sdf.parse(dobStr);
+                dateOfBirth = new java.sql.Date(parsedDate.getTime());
+            } catch (Exception e) {
+                e.printStackTrace();
+                dateOfBirth = null;
+            }
+        }
+
         String roleIdStr = request.getParameter("roleID");
 
         // Chuyển đổi ngày sinh
