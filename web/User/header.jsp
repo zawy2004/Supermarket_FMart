@@ -317,7 +317,7 @@
                         <a href="${pageContext.request.contextPath}/faq" class="offer-link"><i class="uil uil-question-circle"></i>Help</a>
                     </li>
                     <li>
-                        <a href="wishlist" class="option_links" title="Wishlist"><i class='uil uil-heart icon_wishlist'></i><span class="noti_count1">3</span></a>
+                        <a href="wishlist" class="option_links" title="Wishlist"><i class='uil uil-heart icon_wishlist'></i></a>
                     </li>	
                     <li class="dropdown account-dropdown">
                         <a href="#" class="opts_account" role="button" id="accountClick" data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
@@ -485,7 +485,7 @@
                 </div>
                 <div class="sub_header_right">
                     <div class="header_cart">
-                        <a href="#" class="cart__btn hover-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="uil uil-shopping-cart-alt"></i><span>Cart</span><ins>2</ins><i class="uil uil-angle-down"></i></a>
+                        <a href="#" class="cart__btn hover-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="uil uil-shopping-cart-alt"></i><span>My Cart</span><i class="uil uil-angle-down"></i></a>
                     </div>
                 </div>
             </nav>

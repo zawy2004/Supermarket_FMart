@@ -246,10 +246,7 @@
                                                                             <i class="uil uil-star"></i> Write Review
                                                                         </a>
                                                                     </c:if>
-                                                                    <a href="reorder?orderID=${order.orderID}" 
-                                                                       class="btn btn-sm btn-outline-success">
-                                                                        <i class="uil uil-redo"></i> Reorder
-                                                                    </a>
+                                                                    
                                                                 </div>
                                                             </div>
                                                         </div>
