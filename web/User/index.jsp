@@ -466,15 +466,15 @@
                                     <span>For You</span>
                                     <h2>Top Featured Products</h2>
                                 </div>
-                                <a href="shop_grid.jsp" class="see-more-btn">See All</a>
+                                <a href="shop" class="see-more-btn">See All</a>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="owl-carousel featured-slider owl-theme">
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-1.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=22" class="product-img">
+                                            <img src="User/images/product/img-22.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">6% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -482,8 +482,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$12 <span>$15</span></div>
+                                            <h4>Acecook Hảo Hảo Shrimp </h4>
+                                            <div class="product-price">12,250  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -497,8 +497,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-2.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=41" class="product-img">
+                                            <img src="User/images/product/img-41.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">2% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -506,8 +506,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$10 <span>$13</span></div>
+                                            <h4>Vinamilk Fresh Milk</h4>
+                                            <div class="product-price">87,250  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -521,8 +521,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-3.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=82" class="product-img">
+                                            <img src="User/images/product/img-82.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">5% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -530,8 +530,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$5 <span>$8</span></div>
+                                            <h4>Mars Snickers Bar</h4>
+                                            <div class="product-price">49,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -545,8 +545,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-4.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=117" class="product-img">
+                                            <img src="User/images/product/img-117.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">3% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -554,8 +554,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$15 <span>$20</span></div>
+                                            <h4>FMart Facial Tissue</h4>
+                                            <div class="product-price">74,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -569,8 +569,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-5.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=150" class="product-img">
+                                            <img src="User/images/product/img-150.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">2% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -578,8 +578,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$9 <span>$10</span></div>
+                                            <h4>Unilever Clear Shampoo</h4>
+                                            <div class="product-price">199,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -593,8 +593,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-6.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=210" class="product-img">
+                                            <img src="User/images/product/img-210.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">2% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -602,8 +602,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$7 <span>$8</span></div>
+                                            <h4>FMart Bluetooth Earbuds</h4>
+                                            <div class="product-price">999,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -617,8 +617,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-7.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=181" class="product-img">
+                                            <img src="User/images/product/img-181.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">1% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -626,8 +626,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$6.95 <span>$7</span></div>
+                                            <h4>Vissan Fresh Chicken Breast</h4>
+                                            <div class="product-price">324,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -641,8 +641,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-8.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=59" class="product-img">
+                                            <img src="User/images/product/img-59.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">3% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -650,8 +650,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$8 <span>$10</span></div>
+                                            <h4>Nutifood Strawberry Yogurt</h4>
+                                            <div class="product-price">132.250 ₫  <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -718,15 +718,15 @@
                                     <span>For You</span>
                                     <h2>Fresh Vegetables & Fruits</h2>
                                 </div>
-                                <a href="shop_grid.jsp" class="see-more-btn">See All</a>
+                                <a href="shop" class="see-more-btn">See All</a>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="owl-carousel featured-slider owl-theme">
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-11.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=18" class="product-img">
+                                            <img src="User/images/product/img-18.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">6% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -734,8 +734,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$12 <span>$15</span></div>
+                                            <h4>Fresh Strawberries</h4>
+                                            <div class="product-price">62,250  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -749,7 +749,7 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=12" class="product-img">
                                             <img src="User/images/product/img-12.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">2% off</span>
@@ -758,8 +758,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$10 <span>$13</span></div>
+                                            <h4>Fresh Tomatoes</h4>
+                                            <div class="product-price">62,250  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -773,7 +773,7 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=13" class="product-img">
                                             <img src="User/images/product/img-13.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">5% off</span>
@@ -782,8 +782,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$5 <span>$8</span></div>
+                                            <h4>Fresh Carrots</h4>
+                                            <div class="product-price">44,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -797,7 +797,7 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=1" class="product-img">
                                             <img src="User/images/product/img-1.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">3% off</span>
@@ -806,8 +806,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$15 <span>$20</span></div>
+                                            <h4>Fresh Spinach</h4>
+                                            <div class="product-price">49.750  ₫  <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -821,7 +821,7 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=5" class="product-img">
                                             <img src="User/images/product/img-5.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">2% off</span>
@@ -830,8 +830,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$9 <span>$10</span></div>
+                                            <h4>Fresh Dragon Fruit</h4>
+                                            <div class="product-price">99,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -845,7 +845,7 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=6" class="product-img">
                                             <img src="User/images/product/img-6.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">2% off</span>
@@ -854,8 +854,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$7 <span>$8</span></div>
+                                            <h4>Fresh Pineapple</h4>
+                                            <div class="product-price">82,250  ₫<span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -869,7 +869,7 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=14" class="product-img">
                                             <img src="User/images/product/img-14.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">1% off</span>
@@ -878,8 +878,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$6.95 <span>$7</span></div>
+                                            <h4>Fresh Bananas</h4>
+                                            <div class="product-price">49,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -893,7 +893,7 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=3" class="product-img">
                                             <img src="User/images/product/img-3.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">3% off</span>
@@ -902,8 +902,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$8 <span>$10</span></div>
+                                            <h4>Fresh Lettuce</h4>
+                                            <div class="product-price">49,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -929,17 +929,17 @@
                             <div class="main-title-tt">
                                 <div class="main-title-left">
                                     <span>For You</span>
-                                    <h2>Added New Products</h2>
+                                    <h2> New Products</h2>
                                 </div>
-                                <a href="shop_grid.jsp" class="see-more-btn">See All</a>
+                                <a href="shop" class="see-more-btn">See All</a>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="owl-carousel featured-slider owl-theme">
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-10.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=218" class="product-img">
+                                            <img src="User/images/product/img-218.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">New</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -947,8 +947,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$12 <span>$15</span></div>
+                                            <h4>FMart Phone Holder</h4>
+                                            <div class="product-price">199,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -962,8 +962,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-9.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=205" class="product-img">
+                                            <img src="User/images/product/img-205.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">New</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -971,8 +971,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$10</div>
+                                            <h4>FMart Wireless Mouse</h4>
+                                            <div class="product-price">499,750  ₫</div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -986,8 +986,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-15.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=171" class="product-img">
+                                            <img src="User/images/product/img-171.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">5% off</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -995,8 +995,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$5</div>
+                                            <h4>FMart Pet Shampoo</h4>
+                                            <div class="product-price">224.750  ₫</div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -1010,8 +1010,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-11.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=110" class="product-img">
+                                            <img src="User/images/product/img-110.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">New</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -1019,8 +1019,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$15 <span>$16</span></div>
+                                            <h4>Unilever Cif Glass Cleaner</h4>
+                                            <div class="product-price">124,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -1034,8 +1034,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-14.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=73" class="product-img">
+                                            <img src="User/images/product/img-73.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">New</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -1043,8 +1043,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$9</div>
+                                            <h4>Coca-Cola Coke Zero </h4>
+                                            <div class="product-price">74,750  ₫</div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -1058,8 +1058,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-2.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=89" class="product-img">
+                                            <img src="User/images/product/img-89.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">New</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -1067,8 +1067,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$7</div>
+                                            <h4>PepsiCo Lay’s Salt</h4>
+                                            <div class="product-price">99.750  ₫</div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -1082,8 +1082,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">	
-                                            <img src="User/images/product/img-5.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=119" class="product-img">	
+                                            <img src="User/images/product/img-119.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">New</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -1091,8 +1091,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$6.95</div>
+                                            <h4>Unilever Sunlight Dishwashing</h4>
+                                            <div class="product-price">99,750  ₫</div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">
@@ -1106,8 +1106,8 @@
                                 </div>
                                 <div class="item">
                                     <div class="product-item">
-                                        <a href="single_product_view.jsp" class="product-img">
-                                            <img src="User/images/product/img-6.jpg" alt="">
+                                        <a href="http://localhost:8080/Supermarket_FMart/single_product?productId=166" class="product-img">
+                                            <img src="User/images/product/img-166.jpg" alt="">
                                             <div class="product-absolute-options">
                                                 <span class="offer-badge-1">New</span>
                                                 <span class="like-icon" title="wishlist"></span>
@@ -1115,8 +1115,8 @@
                                         </a>
                                         <div class="product-text-dt">
                                             <p>Available<span>(In Stock)</span></p>
-                                            <h4>Product Title Here</h4>
-                                            <div class="product-price">$8 <span>8.75</span></div>
+                                            <h4>Mars Whiskas Cat Treats</h4>
+                                            <div class="product-price">124,750  ₫ <span></span></div>
                                             <div class="qty-cart">
                                                 <div class="quantity buttons_added">
                                                     <input type="button" value="-" class="minus minus-btn">

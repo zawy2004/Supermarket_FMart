@@ -307,11 +307,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a class="dropdown-item" href="User/our_blog.jsp">Our Blog</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_no_sidebar.jsp">Our Blog Two No Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_left_sidebar.jsp">Our Blog with Left Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_right_sidebar.jsp">Our Blog with Right Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_detail_view.jsp">Blog Detail View</a></li>
-                                    <li><a class="dropdown-item" href="User/blog_left_sidebar_single_view.jsp">Blog Detail View with Sidebar</a></li>
+                                    
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -330,7 +326,7 @@
                                     <li><a class="dropdown-item" href="User/job_detail_view.jsp">Job Detail View</a></li>
                                     <li><a class="dropdown-item" href="login">Sign In</a></li>
                                     <li><a class="dropdown-item" href="register">Sign Up</a></li>
-                                    <li><a class="dropdown-item" href="User/forgot_password.jsp">Forgot Password</a></li>
+                                    <li><a class="dropdown-item" href="forgot-password">Forgot Password</a></li>
                                 </ul>
                             </li>
                             <!-- Fix trong header.jsp - dòng cuối cùng -->

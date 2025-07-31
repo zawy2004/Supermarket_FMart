@@ -91,9 +91,7 @@
                             
                             <c:if test="${user != null}">
                                 <div class="mt-3">
-                                    <a href="${pageContext.request.contextPath}/contact?action=history" class="btn btn-outline-primary">
-                                        <i class="fas fa-history me-2"></i>View My Contact History
-                                    </a>
+                                    
                                 </div>
                             </c:if>
                         </div>
