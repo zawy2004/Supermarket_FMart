@@ -1,7 +1,9 @@
 package controller.admin;
 
 import model.Coupon;
+import model.CouponUsage;
 import model.User;
+import dao.CouponUsageDAO;
 import service.CouponService;
 import util.CouponValidationUtil.ValidationException;
 
@@ -215,7 +217,7 @@ public class CouponManagementServlet extends HttpServlet {
             }
 
             // Get usage history for this coupon
-            var usageHistory = couponService.getOrderCouponUsage(couponId);
+            List<CouponUsage> usageHistory = couponService.getOrderCouponUsage(couponId);
             
             request.setAttribute("coupon", coupon);
             request.setAttribute("usageHistory", usageHistory);
@@ -229,7 +231,7 @@ public class CouponManagementServlet extends HttpServlet {
     private void handleShowStatistics(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         
-        var stats = couponService.getCouponUsageStatistics();
+        List<CouponUsageDAO.CouponUsageStats> stats = couponService.getCouponUsageStatistics();
         request.setAttribute("couponStats", stats);
         request.getRequestDispatcher("/Admin/couponStats.jsp").forward(request, response);
     }
@@ -452,7 +454,7 @@ public class CouponManagementServlet extends HttpServlet {
         }
         
         User user = (User) session.getAttribute("user");
-        return user != null && ("admin".equals(user.getRole()) || "manager".equals(user.getRole()));
+        return user != null && ("admin".equals(user.getRoleName()) || "manager".equals(user.getRoleName()));
     }
 
     private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response)

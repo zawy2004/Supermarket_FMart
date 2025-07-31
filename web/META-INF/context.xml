@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/Supermarket_FMart"/>
+<Context path="/Supermarket_FMart" reloadable="true">
+    <!-- Database Resource Configuration -->
+    <Resource name="jdbc/FmartDB"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxTotal="20"
+              maxIdle="5"
+              maxWaitMillis="10000"
+              username="sa"
+              password="123456"
+              driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+              url="jdbc:sqlserver://DESKTOP-MK7ODO2:1433;databaseName=FmartDB;encrypt=false;trustServerCertificate=true"/>
+</Context>

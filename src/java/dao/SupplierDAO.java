@@ -71,5 +71,6 @@ public class SupplierDAO {
         return null;
     }
 
-    // TODO: Thêm phương thức thêm, cập nhật, xoá nhà cung cấp nếu cần
+    // Các phương thức CRUD cho nhà cung cấp sẽ được thêm khi cần thiết
+    // Hiện tại chỉ cần read operations cho việc hiển thị thông tin sản phẩm
 }

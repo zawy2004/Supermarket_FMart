@@ -207,6 +207,39 @@ public class CouponUsageDAO {
     }
 
     /**
+     * Lấy danh sách sử dụng coupon theo coupon ID
+     */
+    public List<CouponUsage> getCouponUsageByCoupon(int couponId) throws SQLException {
+        List<CouponUsage> usageList = new ArrayList<>();
+        String sql = """
+            SELECT cu.*, c.CouponCode, c.CouponName
+            FROM CouponUsage cu
+            INNER JOIN Coupons c ON cu.CouponID = c.CouponID
+            WHERE cu.CouponID = ?
+            ORDER BY cu.UsedDate DESC
+            """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, couponId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    CouponUsage usage = mapResultSetToCouponUsage(rs);
+                    usageList.add(usage);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Lỗi khi lấy danh sách sử dụng coupon theo coupon ID: " + couponId, e);
+            throw e;
+        }
+
+        return usageList;
+    }
+
+    /**
      * Get coupon usage statistics
      */
     public List<CouponUsageStats> getCouponUsageStats() throws SQLException {

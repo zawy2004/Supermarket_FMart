@@ -47,7 +47,14 @@ public class ShoppingCartService {
     public List<ShoppingCart> getCartItemsByUserId(int userId) {
         return cartDAO.getCartItemsByUserId(userId);
     }
-    
+
+    /**
+     * Xóa toàn bộ giỏ hàng của user (dùng khi checkout thành công)
+     */
+    public void clearCart(int userId) {
+        cartDAO.removeAllCartItemsByUserId(userId);
+    }
+
     public boolean isInWishlist(int userId, int productId) {
         return wishlistDAO.isInWishlist(userId, productId);
     }

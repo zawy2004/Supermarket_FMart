@@ -1,9 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
-
 
 import model.Order;
 import java.sql.*;
@@ -100,6 +95,7 @@ public class OrderDAO {
             stmt.setInt(3, orderId);
             stmt.executeUpdate();
         } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa giỏ hàng: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -165,41 +161,7 @@ public class OrderDAO {
         return orders;
     }
 
-    public Order getOrderById(int orderId) {
-        String query = "SELECT * FROM [Orders] WHERE orderID = ?";
-        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
 
-            ps.setInt(1, orderId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return new Order(
-                        rs.getInt("orderID"),
-                        rs.getString("orderNumber"),
-                        rs.getInt("customerID"),
-                        rs.getDate("orderDate"),
-                        rs.getString("orderType"),
-                        rs.getString("status"),
-                        rs.getDouble("totalAmount"),
-                        rs.getDouble("discountAmount"),
-                        rs.getDouble("taxAmount"),
-                        rs.getDouble("finalAmount"),
-                        rs.getString("paymentStatus"),
-                        rs.getString("paymentMethod"),
-                        rs.getString("deliveryAddress"),
-                        rs.getDate("deliveryDate"),
-                        rs.getDate("completedDate"),
-                        rs.getInt("processedBy"),
-                        rs.getString("notes")
-                );
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     public void updateOrder(Order order) {
         // Câu lệnh SQL chỉ cập nhật status
@@ -335,10 +297,13 @@ public class OrderDAO {
         }
 
     } catch (SQLException e) {
+        System.err.println("Lỗi khi lấy danh sách đơn hàng: " + e.getMessage());
         e.printStackTrace();
     }
 
     return orders;
+    }
+
     /**
      * Cập nhật số tiền của đơn hàng (khi áp dụng coupon)
      */
@@ -402,9 +367,8 @@ public class OrderDAO {
         }
         return null;
     }
-}
 
-public int getTotalOrders(String searchName, String status, String fromDate, String toDate) {
+    public int getTotalOrders(String searchName, String status, String fromDate, String toDate) {
     int totalOrders = 0;
     StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Orders o JOIN Users u ON o.CustomerID = u.UserID WHERE 1=1");
 
@@ -654,7 +618,7 @@ public Order getOrderByID(int orderID) {
 
     public List<OrderDetail> getOrderDetails(int orderID) throws SQLException {
         List<OrderDetail> details = new ArrayList<>();
-        String sql = "SELECT od.*, p.ProductName, p.ImageUrl "
+        String sql = "SELECT od.*, p.ProductName "
                 + "FROM OrderDetails od "
                 + "JOIN Products p ON od.ProductID = p.ProductID "
                 + "WHERE od.OrderID = ?";
@@ -667,22 +631,17 @@ public Order getOrderByID(int orderID) {
                     od.setOrderDetailID(rs.getInt("OrderDetailID"));
                     od.setOrderID(rs.getInt("OrderID"));
                     od.setProductID(rs.getInt("ProductID"));
-                    od.setProductName(rs.getString("ProductName")); // <-- fix lỗi cũ
+                    od.setProductName(rs.getString("ProductName")); // Lấy tên sản phẩm từ bảng Products
                     od.setQuantity(rs.getInt("Quantity"));
                     od.setUnitPrice(rs.getDouble("UnitPrice"));
                     od.setDiscountPercent(rs.getDouble("DiscountPercent"));
                     od.setDiscountAmount(rs.getDouble("DiscountAmount"));
                     od.setTotalPrice(rs.getDouble("TotalPrice"));
-                    // Nếu muốn thêm ImageUrl, bạn nên dùng một Map hoặc DTO ngoài
+                    // OrderDetail model chỉ chứa thông tin cơ bản, không bao gồm ImageUrl
                     details.add(od);
                 }
             }
         }
         return details;
     }
-
-
 }
-
-
-

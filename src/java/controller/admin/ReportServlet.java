@@ -1,4 +1,7 @@
 
+/*
+// COMMENTED OUT - MISSING APACHE POI DEPENDENCY
+// TO ENABLE: Add poi-ooxml JAR to web/WEB-INF/lib/
 
 package controller.admin;
 
@@ -140,3 +143,4 @@ public class ReportServlet extends HttpServlet {
         doGet(request, response);
     }
 }
+*/

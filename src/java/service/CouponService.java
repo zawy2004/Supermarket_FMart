@@ -254,7 +254,15 @@ public class CouponService {
 
             if (coupon.getUsageCount() > 0) {
                 usedCoupons++;
-                // Tính tổng discount đã áp dụng (cần thêm logic tính toán chi tiết)
+                // Tính tổng discount đã áp dụng - lấy từ CouponUsage table
+                try {
+                    List<CouponUsage> usageList = couponUsageDAO.getCouponUsageByCoupon(coupon.getCouponId());
+                    for (CouponUsage usage : usageList) {
+                        totalDiscountGiven += usage.getDiscountAmount();
+                    }
+                } catch (SQLException e) {
+                    logger.warning("Không thể tính tổng discount cho coupon " + coupon.getCouponCode() + ": " + e.getMessage());
+                }
             }
         }
 

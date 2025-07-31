@@ -106,8 +106,10 @@ public class CartServlet extends HttpServlet {
                         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         return;
                     }
-                    // Logic áp dụng promo code (giả định chưa có, cần thêm vào sau)
-                    out.print("{\"message\": \"Promo code applied successfully\"}");
+                    // Logic áp dụng promo code - đã được implement trong CheckoutServlet và CustomerCouponServlet
+                    // Chuyển hướng logic này sang checkout để xử lý coupon đúng cách
+                    session.setAttribute("pendingPromoCode", promoCode);
+                    out.print("{\"message\": \"Mã giảm giá sẽ được áp dụng khi thanh toán\"}");
                     break;
                     
                 default:
