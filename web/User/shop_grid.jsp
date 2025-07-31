@@ -311,7 +311,7 @@
                     <div class="col-md-12">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="home">Home</a></li>
+                                <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
                                 <c:choose>
                                     <c:when test="${currentCategory != null}">
                                         <li class="breadcrumb-item active" aria-current="page">${currentCategory.categoryName}</li>
@@ -409,18 +409,20 @@
                                         <div class="filter-section">
                                             <h6>Price Range</h6>
                                             <div class="price-range-inputs">
-                                                <input type="number" id="filter-min-price" placeholder="Min ($)" 
-                                                       value="${minPrice}" min="0" step="0.01">
-                                                <input type="number" id="filter-max-price" placeholder="Max ($)" 
-                                                       value="${maxPrice}" min="0" step="0.01">
+                                                <input type="number" id="filter-min-price" placeholder="Min (VND)" 
+                                                       value="${minPrice}" min="0" step="1000">
+                                                <input type="number" id="filter-max-price" placeholder="Max (VND)" 
+                                                       value="${maxPrice}" min="0" step="1000">
                                             </div>
                                             <div class="quick-price-filters">
-                                                <button type="button" class="quick-price-btn" onclick="setQuickPrice(0, 2)">Under $2</button>
-                                                <button type="button" class="quick-price-btn" onclick="setQuickPrice(2, 5)">$2 - $5</button>
-                                                <button type="button" class="quick-price-btn" onclick="setQuickPrice(5, 10)">$5 - $10</button>
-                                                <button type="button" class="quick-price-btn" onclick="setQuickPrice(10, 20)">$10 - $20</button>
-                                                <button type="button" class="quick-price-btn" onclick="setQuickPrice(20, 999)">$20+</button>
-                                            </div>
+    <button type="button" class="quick-price-btn" onclick="setQuickPrice(0, 20000)">Dưới 20.000đ</button>
+    <button type="button" class="quick-price-btn" onclick="setQuickPrice(20000, 50000)">20.000đ - 50.000đ</button>
+    <button type="button" class="quick-price-btn" onclick="setQuickPrice(50000, 100000)">50.000đ - 100.000đ</button>
+    <button type="button" class="quick-price-btn" onclick="setQuickPrice(100000, 200000)">100.000đ - 200.000đ</button>
+    <button type="button" class="quick-price-btn" onclick="setQuickPrice(200000, 99999999)">Trên 200.000đ</button>
+</div>
+
+
                                         </div>
                                         
                                         <!-- Filter Buttons -->

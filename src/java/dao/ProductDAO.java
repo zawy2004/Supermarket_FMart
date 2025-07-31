@@ -416,6 +416,8 @@ public static List<Product> smartSearch(String keyword) {
                 Product product = extractProductFromResultSet(rs);
                 products.add(product);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     } catch (SQLException e) {
         e.printStackTrace();

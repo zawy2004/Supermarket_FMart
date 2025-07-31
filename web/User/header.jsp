@@ -443,12 +443,8 @@
                                     Blog
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/our_blog">Our Blog</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_no_sidebar">Our Blog Two No Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_left_sidebar">Our Blog with Left Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_right_sidebar">Our Blog with Right Sidebar</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_detail_view">Blog Detail View</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/blog_left_sidebar_single_view">Blog Detail View with Sidebar</a></li>
+                                    <li><a class="dropdown-item" href="User/our_blog.jsp">Our Blog</a></li>
+                                    
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
