@@ -502,6 +502,24 @@ public int getTotalOrders(String searchName, String status, String fromDate, Str
 
     return reports;
 }
+   public int getTotalOrdersByStatus(String status) {
+    int count = 0;
+    String sql = "SELECT COUNT(*) FROM orders WHERE status = ?";
+    
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, status);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+    return count;
+}
+
 }
 
 

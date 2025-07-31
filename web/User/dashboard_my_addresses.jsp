@@ -106,7 +106,7 @@
                                     <h4>My Address</h4>
                                 </div>
                                 <div class="address-body">
-                                    <   button class="add-address hover-btn" data-bs-toggle="modal" data-bs-target="#address_model">
+                                    <button class="add-address hover-btn" data-bs-toggle="modal" data-bs-target="#address_model">
                                         ${user.address == null || user.address.isEmpty() ? "Add Address" : "Edit Address"}
                                     </button>
                                     <div class="address-item mt-3">

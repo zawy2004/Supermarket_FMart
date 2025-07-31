@@ -10,7 +10,7 @@
         <div class="sb-sidenav-menu">
             <div class="nav">
 
-                <a class="nav-link" href="orders.jsp">
+                <a class="nav-link" href="OrderManagementServlet">
                     <div class="sb-nav-link-icon"><i class="fas fa-cart-arrow-down"></i></div>
                     Orders
                 </a>

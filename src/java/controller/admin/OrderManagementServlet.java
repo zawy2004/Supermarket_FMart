@@ -2,6 +2,7 @@ package controller.admin;
 
 import dao.OrderDAO;
 import dao.OrderDetailDAO;
+import dao.ProductDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,17 +13,19 @@ import model.OrderDetail;
 
 import java.io.IOException;
 import java.util.List;
+import model.Product;
 
 @WebServlet("/OrderManagementServlet")
 public class OrderManagementServlet extends HttpServlet {
 
     private OrderDAO orderDAO;
     private OrderDetailDAO orderDetailDAO;
-
+    private ProductDAO productDAO;
     @Override
     public void init() {
         orderDAO = new OrderDAO();
         orderDetailDAO = new OrderDetailDAO();
+        productDAO = new ProductDAO();
     }
 
     @Override
@@ -70,6 +73,13 @@ public class OrderManagementServlet extends HttpServlet {
         // Fetch orders for the current page with filters
         List<Order> orders = orderDAO.getOrdersWithPagination(page, pageSize, searchName, status, fromDate, toDate);
 
+        // Get total number of orders by each status
+        int pendingCount = orderDAO.getTotalOrdersByStatus("Pending");
+        int confirmedCount = orderDAO.getTotalOrdersByStatus("Confirmed");
+        int processingCount = orderDAO.getTotalOrdersByStatus("Processing");
+        int completedCount = orderDAO.getTotalOrdersByStatus("Completed");
+        int cancelledCount = orderDAO.getTotalOrdersByStatus("Cancelled");
+
         // Set attributes for JSP
         request.setAttribute("orderList", orders);
         request.setAttribute("currentPage", page);
@@ -78,18 +88,31 @@ public class OrderManagementServlet extends HttpServlet {
         request.setAttribute("status", status);
         request.setAttribute("fromDate", fromDate);
         request.setAttribute("toDate", toDate);
+        
+        // Set status counts for JSP
+        request.setAttribute("pendingCount", pendingCount);
+        request.setAttribute("confirmedCount", confirmedCount);
+        request.setAttribute("processingCount", processingCount);
+        request.setAttribute("completedCount", completedCount);
+        request.setAttribute("cancelledCount", cancelledCount);
 
         request.getRequestDispatcher("Admin/orders.jsp").forward(request, response);
     }
 
-
     // View order detail
-    private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response)
+private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int orderId = Integer.parseInt(request.getParameter("id"));
         Order order = orderDAO.getOrderById(orderId);
         List<OrderDetail> orderDetails = orderDetailDAO.getDetailsByOrderId(orderId);
 
+        // Lấy tên sản phẩm từ ProductDAO và gán vào OrderDetail
+        for (OrderDetail item : orderDetails) {
+            Product product = productDAO.getProductById(item.getProductID()); // Lấy thông tin sản phẩm
+            item.setProductName(product != null ? product.getProductName() : "Unknown Product"); // Gán tên sản phẩm
+        }
+
+        // Truyền danh sách orderDetails vào JSP
         request.setAttribute("order", order);
         request.setAttribute("orderDetails", orderDetails);
         request.getRequestDispatcher("Admin/order_view.jsp").forward(request, response);
@@ -101,7 +124,11 @@ public class OrderManagementServlet extends HttpServlet {
         int orderId = Integer.parseInt(request.getParameter("id"));
         Order order = orderDAO.getOrderById(orderId);
         List<OrderDetail> orderDetails = orderDetailDAO.getDetailsByOrderId(orderId);
-
+    // Lấy tên sản phẩm từ ProductDAO và gán vào OrderDetail
+        for (OrderDetail item : orderDetails) {
+            Product product = productDAO.getProductById(item.getProductID()); // Lấy thông tin sản phẩm
+            item.setProductName(product != null ? product.getProductName() : "Unknown Product"); // Gán tên sản phẩm
+        }
         request.setAttribute("order", order);
         request.setAttribute("orderDetails", orderDetails);
         request.getRequestDispatcher("Admin/order_edit.jsp").forward(request, response);

@@ -502,5 +502,23 @@ public boolean checkUserPassword(int userId, String rawPassword) {
     }
     return false;
 }
+ // Phương thức đếm số lượng người dùng theo roleID
+    public int countUsersByRole(int roleID) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Users WHERE roleID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, roleID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 
 }

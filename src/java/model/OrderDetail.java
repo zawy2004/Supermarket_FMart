@@ -6,6 +6,7 @@ public class OrderDetail {
     private int orderDetailID;
     private int orderID;
     private int productID;
+     private String productName; 
     private int quantity;
     private double unitPrice;
     private double discountPercent;
@@ -24,6 +25,15 @@ public class OrderDetail {
         this.discountAmount = discountAmount;
         this.totalPrice = totalPrice;
     }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
 
     public int getOrderDetailID() { return orderDetailID; }
     public void setOrderDetailID(int orderDetailID) { this.orderDetailID = orderDetailID; }

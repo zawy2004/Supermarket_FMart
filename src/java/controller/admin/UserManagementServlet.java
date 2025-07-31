@@ -75,7 +75,7 @@ public class UserManagementServlet extends HttpServlet {
         }
     }
 
-    private void listUsers(HttpServletRequest request, HttpServletResponse response)
+      private void listUsers(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
         int page = 1;
         int pageSize = 5;
@@ -93,7 +93,6 @@ public class UserManagementServlet extends HttpServlet {
         }
 
         int offset = (page - 1) * pageSize;
-
         String keyword = request.getParameter("keyword");
         String roleIDStr = request.getParameter("roleID");
 
@@ -103,22 +102,54 @@ public class UserManagementServlet extends HttpServlet {
         int totalUsers = userDAO.countSearchUsers(keyword, roleID);
         int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
 
+        // Lấy số lượng người dùng theo từng role
+        int customerCount = userDAO.countUsersByRole(1); // Assuming roleID for customers is 1
+        int staffCount = userDAO.countUsersByRole(2);    // Assuming roleID for staff is 2
+        int managerCount = userDAO.countUsersByRole(3);  // Assuming roleID for managers is 3
+        int adminCount = userDAO.countUsersByRole(4);    // Assuming roleID for admins is 4
+        int totaluserCount = userDAO.getTotalUsers();
+        
         request.setAttribute("userList", users);
         request.setAttribute("page", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("keyword", keyword);
-        request.setAttribute("roleID", roleIDStr); // để giữ trạng thái dropdown
+        request.setAttribute("roleID", roleIDStr);
+
+        // Truyền số lượng người dùng theo từng vai trò vào JSP
+        request.setAttribute("customerCount", customerCount);
+        request.setAttribute("staffCount", staffCount);
+        request.setAttribute("managerCount", managerCount);
+        request.setAttribute("adminCount", adminCount);
+        request.setAttribute("totalUsers", totaluserCount);
 
         request.getRequestDispatcher("/Admin/customers.jsp").forward(request, response);
     }
 
     private void viewUser(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        User user = userDAO.getUserById(id);
-        request.setAttribute("user", user);
-        request.getRequestDispatcher("/Admin/customer_view.jsp").forward(request, response);
+    String idStr = request.getParameter("id");
+    int id = -1;
+    
+    try {
+        id = Integer.parseInt(idStr);
+    } catch (NumberFormatException e) {
+        request.setAttribute("error", "Invalid user ID");
+        request.getRequestDispatcher("/Admin/customers.jsp").forward(request, response);
+        return;
     }
+    
+    User user = userDAO.getUserById(id);
+    
+    if (user == null) {
+        request.setAttribute("error", "User not found");
+        request.getRequestDispatcher("/Admin/customers.jsp").forward(request, response);
+        return;
+    }
+    
+    request.setAttribute("user", user);
+    request.getRequestDispatcher("/Admin/customer_view.jsp").forward(request, response);
+}
+
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
@@ -141,17 +172,7 @@ public class UserManagementServlet extends HttpServlet {
         String dobStr = request.getParameter("dateOfBirth");
         Date dateOfBirth = null;
 
-        if (dobStr != null && !dobStr.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // hoặc "dd/MM/yyyy" nếu bạn dùng định dạng khác
-                Date parsedDate = sdf.parse(dobStr);
-                dateOfBirth = new java.sql.Date(parsedDate.getTime());
-            } catch (Exception e) {
-                System.err.println("Lỗi định dạng ngày sinh: " + e.getMessage());
-                dateOfBirth = null;
-            }
-        }
-
+      
         String roleIdStr = request.getParameter("roleID");
 
         // Chuyển đổi ngày sinh
