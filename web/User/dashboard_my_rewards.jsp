@@ -363,7 +363,7 @@
                             <div class="left-side-tabs">
                                 <div class="dashboard-left-links">
                                     <a href="dashboard_overview.jsp" class="user-item"><i class="uil uil-apps"></i>Overview</a>
-                                    <a href="dashboard_my_orders.jsp" class="user-item"><i class="uil uil-box"></i>My Orders</a>
+                                    <a href="orders" class="user-item"><i class="uil uil-box"></i>My Orders</a>
                                     <a href="dashboard_my_rewards.jsp" class="user-item active"><i class="uil uil-gift"></i>My Rewards</a>
                                     <a href="dashboard_my_wallet.jsp" class="user-item"><i class="uil uil-wallet"></i>My Wallet</a>
                                     <a href="dashboard_my_wishlist.jsp" class="user-item"><i class="uil uil-heart"></i>Shopping Wishlist</a>

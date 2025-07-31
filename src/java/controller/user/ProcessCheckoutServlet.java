@@ -45,7 +45,7 @@ public class ProcessCheckoutServlet extends HttpServlet {
             int customerId;
             if (session == null || session.getAttribute("userId") == null) {
                 request.setAttribute("error", "Phiên đăng nhập đã hết. Vui lòng đăng nhập lại.");
-                request.getRequestDispatcher("/User/login.jsp").forward(request, response);
+                request.getRequestDispatcher("login").forward(request, response);
                 return;
             }
             customerId = Integer.parseInt(session.getAttribute("userId").toString());
@@ -70,34 +70,34 @@ public class ProcessCheckoutServlet extends HttpServlet {
                 deliveryLocalDate = LocalDate.now();
             } else if ("tomorrow".equals(deliveryDateStr)) {
                 deliveryLocalDate = LocalDate.now().plusDays(1);
-            }else {
-    // Kiểm tra deliveryDateStr không null và không rỗng trước khi parse
-    if (deliveryDateStr != null && !deliveryDateStr.isEmpty()) {
-        String[] parts = deliveryDateStr.split(" ");
-        int days = 0;
-        if (parts.length > 0 && !parts[0].isEmpty()) {
-            try {
-                days = Integer.parseInt(parts[0]);
-            } catch (NumberFormatException e) {
-                // Xử lý khi parse lỗi (ví dụ gán days = 0 hoặc log lỗi)
-                days = 0;
+            } else {
+                // Kiểm tra deliveryDateStr không null và không rỗng trước khi parse
+                if (deliveryDateStr != null && !deliveryDateStr.isEmpty()) {
+                    String[] parts = deliveryDateStr.split(" ");
+                    int days = 0;
+                    if (parts.length > 0 && !parts[0].isEmpty()) {
+                        try {
+                            days = Integer.parseInt(parts[0]);
+                        } catch (NumberFormatException e) {
+                            // Xử lý khi parse lỗi (ví dụ gán days = 0 hoặc log lỗi)
+                            days = 0;
+                        }
+                    }
+                    deliveryLocalDate = LocalDate.now().plusDays(days);
+                } else {
+                    // Nếu rỗng hoặc null, gán ngày giao mặc định (ví dụ hôm nay)
+                    deliveryLocalDate = LocalDate.now();
+                }
             }
-        }
-        deliveryLocalDate = LocalDate.now().plusDays(days);
-    } else {
-        // Nếu rỗng hoặc null, gán ngày giao mặc định (ví dụ hôm nay)
-        deliveryLocalDate = LocalDate.now();
-    }
-}
 
-Date deliveryDate = Date.from(deliveryLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date deliveryDate = Date.from(deliveryLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
             // Lấy giỏ hàng
             ShoppingCartDAO cartDAO = new ShoppingCartDAO();
             List<ShoppingCart> cartItems = cartDAO.getCartItemsByUserId(customerId);
             if (cartItems.isEmpty()) {
                 request.setAttribute("error", "Giỏ hàng rỗng.");
-                request.getRequestDispatcher("/User/checkout.jsp").forward(request, response);
+                request.getRequestDispatcher("checkout").forward(request, response);
                 return;
             }
 

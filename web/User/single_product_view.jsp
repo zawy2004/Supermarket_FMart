@@ -316,7 +316,7 @@
                                                 <c:if test="${relatedProduct.categoryID == currentCategoryId && relatedProduct.productID != product.productID}">
                                                     <div class="cart-item border_radius">
                                                         <a href="single_product?productId=${relatedProduct.productID}" class="cart-product-img">
-                                                            <img src="${relatedProductImages[relatedProduct.productID]}" alt="${relatedProduct.productName}">
+                                                            <img src="User/${relatedProductImages[relatedProduct.productID]}" alt="${relatedProduct.productName}">
                                                             <p style="display: none;">Debug: Image URL = ${relatedProductImages[relatedProduct.productID]}, ProductID = ${relatedProduct.productID}</p>
                                                             <c:if test="${relatedProduct.costPrice > 0 && relatedProduct.sellingPrice < relatedProduct.costPrice}">
                                                                 <c:set var="discount" value="${((relatedProduct.costPrice - relatedProduct.sellingPrice) / relatedProduct.costPrice) * 100}"/>

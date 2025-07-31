@@ -55,7 +55,7 @@ public class CheckoutServlet extends HttpServlet {
             List<ShoppingCart> cartItems = new ArrayList<>();
             double cartTotal = 0.0;
             double totalSaving = 0.0;
-            double deliveryCharge = 1.0; // Giá trị mặc định
+            double deliveryCharge = 20000.0; // Giá trị mặc định
 
             // Chỉ xử lý sản phẩm từ "Order Now" nếu có productIdStr
             if (productIdStr != null && quantityStr != null && sellingPriceStr != null) {

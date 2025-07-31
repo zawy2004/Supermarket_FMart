@@ -18,7 +18,7 @@
             </div>
             <div class="cart-total-dil pt-2">
                 <h4>Delivery Charges</h4>
-                <span id="delivery-charge"><fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 30000}" pattern="#,##0"/>₫</span>
+                <span id="delivery-charge"><fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 20000}" pattern="#,##0"/>₫</span>
             </div>
         </div>
         <div class="side-cart-items">
