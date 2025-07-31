@@ -405,12 +405,12 @@
                     container.style.transform = 'translateY(0)';
                 }, 100);
                 
-                // Auto redirect after 30 seconds
-                setTimeout(() => {
-                    if (confirm('Bạn có muốn chuyển về trang chủ không?')) {
-                        window.location.href = 'home';
-                    }
-                }, 30000);
+//                // Auto redirect after 30 seconds
+//                setTimeout(() => {
+//                    if (confirm('Bạn có muốn chuyển về trang chủ không?')) {
+//                        window.location.href = 'home';
+//                    }
+//                }, 30000);
             });
         </script>
     </body>
