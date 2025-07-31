@@ -648,7 +648,7 @@
             item.className = 'suggestion-item';
 
             // Format price
-            const formattedPrice = '$' + parseFloat(product.sellingPrice).toFixed(2);
+            const formattedPrice = '₫' + parseFloat(product.sellingPrice).toFixed(2);
 
             // Get image URL
             let imageSrc = product.imageUrl;
