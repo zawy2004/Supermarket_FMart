@@ -581,5 +581,151 @@
                                     $('#payment-cod').show();
                                 });
             </script>
+            // Apply Promo Code
+            function applyPromoCode() {
+                const promoCode = document.getElementById('promoCodeInput').value.trim();
+                if (!promoCode) {
+                    showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
+                    return;
+                }
+                applyCoupon(promoCode);
+            }
+
+            // Apply Coupon
+            function applyCoupon(couponCode) {
+                <c:set var="orderAmountValue" value="${(cartTotal != null ? cartTotal : 0) + (deliveryCharge != null ? deliveryCharge : 30000)}" />
+                const orderAmount = ${orderAmountValue};
+                $('.loading-spinner').show();
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/user/coupons',
+                    type: 'GET',
+                    data: {
+                        action: 'validate',
+                        couponCode: couponCode,
+                        orderAmount: orderAmount,
+                        format: 'json'
+                    },
+                    success: function(response) {
+                        $('.loading-spinner').hide();
+                        if (response.valid) {
+                            showNotification('Áp dụng mã giảm giá thành công! Giảm: ' + formatVND(response.discount), 'success');
+                            $('#discount-amount').text(formatVND(response.discount));
+                            $('#total-amount').text(formatVND(orderAmount - response.discount));
+                            $('#appliedCouponCode').val(couponCode);
+                            $('#appliedDiscount').val(response.discount);
+                            $('#couponCodeInput').val(couponCode);
+                            $('#promoCodeModal').modal('hide');
+                            // Lưu vào session
+                            $.ajax({
+                                url: '${pageContext.request.contextPath}/cart',
+                                type: 'POST',
+                                data: {
+                                    action: 'applyPromo',
+                                    promoCode: couponCode
+                                },
+                                success: function() {
+                                    // Session đã được cập nhật
+                                }
+                            });
+                        } else {
+                            showNotification('Lỗi: ' + response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        $('.loading-spinner').hide();
+                        showNotification('Lỗi hệ thống khi áp dụng mã giảm giá.', 'error');
+                    }
+                });
+            }
+
+            // Show Available Coupons
+            function showAvailableCoupons() {
+                const orderAmount = ${orderAmountValue};
+                $('.loading-spinner').show();
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/user/coupons',
+                    type: 'GET',
+                    data: {
+                        action: 'available',
+                        orderAmount: orderAmount,
+                        format: 'json'
+                    },
+                    success: function(response) {
+                        $('.loading-spinner').hide();
+                        const coupons = response.coupons;
+                        let html = '';
+                        if (coupons.length > 0) {
+                            html = '<h5>Mã giảm giá khả dụng:</h5>';
+                            coupons.forEach(coupon => {
+                                html += `<div class="coupon-item" onclick="$('#couponCodeInput').val('${coupon.code}'); applyCoupon('${coupon.code}');">
+                                    <strong>${coupon.code}</strong> - ${coupon.name}
+                                    (${coupon.discountType == 'Percentage' ? coupon.discountValue + '%' : formatVND(coupon.discountValue)})
+                                    <br><small>Đơn tối thiểu: ${formatVND(coupon.minOrderAmount)}</small>
+                                    ${coupon.description ? '<br><small>' + coupon.description + '</small>' : ''}
+                                </div>`;
+                            });
+                        } else {
+                            html = '<p>Không có mã giảm giá khả dụng.</p>';
+                        }
+                        $('#availableCoupons').html(html);
+                    },
+                    error: function() {
+                        $('.loading-spinner').hide();
+                        $('#availableCoupons').html('<p>Lỗi khi tải mã giảm giá.</p>');
+                    }
+                });
+            }
+
+            // Show Confirm Modal
+            function showConfirmModal() {
+                const summary = document.getElementById('order-summary').innerHTML;
+                document.getElementById('confirm-order-summary').innerHTML = summary;
+                const selectedPayment = document.querySelector('input[name="paymentmethod"]:checked').nextElementSibling.textContent;
+                document.getElementById('confirm-payment-method').textContent = selectedPayment;
+                const totalAmount = document.getElementById('total-amount').textContent;
+                document.getElementById('confirm-total-amount').textContent = totalAmount;
+                $('#confirmPaymentModal').modal('show');
+            }
+
+            // Submit Form sau xác nhận
+            function submitCheckoutForm() {
+                const couponCode = $('#appliedCouponCode').val();
+                if (couponCode) {
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/user/coupons',
+                        type: 'POST',
+                        data: {
+                            action: 'apply',
+                            couponCode: couponCode,
+                            orderId: 0, // OrderId sẽ được tạo trong CheckoutServlet
+                            orderAmount: ${orderAmountValue},
+                            format: 'json'
+                        },
+                        async: false,
+                        success: function(response) {
+                            if (!response.success) {
+                                showNotification('Lỗi khi áp dụng mã giảm giá: ' + response.message, 'error');
+                                return;
+                            }
+                        },
+                        error: function() {
+                            showNotification('Lỗi hệ thống khi áp dụng mã giảm giá.', 'error');
+                            return;
+                        }
+                    });
+                }
+                document.getElementById('checkoutForm').submit();
+            }
+
+            // Toggle Payment Method Description
+            $(document).ready(function() {
+                $('input[name="paymentmethod"]').on('change', function() {
+                    const method = $(this).val().toLowerCase();
+                    $('.payment-description').hide();
+                    $('#payment-' + method).show();
+                });
+                $('#payment-cod').show();
+            });
+        </script>
     </body>
 </html>

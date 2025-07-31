@@ -26,6 +26,8 @@ public class OrderDAO {
             = "UPDATE Orders SET Status = ? WHERE OrderID = ?";
     private static final String UPDATE_ORDER_NUMBER_SQL
             = "UPDATE Orders SET OrderNumber = ? WHERE OrderID = ?";
+    private static final String UPDATE_ORDER_AMOUNT_SQL
+            = "UPDATE Orders SET TotalAmount = ?, DiscountAmount = ?, FinalAmount = ? WHERE OrderID = ?";
 
     // Thêm đơn hàng, trả về orderId (auto-increment)
     public int insertOrder(Order order, Connection conn) throws SQLException {
@@ -337,6 +339,69 @@ public class OrderDAO {
     }
 
     return orders;
+    /**
+     * Cập nhật số tiền của đơn hàng (khi áp dụng coupon)
+     */
+    public void updateOrderAmount(int orderId, double totalAmount, double discountAmount, double finalAmount) {
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(UPDATE_ORDER_AMOUNT_SQL)) {
+
+            stmt.setDouble(1, totalAmount);
+            stmt.setDouble(2, discountAmount);
+            stmt.setDouble(3, finalAmount);
+            stmt.setInt(4, orderId);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Đã cập nhật số tiền đơn hàng " + orderId +
+                                 ": Total=" + totalAmount + ", Discount=" + discountAmount +
+                                 ", Final=" + finalAmount);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật số tiền đơn hàng: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Lấy đơn hàng theo ID
+     */
+    public Order getOrderById(int orderId) {
+        String sql = "SELECT * FROM Orders WHERE OrderID = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, orderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Order order = new Order();
+                    order.setOrderID(rs.getInt("OrderID"));
+                    order.setOrderNumber(rs.getString("OrderNumber"));
+                    order.setCustomerID(rs.getInt("CustomerID"));
+                    order.setOrderDate(rs.getTimestamp("OrderDate"));
+                    order.setOrderType(rs.getString("OrderType"));
+                    order.setStatus(rs.getString("Status"));
+                    order.setTotalAmount(rs.getDouble("TotalAmount"));
+                    order.setDiscountAmount(rs.getDouble("DiscountAmount"));
+                    order.setTaxAmount(rs.getDouble("TaxAmount"));
+                    order.setFinalAmount(rs.getDouble("FinalAmount"));
+                    order.setPaymentStatus(rs.getString("PaymentStatus"));
+                    order.setPaymentMethod(rs.getString("PaymentMethod"));
+                    order.setDeliveryAddress(rs.getString("DeliveryAddress"));
+                    order.setDeliveryDate(rs.getTimestamp("DeliveryDate"));
+                    order.setCompletedDate(rs.getTimestamp("CompletedDate"));
+                    order.setProcessedBy(rs.getInt("ProcessedBy"));
+                    order.setNotes(rs.getString("Notes"));
+                    return order;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy đơn hàng theo ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 
 public int getTotalOrders(String searchName, String status, String fromDate, String toDate) {
