@@ -394,10 +394,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="main-title-tt">
-                                                    <div class="main-title-left">
-                                                        <span>For You</span>
-                                                        <h2>Top Featured Products</h2>
-                                                    </div>
+                                                    
                                                     <a href="shop" class="see-more-btn">See All</a>
                                                 </div>
                                             </div>

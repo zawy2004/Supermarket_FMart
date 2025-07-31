@@ -118,7 +118,7 @@ public class SingleProductServlet extends HttpServlet {
             List<ShoppingCart> cartItems = null;
             double cartTotal = 0.0;
             double totalSaving = 0.0;
-            double deliveryCharge = 1.0;
+            double deliveryCharge = 30000.0;
             
             if (userId != null) {
                 cartItems = cartService.getCartItemsByUserId(userId);

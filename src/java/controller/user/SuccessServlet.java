@@ -12,12 +12,14 @@ public class SuccessServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         String orderCode = request.getParameter("orderCode");
         String status = request.getParameter("status");
 
-        response.getWriter().println("<h1>Thanh toán thành công!</h1>");
-        response.getWriter().println("<p>Mã đơn hàng: " + orderCode + "</p>");
-        response.getWriter().println("<p>Trạng thái: " + status + "</p>");
+        request.setAttribute("orderCode", orderCode);
+        request.setAttribute("status", status);
+        request.getRequestDispatcher("/User/order_confirmation.jsp").forward(request, response);
     }
 }
