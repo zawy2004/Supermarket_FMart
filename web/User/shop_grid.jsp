@@ -14,7 +14,7 @@
     <title>FMart - ${pageTitle != null ? pageTitle : 'Shop'}</title>
 
     <!-- Favicon Icon -->
-    <link rel="icon" type="image/png" href="User/images/fmart.jpg">
+    <link rel="icon" type="image/png" href="User/images/fav.png">
 
     <!-- Stylesheets -->
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
