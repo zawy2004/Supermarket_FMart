@@ -155,7 +155,7 @@ public class ShopServlet extends HttpServlet {
                 
                 // Update title if price filtering is applied
                 if (search != null && !search.trim().isEmpty()) {
-                    pageTitle += " (lọc giá: $" + (minPrice > 0 ? minPrice : "0") + " - $" + 
+                    pageTitle += " (lọc giá: vnd" + (minPrice > 0 ? minPrice : "0") + " - vnd" + 
                                (maxPrice < Double.MAX_VALUE ? maxPrice : "∞") + ")";
                 }
             }
