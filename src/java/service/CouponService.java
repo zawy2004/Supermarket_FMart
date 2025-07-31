@@ -83,90 +83,36 @@ public class CouponService {
         return coupon.calculateDiscount(orderAmount);
     }
 
-    public double applyCouponToOrder(int orderId, String couponCode, int userId, double orderAmount) 
+    public double applyCouponToOrder(int orderId, String couponCode, int userId, double orderAmount)
             throws SQLException, ValidationException {
-        
+
         // Step 1: Validate coupon for user
         validateCouponForUser(couponCode, userId, orderAmount);
-        
-        // Step 2: Get coupon details
-        Coupon coupon = getCouponByCode(couponCode);
-        
-        // Step 3: Calculate discount
-        double discountAmount = coupon.calculateDiscount(orderAmount);
-        
-        if (discountAmount <= 0) {
-            throw new ValidationException("Không thể áp dụng coupon cho đơn hàng này");
-        }
 
+        // Step 2: Apply coupon using stored procedure
+        // Stored procedure handles all validation and logging internally
         try {
-            // Step 4: Apply coupon using stored procedure (if exists)
             double appliedDiscount = couponDAO.applyCouponToOrder(orderId, couponCode, userId);
-            
-            // Step 5: Log coupon usage
+
             if (appliedDiscount > 0) {
-                CouponUsage usage = new CouponUsage();
-                usage.setCouponID(coupon.getCouponId());
-                usage.setUserID(userId);
-                usage.setOrderID(orderId);
-                usage.setUsedDate(new Date());
-                usage.setDiscountAmount(appliedDiscount);
-                
-                couponUsageDAO.logCouponUsage(usage);
-                
-                logger.info("Successfully applied coupon " + couponCode + " to order " + orderId + 
+                logger.info("Successfully applied coupon " + couponCode + " to order " + orderId +
                           " for user " + userId + ", discount: " + appliedDiscount);
             }
-            
+
             return appliedDiscount;
-            
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error applying coupon to order", e);
             throw e;
         }
     }
 
-    public double applyCouponManually(int orderId, String couponCode, int userId, double orderAmount) 
+    public double applyCouponManually(int orderId, String couponCode, int userId, double orderAmount)
             throws SQLException, ValidationException {
-        
-        // Validate and get coupon
-        validateCouponForUser(couponCode, userId, orderAmount);
-        Coupon coupon = getCouponByCode(couponCode);
-        
-        // Calculate discount
-        double discountAmount = coupon.calculateDiscount(orderAmount);
-        
-        if (discountAmount <= 0) {
-            throw new ValidationException("Không thể áp dụng coupon cho đơn hàng này");
-        }
 
-        try {
-            // Update coupon usage count
-            boolean updated = couponDAO.incrementUsageCount(coupon.getCouponId());
-            
-            if (updated) {
-                // Log coupon usage
-                CouponUsage usage = new CouponUsage();
-                usage.setCouponID(coupon.getCouponId());
-                usage.setUserID(userId);
-                usage.setOrderID(orderId);
-                usage.setUsedDate(new Date());
-                usage.setDiscountAmount(discountAmount);
-                
-                couponUsageDAO.logCouponUsage(usage);
-                
-                logger.info("Manually applied coupon " + couponCode + " to order " + orderId + 
-                          " for user " + userId + ", discount: " + discountAmount);
-                
-                return discountAmount;
-            } else {
-                throw new ValidationException("Không thể cập nhật trạng thái coupon");
-            }
-            
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error manually applying coupon", e);
-            throw e;
-        }
+        // Use stored procedure for manual application as well
+        // This ensures consistency with automatic application
+        return applyCouponToOrder(orderId, couponCode, userId, orderAmount);
     }
 
     /**
@@ -174,6 +120,13 @@ public class CouponService {
      */
     public List<CouponUsage> getUserCouponHistory(int userId) throws SQLException {
         return couponUsageDAO.getCouponUsageByUser(userId);
+    }
+
+    /**
+     * Get user's coupon usage history by orders (compatible with database schema)
+     */
+    public List<CouponUsage> getUserCouponHistoryByOrders(int userId) throws SQLException {
+        return couponUsageDAO.getCouponUsageByUserOrders(userId);
     }
 
  
@@ -222,13 +175,115 @@ public class CouponService {
         if (baseName == null || baseName.trim().isEmpty()) {
             baseName = "COUPON";
         }
-        
+
         String cleanName = baseName.replaceAll("[^A-Za-z0-9]", "").toUpperCase();
         if (cleanName.length() > 10) {
             cleanName = cleanName.substring(0, 10);
         }
-        
+
         long timestamp = System.currentTimeMillis() % 10000;
         return cleanName + timestamp;
+    }
+
+    /**
+     * Tìm kiếm coupon với phân trang
+     */
+    public List<Coupon> searchCoupons(String keyword, String statusFilter, String typeFilter, int offset, int limit) throws SQLException {
+        return couponDAO.searchCoupons(keyword, statusFilter, typeFilter, offset, limit);
+    }
+
+    /**
+     * Đếm số lượng coupon theo điều kiện tìm kiếm
+     */
+    public int countSearchCoupons(String keyword, String statusFilter, String typeFilter) throws SQLException {
+        return couponDAO.countSearchCoupons(keyword, statusFilter, typeFilter);
+    }
+
+    /**
+     * Cập nhật thông tin coupon
+     */
+    public boolean updateCoupon(Coupon coupon) throws SQLException, ValidationException {
+        // Validate coupon data
+        CouponValidationUtil.validateCoupon(coupon);
+
+        // Check if coupon code exists for other coupons
+        Coupon existingCoupon = getCouponByCode(coupon.getCouponCode());
+        if (existingCoupon != null && existingCoupon.getCouponId() != coupon.getCouponId()) {
+            throw new ValidationException("Mã coupon đã tồn tại: " + coupon.getCouponCode());
+        }
+
+        return couponDAO.updateCoupon(coupon);
+    }
+
+    /**
+     * Xóa coupon (soft delete)
+     */
+    public boolean deleteCoupon(int couponId) throws SQLException {
+        return couponDAO.deleteCoupon(couponId);
+    }
+
+    /**
+     * Xóa coupon vĩnh viễn
+     */
+    public boolean hardDeleteCoupon(int couponId) throws SQLException {
+        return couponDAO.hardDeleteCoupon(couponId);
+    }
+
+    /**
+     * Lấy thống kê tổng quan về coupon
+     */
+    public CouponStatistics getCouponStatistics() throws SQLException {
+        List<Coupon> allCoupons = getAllCoupons();
+
+        int totalCoupons = allCoupons.size();
+        int activeCoupons = 0;
+        int expiredCoupons = 0;
+        int usedCoupons = 0;
+        double totalDiscountGiven = 0.0;
+
+        Date now = new Date();
+
+        for (Coupon coupon : allCoupons) {
+            if (coupon.isActive()) {
+                if (coupon.getEndDate().before(now)) {
+                    expiredCoupons++;
+                } else {
+                    activeCoupons++;
+                }
+            }
+
+            if (coupon.getUsageCount() > 0) {
+                usedCoupons++;
+                // Tính tổng discount đã áp dụng (cần thêm logic tính toán chi tiết)
+            }
+        }
+
+        return new CouponStatistics(totalCoupons, activeCoupons, expiredCoupons, usedCoupons, totalDiscountGiven);
+    }
+
+    /**
+     * Inner class để lưu thống kê coupon
+     */
+    public static class CouponStatistics {
+        private int totalCoupons;
+        private int activeCoupons;
+        private int expiredCoupons;
+        private int usedCoupons;
+        private double totalDiscountGiven;
+
+        public CouponStatistics(int totalCoupons, int activeCoupons, int expiredCoupons, int usedCoupons, double totalDiscountGiven) {
+            this.totalCoupons = totalCoupons;
+            this.activeCoupons = activeCoupons;
+            this.expiredCoupons = expiredCoupons;
+            this.usedCoupons = usedCoupons;
+            this.totalDiscountGiven = totalDiscountGiven;
+        }
+
+        // Getters
+        public int getTotalCoupons() { return totalCoupons; }
+        public int getActiveCoupons() { return activeCoupons; }
+        public int getExpiredCoupons() { return expiredCoupons; }
+        public int getUsedCoupons() { return usedCoupons; }
+        public double getTotalDiscountGiven() { return totalDiscountGiven; }
     }
 }

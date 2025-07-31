@@ -10,35 +10,32 @@ import java.util.logging.Level;
 
 public class CouponUsageDAO {
     
-}
     private static final Logger logger = Logger.getLogger(CouponUsageDAO.class.getName());
 
     /**
-     * Log coupon usage when applied to an order
+     * Log coupon usage when applied to an order (compatible with current database schema)
      */
     public boolean logCouponUsage(CouponUsage couponUsage) throws SQLException {
         String sql = """
-            INSERT INTO CouponUsage (CouponID, UserID, OrderID, UsedDate, DiscountAmount)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO CouponUsage (CouponID, OrderID, UsedDate, DiscountAmount)
+            VALUES (?, ?, ?, ?)
             """;
-        
+
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+
             stmt.setInt(1, couponUsage.getCouponID());
-            stmt.setInt(2, couponUsage.getUserID());
-            stmt.setInt(3, couponUsage.getOrderID());
-            stmt.setTimestamp(4, new Timestamp(couponUsage.getUsedDate().getTime()));
-            stmt.setDouble(5, couponUsage.getDiscountAmount());
-            
+            stmt.setInt(2, couponUsage.getOrderID());
+            stmt.setTimestamp(3, new Timestamp(couponUsage.getUsedDate().getTime()));
+            stmt.setDouble(4, couponUsage.getDiscountAmount());
+
             int rowsAffected = stmt.executeUpdate();
-            
+
             if (rowsAffected > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     if (rs.next()) {
                         couponUsage.setUsageID(rs.getInt(1));
-                        logger.info("Logged coupon usage: Coupon ID " + couponUsage.getCouponID() + 
-                                  ", User ID " + couponUsage.getUserID() + 
+                        logger.info("Logged coupon usage: Coupon ID " + couponUsage.getCouponID() +
                                   ", Order ID " + couponUsage.getOrderID());
                         return true;
                     }
@@ -54,7 +51,7 @@ public class CouponUsageDAO {
     }
 
     /**
-     * Get coupon usage history by user
+     * Get coupon usage history by user (legacy method - may not work with current schema)
      */
     public List<CouponUsage> getCouponUsageByUser(int userId) throws SQLException {
         List<CouponUsage> usageList = new ArrayList<>();
@@ -65,24 +62,58 @@ public class CouponUsageDAO {
             WHERE cu.UserID = ?
             ORDER BY cu.UsedDate DESC
             """;
-        
+
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+
             stmt.setInt(1, userId);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     CouponUsage usage = mapResultSetToCouponUsage(rs);
                     usageList.add(usage);
                 }
             }
-            
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error getting coupon usage by user: " + userId, e);
             throw e;
         }
-        
+
+        return usageList;
+    }
+
+    /**
+     * Get coupon usage history by user through orders (compatible with current database schema)
+     */
+    public List<CouponUsage> getCouponUsageByUserOrders(int userId) throws SQLException {
+        List<CouponUsage> usageList = new ArrayList<>();
+        String sql = """
+            SELECT cu.*, c.CouponCode, c.CouponName, o.OrderNumber
+            FROM CouponUsage cu
+            INNER JOIN Coupons c ON cu.CouponID = c.CouponID
+            INNER JOIN Orders o ON cu.OrderID = o.OrderID
+            WHERE o.CustomerID = ?
+            ORDER BY cu.UsedDate DESC
+            """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    CouponUsage usage = mapResultSetToCouponUsage(rs);
+                    usageList.add(usage);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error getting coupon usage by user orders: " + userId, e);
+            throw e;
+        }
+
         return usageList;
     }
 
@@ -120,28 +151,33 @@ public class CouponUsageDAO {
     }
 
     /**
-     * Get coupon usage count by user and coupon
+     * Get coupon usage count by user and coupon (compatible with current database schema)
      */
     public int getUserCouponUsageCount(int userId, int couponId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM CouponUsage WHERE UserID = ? AND CouponID = ?";
-        
+        String sql = """
+            SELECT COUNT(*)
+            FROM CouponUsage cu
+            INNER JOIN Orders o ON cu.OrderID = o.OrderID
+            WHERE o.CustomerID = ? AND cu.CouponID = ?
+            """;
+
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+
             stmt.setInt(1, userId);
             stmt.setInt(2, couponId);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
             }
-            
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error getting user coupon usage count", e);
             throw e;
         }
-        
+
         return 0;
     }
 
@@ -242,13 +278,13 @@ public class CouponUsageDAO {
     }
 
     /**
-     * Helper method to map ResultSet to CouponUsage object
+     * Helper method to map ResultSet to CouponUsage object (compatible with current database schema)
      */
     private CouponUsage mapResultSetToCouponUsage(ResultSet rs) throws SQLException {
         CouponUsage usage = new CouponUsage();
         usage.setUsageID(rs.getInt("UsageID"));
         usage.setCouponID(rs.getInt("CouponID"));
-        usage.setUserID(rs.getInt("UserID"));
+        // UserID is derived from Order.CustomerID, not stored directly in CouponUsage
         usage.setOrderID(rs.getInt("OrderID"));
         usage.setUsedDate(rs.getTimestamp("UsedDate"));
         usage.setDiscountAmount(rs.getDouble("DiscountAmount"));

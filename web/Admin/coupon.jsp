@@ -106,7 +106,7 @@
                     
                     <ol class="breadcrumb mb-30">
                         <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/Admin/index.jsp">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/coupon?action=list">Quản lý Coupon</a></li>
+                        <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/coupon">Quản lý Coupon</a></li>
                         <li class="breadcrumb-item active">${isEdit ? 'Chỉnh sửa' : 'Tạo'} mã giảm giá</li>
                     </ol>
 
@@ -134,7 +134,7 @@
                                 </div>
                                 <div class="card-body">
                                     <form id="couponForm" action="${pageContext.request.contextPath}/admin/coupon" method="post" novalidate>
-                                        <input type="hidden" name="action" value="create">
+                                        <input type="hidden" name="action" value="${isEdit ? 'update' : 'create'}">
                                         <c:if test="${isEdit}">
                                             <input type="hidden" name="couponId" value="${coupon.couponId}">
                                         </c:if>
@@ -319,7 +319,7 @@
                                             <button type="submit" class="btn btn-primary" id="submitBtn">
                                                 <i class="fas fa-save"></i> ${isEdit ? 'Cập nhật' : 'Tạo mã giảm giá'}
                                             </button>
-                                            <a href="${pageContext.request.contextPath}/admin/coupon?action=list" class="btn btn-secondary">
+                                            <a href="${pageContext.request.contextPath}/admin/coupon" class="btn btn-secondary">
                                                 <i class="fas fa-arrow-left"></i> Quay lại
                                             </a>
                                             <button type="button" class="btn btn-info" onclick="previewCoupon()">

@@ -94,6 +94,26 @@ public class OrderService {
         orderDAO.updateOrderNumber(orderId, orderNumber);
     }
 
+    /**
+     * Cập nhật số tiền của đơn hàng khi áp dụng coupon
+     * @param orderId ID đơn hàng
+     * @param totalAmount Tổng tiền hàng
+     * @param discountAmount Số tiền giảm giá
+     * @param finalAmount Số tiền cuối cùng
+     */
+    public void updateOrderAmount(int orderId, double totalAmount, double discountAmount, double finalAmount) {
+        orderDAO.updateOrderAmount(orderId, totalAmount, discountAmount, finalAmount);
+    }
+
+    /**
+     * Lấy đơn hàng theo ID
+     * @param orderId ID đơn hàng
+     * @return Order object hoặc null nếu không tìm thấy
+     */
+    public Order getOrderById(int orderId) {
+        return orderDAO.getOrderById(orderId);
+    }
+
 //    private String generateOrderNumber() {
 //        // Ví dụ: FM20250717-1699871234567
 //        String prefix = "ORD";

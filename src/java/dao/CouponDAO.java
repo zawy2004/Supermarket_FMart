@@ -221,16 +221,16 @@ public class CouponDAO {
     }
 
  
-    public double applyCouponToOrder(int orderId, String couponCode, int userId) throws SQLException {
+    public double applyCouponToOrder(int orderId, String couponCode, int createdBy) throws SQLException {
         String sql = "{call sp_ApplyCouponToOrder(?, ?, ?)}";
-        
+
         try (Connection conn = DatabaseConfig.getConnection();
              CallableStatement stmt = conn.prepareCall(sql)) {
-            
+
             stmt.setInt(1, orderId);
             stmt.setString(2, couponCode);
-            stmt.setInt(3, userId);
-            
+            stmt.setInt(3, createdBy);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     double discount = rs.getDouble("AppliedDiscount");
@@ -238,12 +238,12 @@ public class CouponDAO {
                     return discount;
                 }
             }
-            
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error applying coupon to order. Order: " + orderId + ", Coupon: " + couponCode, e);
             throw e;
         }
-        
+
         return 0.0;
     }
 
@@ -271,6 +271,217 @@ public class CouponDAO {
         }
         
         return 0;
+    }
+
+    /**
+     * Tìm kiếm coupon với phân trang
+     */
+    public List<Coupon> searchCoupons(String keyword, String statusFilter, String typeFilter, int offset, int limit) throws SQLException {
+        List<Coupon> coupons = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Coupons WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        // Thêm điều kiện tìm kiếm
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (CouponCode LIKE ? OR CouponName LIKE ? OR Description LIKE ?)");
+            String searchPattern = "%" + keyword.trim() + "%";
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+        }
+
+        if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+            if ("active".equals(statusFilter)) {
+                sql.append(" AND IsActive = 1");
+            } else if ("inactive".equals(statusFilter)) {
+                sql.append(" AND IsActive = 0");
+            } else if ("expired".equals(statusFilter)) {
+                sql.append(" AND EndDate < GETDATE()");
+            } else if ("valid".equals(statusFilter)) {
+                sql.append(" AND IsActive = 1 AND StartDate <= GETDATE() AND EndDate >= GETDATE()");
+            }
+        }
+
+        if (typeFilter != null && !typeFilter.trim().isEmpty()) {
+            sql.append(" AND DiscountType = ?");
+            params.add(typeFilter);
+        }
+
+        sql.append(" ORDER BY CreatedDate DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add(offset);
+        params.add(limit);
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            // Set parameters
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    coupons.add(mapResultSetToCoupon(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error searching coupons", e);
+            throw e;
+        }
+
+        return coupons;
+    }
+
+    /**
+     * Đếm số lượng coupon theo điều kiện tìm kiếm
+     */
+    public int countSearchCoupons(String keyword, String statusFilter, String typeFilter) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Coupons WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        // Thêm điều kiện tìm kiếm (giống như searchCoupons)
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (CouponCode LIKE ? OR CouponName LIKE ? OR Description LIKE ?)");
+            String searchPattern = "%" + keyword.trim() + "%";
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+        }
+
+        if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+            if ("active".equals(statusFilter)) {
+                sql.append(" AND IsActive = 1");
+            } else if ("inactive".equals(statusFilter)) {
+                sql.append(" AND IsActive = 0");
+            } else if ("expired".equals(statusFilter)) {
+                sql.append(" AND EndDate < GETDATE()");
+            } else if ("valid".equals(statusFilter)) {
+                sql.append(" AND IsActive = 1 AND StartDate <= GETDATE() AND EndDate >= GETDATE()");
+            }
+        }
+
+        if (typeFilter != null && !typeFilter.trim().isEmpty()) {
+            sql.append(" AND DiscountType = ?");
+            params.add(typeFilter);
+        }
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            // Set parameters
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error counting search coupons", e);
+            throw e;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Cập nhật thông tin coupon
+     */
+    public boolean updateCoupon(Coupon coupon) throws SQLException {
+        String sql = """
+            UPDATE Coupons SET
+                CouponCode = ?, CouponName = ?, Description = ?,
+                DiscountType = ?, DiscountValue = ?, MinOrderAmount = ?,
+                MaxDiscountAmount = ?, UsageLimit = ?, OrderLimit = ?,
+                StartDate = ?, EndDate = ?
+            WHERE CouponID = ?
+            """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, coupon.getCouponCode());
+            stmt.setString(2, coupon.getCouponName());
+            stmt.setString(3, coupon.getDescription());
+            stmt.setString(4, coupon.getDiscountType());
+            stmt.setDouble(5, coupon.getDiscountValue());
+            stmt.setDouble(6, coupon.getMinOrderAmount());
+            stmt.setDouble(7, coupon.getMaxDiscountAmount());
+            stmt.setInt(8, coupon.getUsageLimit());
+            stmt.setInt(9, coupon.getOrderLimit());
+            stmt.setDate(10, coupon.getStartDate());
+            stmt.setDate(11, coupon.getEndDate());
+            stmt.setInt(12, coupon.getCouponId());
+
+            int rowsAffected = stmt.executeUpdate();
+            boolean success = rowsAffected > 0;
+
+            if (success) {
+                logger.info("Updated coupon with ID: " + coupon.getCouponId());
+            }
+
+            return success;
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updating coupon: " + coupon.getCouponId(), e);
+            throw e;
+        }
+    }
+
+    /**
+     * Xóa coupon (soft delete - chỉ set IsActive = false)
+     */
+    public boolean deleteCoupon(int couponId) throws SQLException {
+        String sql = "UPDATE Coupons SET IsActive = 0 WHERE CouponID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, couponId);
+
+            int rowsAffected = stmt.executeUpdate();
+            boolean success = rowsAffected > 0;
+
+            if (success) {
+                logger.info("Soft deleted coupon with ID: " + couponId);
+            }
+
+            return success;
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error deleting coupon: " + couponId, e);
+            throw e;
+        }
+    }
+
+    /**
+     * Xóa coupon vĩnh viễn (hard delete)
+     */
+    public boolean hardDeleteCoupon(int couponId) throws SQLException {
+        String sql = "DELETE FROM Coupons WHERE CouponID = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, couponId);
+
+            int rowsAffected = stmt.executeUpdate();
+            boolean success = rowsAffected > 0;
+
+            if (success) {
+                logger.info("Hard deleted coupon with ID: " + couponId);
+            }
+
+            return success;
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error hard deleting coupon: " + couponId, e);
+            throw e;
+        }
     }
 
     private Coupon mapResultSetToCoupon(ResultSet rs) throws SQLException {

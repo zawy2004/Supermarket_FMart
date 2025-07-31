@@ -31,7 +31,7 @@ public class CustomerCouponServlet extends HttpServlet {
         
         User currentUser = getCurrentUser(request);
         if (currentUser == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/User/sign_in.jsp");
             return;
         }
 
@@ -71,7 +71,7 @@ public class CustomerCouponServlet extends HttpServlet {
         
         User currentUser = getCurrentUser(request);
         if (currentUser == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/User/sign_in.jsp");
             return;
         }
 
@@ -116,8 +116,9 @@ public class CustomerCouponServlet extends HttpServlet {
      */
     private void handleShowUsageHistory(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException, SQLException {
-        
-        List<CouponUsage> usageHistory = couponService.getUserCouponHistory(user.getUserId());
+
+        // Lấy lịch sử coupon qua OrderID của user
+        List<CouponUsage> usageHistory = couponService.getUserCouponHistoryByOrders(user.getUserId());
         request.setAttribute("usageHistory", usageHistory);
         request.setAttribute("pageTitle", "Lịch sử sử dụng coupon");
         request.getRequestDispatcher("/User/couponHistory.jsp").forward(request, response);

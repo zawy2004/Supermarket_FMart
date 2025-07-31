@@ -14,6 +14,8 @@ import model.Product;
 import service.OrderService;
 import service.ProductService;
 import service.VnpayService;
+import service.CouponService;
+import util.CouponValidationUtil.ValidationException;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -29,11 +31,13 @@ public class ProcessCheckoutServlet extends HttpServlet {
 
     private OrderService orderService;
     private ProductService productService;
+    private CouponService couponService;
 
     @Override
     public void init() throws ServletException {
         orderService = new OrderService();
         productService = new ProductService();
+        couponService = new CouponService();
     }
 
     @Override
@@ -159,6 +163,37 @@ Date deliveryDate = Date.from(deliveryLocalDate.atStartOfDay(ZoneId.systemDefaul
                 throw new Exception("Tạo đơn hàng thất bại.");
             }
             order.setOrderID(orderId);
+
+            // Áp dụng coupon nếu có (sau khi tạo order thành công)
+            String pendingCouponCode = (String) session.getAttribute("pendingCouponCode");
+            Double pendingCouponDiscount = (Double) session.getAttribute("pendingCouponDiscount");
+
+            if (pendingCouponCode != null && pendingCouponDiscount != null && pendingCouponDiscount > 0) {
+                try {
+                    // Áp dụng coupon vào order đã tạo
+                    double appliedDiscount = couponService.applyCouponToOrder(orderId, pendingCouponCode, customerId, finalAmount);
+
+                    if (appliedDiscount > 0) {
+                        // Cập nhật lại final amount trong order
+                        double newFinalAmount = finalAmount - appliedDiscount;
+                        orderService.updateOrderAmount(orderId, order.getTotalAmount(), appliedDiscount, newFinalAmount);
+                        order.setDiscountAmount(appliedDiscount);
+                        order.setFinalAmount(newFinalAmount);
+                        finalAmount = newFinalAmount; // Cập nhật cho payment
+
+                        System.out.println("Đã áp dụng coupon " + pendingCouponCode + " với discount: " + appliedDiscount);
+                    }
+
+                    // Xóa coupon khỏi session sau khi áp dụng
+                    session.removeAttribute("pendingCouponCode");
+                    session.removeAttribute("pendingCouponDiscount");
+
+                } catch (Exception e) {
+                    System.err.println("Lỗi khi áp dụng coupon: " + e.getMessage());
+                    // Không throw exception để không làm gián đoạn quá trình checkout
+                    // Chỉ log lỗi và tiếp tục
+                }
+            }
 
             if ("cod".equals(paymentMethod)) {
                 orderService.updateOrderStatus(orderId, "Confirmed");

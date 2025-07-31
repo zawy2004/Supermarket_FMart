@@ -76,6 +76,33 @@
             background: #f8f9fa;
             border-radius: 4px;
         }
+        .coupon-section {
+            margin-top: 20px;
+        }
+        .coupon-input {
+            display: flex;
+            gap: 10px;
+        }
+        .error-message, .success-message {
+            margin-top: 10px;
+        }
+        .available-coupons {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .coupon-item {
+            cursor: pointer;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .coupon-item:hover {
+            background-color: #f0f0f0;
+        }
+        .loading-spinner {
+            display: none;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -88,7 +115,7 @@
                         <i class="uil uil-multiply"></i>
                     </button>
                 </div>
-                <div class="category-model-content modal-content"> 
+                <div class="category-model-content modal-content">
                     <div class="cate-header">
                         <h4>Chọn danh mục</h4>
                     </div>
@@ -118,7 +145,7 @@
                         <i class="uil uil-multiply"></i>
                     </button>
                 </div>
-                <div class="category-model-content modal-content"> 
+                <div class="category-model-content modal-content">
                     <div class="search-header">
                         <form action="#">
                             <input type="search" placeholder="Tìm kiếm sản phẩm...">
@@ -167,7 +194,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-7">
-                        <form id="checkoutForm" action="${pageContext.request.contextPath}/processCheckout" method="post">
+                        <form id="checkoutForm" action="${pageContext.request.contextPath}/checkout" method="post">
                             <div class="pdpt-bg">
                                 <div class="pdpt-title">
                                     <h4>Thông tin thanh toán</h4>
@@ -176,20 +203,20 @@
                                     <!-- Xác minh số điện thoại -->
                                     <div class="form-group mt-3">
                                         <label class="control-label">Số điện thoại*</label>
-                                        <input id="phone" name="phone" type="text" placeholder="Số điện thoại" class="form-control" value="${sessionScope.userPhone}" required>
+                                        <input id="phone" name="phone" type="text" placeholder="Số điện thoại" class="form-control" value="${sessionScope.user.phoneNumber}" required>
                                         <small class="form-text text-muted">Số điện thoại dùng để gửi thông báo đơn hàng.</small>
                                     </div>
 
                                     <!-- Họ và tên -->
                                     <div class="form-group mt-3">
                                         <label class="control-label">Họ và tên*</label>
-                                        <input id="name" name="name" type="text" placeholder="Họ và tên" class="form-control" required>
+                                        <input id="name" name="name" type="text" placeholder="Họ và tên" class="form-control" value="${sessionScope.user.fullName}" required>
                                     </div>
 
                                     <!-- Email -->
                                     <div class="form-group mt-3">
                                         <label class="control-label">Email*</label>
-                                        <input id="email" name="email" type="email" placeholder="Email" class="form-control" required>
+                                        <input id="email" name="email" type="email" placeholder="Email" class="form-control" value="${sessionScope.user.email}" required>
                                     </div>
 
                                     <!-- Địa chỉ -->
@@ -244,15 +271,15 @@
                                         <div class="product-radio">
                                             <ul class="product-now payment-method-radio">
                                                 <li>
-                                                    <input type="radio" id="cod" name="paymentmethod" value="cod" checked>
+                                                    <input type="radio" id="cod" name="paymentmethod" value="COD" checked>
                                                     <label for="cod"><img src="${pageContext.request.contextPath}/User/images/icons/cod.png" alt=""> Thanh toán khi nhận hàng</label>
                                                 </li>
                                                 <li>
-                                                    <input type="radio" id="vnpay" name="paymentmethod" value="vnpay">
+                                                    <input type="radio" id="vnpay" name="paymentmethod" value="VNPAY">
                                                     <label for="vnpay"><img src="${pageContext.request.contextPath}/User/images/icons/vnpay.png" alt=""> VNPay</label>
                                                 </li>
                                                 <li>
-                                                    <input type="radio" id="payos" name="paymentmethod" value="payos">
+                                                    <input type="radio" id="payos" name="paymentmethod" value="PAYOS">
                                                     <label for="payos"><img src="${pageContext.request.contextPath}/User/images/icons/payos.png" alt=""> PayOS</label>
                                                 </li>
                                             </ul>
@@ -271,6 +298,8 @@
                                         <input type="hidden" name="price" value="${item.sellingPrice}"/>
                                     </c:forEach>
                                     <input type="hidden" name="cartTotal" value="${cartTotal}"/>
+                                    <input type="hidden" name="appliedCouponCode" id="appliedCouponCode" value="${sessionScope.appliedCouponCode}"/>
+                                    <input type="hidden" name="appliedDiscount" id="appliedDiscount" value="${sessionScope.appliedDiscount != null ? sessionScope.appliedDiscount : 0}"/>
 
                                     <button type="button" class="next-btn16 hover-btn mt-4" onclick="showConfirmModal()">Đặt hàng</button>
                                 </div>
@@ -309,26 +338,41 @@
                             <div class="total-checkout-group">
                                 <div class="cart-total-dil">
                                     <h4>Tổng giỏ hàng</h4>
-                                    <span><fmt:formatNumber value="${cartTotal != null ? cartTotal : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                    <span id="cart-total"><fmt:formatNumber value="${cartTotal != null ? cartTotal : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
                                 </div>
                                 <div class="cart-total-dil pt-3">
                                     <h4>Phí giao hàng</h4>
-                                    <span><fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 30000}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                    <span id="delivery-charge"><fmt:formatNumber value="${deliveryCharge != null ? deliveryCharge : 30000}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
                                 </div>
-                            </div>
-                            <div class="cart-total-dil saving-total">
-                                <h4>Tổng tiết kiệm</h4>
-                                <span><fmt:formatNumber value="${totalSaving != null ? totalSaving : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                <div class="cart-total-dil pt-3">
+                                    <h4>Giảm giá</h4>
+                                    <span id="discount-amount"><fmt:formatNumber value="${sessionScope.appliedDiscount != null ? sessionScope.appliedDiscount : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                </div>
                             </div>
                             <div class="main-total-cart p-4">
                                 <h2>Tổng cộng</h2>
-                                <span id="total-amount"><fmt:formatNumber value="${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 30000) : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                <span id="total-amount">
+                                    <c:set var="finalTotal" value="${(cartTotal != null ? cartTotal : 0) + (deliveryCharge != null ? deliveryCharge : 30000) - (sessionScope.appliedDiscount != null ? sessionScope.appliedDiscount : 0)}" />
+                                    <fmt:formatNumber value="${finalTotal}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫
+                                </span>
+                            </div>
+                            <!-- Coupon Section -->
+                            <div class="coupon-section">
+                                <h4>Áp dụng mã giảm giá</h4>
+                                <div class="coupon-input">
+                                    <input type="text" id="couponCodeInput" class="form-control" placeholder="Nhập mã giảm giá" value="${sessionScope.appliedCouponCode}"/>
+                                    <button type="button" class="btn btn-primary" onclick="applyCoupon()">Áp dụng <span class="loading-spinner spinner-border spinner-border-sm"></span></button>
+                                    <button type="button" class="btn btn-info" onclick="showAvailableCoupons()">Xem mã khả dụng</button>
+                                </div>
+                                <div id="couponMessage" class="error-message text-danger"></div>
+                                <div id="couponSuccess" class="success-message text-success"></div>
+                                <div id="availableCoupons" class="available-coupons"></div>
                             </div>
                             <div class="payment-secure">
                                 <i class="uil uil-padlock"></i>Thanh toán an toàn
                             </div>
                         </div>
-                        <a href="#" class="promo-link45" data-bs-toggle="modal" data-bs-target="#promoCodeModal">Có mã khuyến mãi?</a>
+                        <a href="#" class="promo-link45" data-bs-toggle="modal" data-bs-target="#promoCodeModal">Có mã khuyến mãi khác?</a>
                         <div class="checkout-safety-alerts">
                             <p><i class="uil uil-sync"></i>Đảm bảo đổi trả 100%</p>
                             <p><i class="uil uil-check-square"></i>Sản phẩm chính hãng 100%</p>
@@ -370,7 +414,7 @@
                     </div>
                     <div class="modal-body">
                         <h5>Chi tiết đơn hàng</h5>
-                        <div id="confirm-order-summary"></div> <!-- Sao chép từ order-summary -->
+                        <div id="confirm-order-summary"></div>
                         <hr>
                         <p><strong>Phương thức thanh toán:</strong> <span id="confirm-payment-method"></span></p>
                         <p><strong>Tổng cộng:</strong> <span id="confirm-total-amount"></span></p>
@@ -400,10 +444,10 @@
         <script>
             // Format price as VND
             function formatVND(price) {
-                return price.toLocaleString('vi-VN', { 
-                    style: 'decimal', 
-                    minimumFractionDigits: 0, 
-                    maximumFractionDigits: 0 
+                return price.toLocaleString('vi-VN', {
+                    style: 'decimal',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
                 }) + ' ₫';
             }
 
@@ -418,9 +462,9 @@
                 notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
 
                 const icon = type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-circle';
-                notification.innerHTML = 
-                    '<i class="fas fa-' + icon + ' me-2"></i>' + 
-                    message + 
+                notification.innerHTML =
+                    '<i class="fas fa-' + icon + ' me-2"></i>' +
+                    message +
                     '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
 
                 document.body.appendChild(notification);
@@ -477,60 +521,147 @@
 
             // Apply Promo Code
             function applyPromoCode() {
-                const promoCode = document.getElementById('promoCodeInput').value;
+                const promoCode = document.getElementById('promoCodeInput').value.trim();
                 if (!promoCode) {
                     showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
                     return;
                 }
+                applyCoupon(promoCode);
+            }
+
+            // Apply Coupon
+            function applyCoupon(couponCode) {
+                <c:set var="orderAmountValue" value="${(cartTotal != null ? cartTotal : 0) + (deliveryCharge != null ? deliveryCharge : 30000)}" />
+                const orderAmount = ${orderAmountValue};
+                $('.loading-spinner').show();
                 $.ajax({
-                    url: '${pageContext.request.contextPath}/cart',
-                    type: 'POST',
+                    url: '${pageContext.request.contextPath}/user/coupons',
+                    type: 'GET',
                     data: {
-                        action: 'applyPromo',
-                        promoCode: promoCode
+                        action: 'validate',
+                        couponCode: couponCode,
+                        orderAmount: orderAmount,
+                        format: 'json'
                     },
                     success: function(response) {
-                        showNotification('Áp dụng mã khuyến mãi thành công!', 'success');
-                        $('#promoCodeModal').modal('hide');
-                        location.reload();
+                        $('.loading-spinner').hide();
+                        if (response.valid) {
+                            showNotification('Áp dụng mã giảm giá thành công! Giảm: ' + formatVND(response.discount), 'success');
+                            $('#discount-amount').text(formatVND(response.discount));
+                            $('#total-amount').text(formatVND(orderAmount - response.discount));
+                            $('#appliedCouponCode').val(couponCode);
+                            $('#appliedDiscount').val(response.discount);
+                            $('#couponCodeInput').val(couponCode);
+                            $('#promoCodeModal').modal('hide');
+                            // Lưu vào session
+                            $.ajax({
+                                url: '${pageContext.request.contextPath}/cart',
+                                type: 'POST',
+                                data: {
+                                    action: 'applyPromo',
+                                    promoCode: couponCode
+                                },
+                                success: function() {
+                                    // Session đã được cập nhật
+                                }
+                            });
+                        } else {
+                            showNotification('Lỗi: ' + response.message, 'error');
+                        }
                     },
-                    error: function(xhr) {
-                        showNotification('Lỗi khi áp dụng mã khuyến mãi: ' + xhr.responseText, 'error');
+                    error: function() {
+                        $('.loading-spinner').hide();
+                        showNotification('Lỗi hệ thống khi áp dụng mã giảm giá.', 'error');
+                    }
+                });
+            }
+
+            // Show Available Coupons
+            function showAvailableCoupons() {
+                const orderAmount = ${orderAmountValue};
+                $('.loading-spinner').show();
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/user/coupons',
+                    type: 'GET',
+                    data: {
+                        action: 'available',
+                        orderAmount: orderAmount,
+                        format: 'json'
+                    },
+                    success: function(response) {
+                        $('.loading-spinner').hide();
+                        const coupons = response.coupons;
+                        let html = '';
+                        if (coupons.length > 0) {
+                            html = '<h5>Mã giảm giá khả dụng:</h5>';
+                            coupons.forEach(coupon => {
+                                html += `<div class="coupon-item" onclick="$('#couponCodeInput').val('${coupon.code}'); applyCoupon('${coupon.code}');">
+                                    <strong>${coupon.code}</strong> - ${coupon.name}
+                                    (${coupon.discountType == 'Percentage' ? coupon.discountValue + '%' : formatVND(coupon.discountValue)})
+                                    <br><small>Đơn tối thiểu: ${formatVND(coupon.minOrderAmount)}</small>
+                                    ${coupon.description ? '<br><small>' + coupon.description + '</small>' : ''}
+                                </div>`;
+                            });
+                        } else {
+                            html = '<p>Không có mã giảm giá khả dụng.</p>';
+                        }
+                        $('#availableCoupons').html(html);
+                    },
+                    error: function() {
+                        $('.loading-spinner').hide();
+                        $('#availableCoupons').html('<p>Lỗi khi tải mã giảm giá.</p>');
                     }
                 });
             }
 
             // Show Confirm Modal
             function showConfirmModal() {
-                // Sao chép tóm tắt đơn hàng vào modal
                 const summary = document.getElementById('order-summary').innerHTML;
                 document.getElementById('confirm-order-summary').innerHTML = summary;
-
-                // Lấy phương thức thanh toán đã chọn
                 const selectedPayment = document.querySelector('input[name="paymentmethod"]:checked').nextElementSibling.textContent;
                 document.getElementById('confirm-payment-method').textContent = selectedPayment;
-
-                // Lấy tổng giá
                 const totalAmount = document.getElementById('total-amount').textContent;
                 document.getElementById('confirm-total-amount').textContent = totalAmount;
-
-                // Hiện modal
                 $('#confirmPaymentModal').modal('show');
             }
 
             // Submit Form sau xác nhận
             function submitCheckoutForm() {
+                const couponCode = $('#appliedCouponCode').val();
+                if (couponCode) {
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/user/coupons',
+                        type: 'POST',
+                        data: {
+                            action: 'apply',
+                            couponCode: couponCode,
+                            orderId: 0, // OrderId sẽ được tạo trong CheckoutServlet
+                            orderAmount: ${orderAmountValue},
+                            format: 'json'
+                        },
+                        async: false,
+                        success: function(response) {
+                            if (!response.success) {
+                                showNotification('Lỗi khi áp dụng mã giảm giá: ' + response.message, 'error');
+                                return;
+                            }
+                        },
+                        error: function() {
+                            showNotification('Lỗi hệ thống khi áp dụng mã giảm giá.', 'error');
+                            return;
+                        }
+                    });
+                }
                 document.getElementById('checkoutForm').submit();
             }
 
             // Toggle Payment Method Description
             $(document).ready(function() {
                 $('input[name="paymentmethod"]').on('change', function() {
-                    const method = $(this).val();
+                    const method = $(this).val().toLowerCase();
                     $('.payment-description').hide();
                     $('#payment-' + method).show();
                 });
-                // Mặc định hiển thị cho COD
                 $('#payment-cod').show();
             });
         </script>

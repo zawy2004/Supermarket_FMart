@@ -7,13 +7,11 @@ import java.sql.SQLException;
 
 public class DatabaseConfig {
 
-    private static final String URL = "jdbc:sqlserver://DEMO\\SQLEXPRESS;databaseName=Fmart;encrypt=false";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "1234";
-    private static final String URL = "jdbc:sqlserver://DESKTOP-MK7ODO2;databaseName=FmartDB;encrypt=false";
-private static final String USER = "sa";
-private static final String PASSWORD = "123456";
->>>>>>> manage-couponcode
+
+    private static final String URL = "jdbc:sqlserver://DESKTOP-MK7ODO2;databaseName=master;encrypt=false;integratedSecurity=true";
+    private static final String USER = null; // Windows Authentication
+    private static final String PASSWORD = null; // Windows Authentication
+
 
 
     private static Connection connection = null;
@@ -26,8 +24,8 @@ private static final String PASSWORD = "123456";
             try {
                 // Load the SQL Server JDBC driver
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                // Establish the connection
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                // Establish the connection using Windows Authentication
+                connection = DriverManager.getConnection(URL);
                 if (connection != null) {
                     System.out.println("Database connection established successfully at " + new java.util.Date());
                 }

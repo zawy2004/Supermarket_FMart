@@ -84,6 +84,15 @@ public class CouponManagementServlet extends HttpServlet {
                 case "create":
                     handleCreateCoupon(request, response);
                     break;
+                case "update":
+                    handleUpdateCoupon(request, response);
+                    break;
+                case "delete":
+                    handleDeleteCoupon(request, response);
+                    break;
+                case "bulk_action":
+                    handleBulkAction(request, response);
+                    break;
                 case "apply":
                     handleApplyCoupon(request, response);
                     break;
@@ -109,10 +118,44 @@ public class CouponManagementServlet extends HttpServlet {
 
     private void handleListCoupons(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
-        List<Coupon> coupons = couponService.getAllCoupons();
+
+        // Lấy tham số tìm kiếm và phân trang
+        String keyword = request.getParameter("keyword");
+        String statusFilter = request.getParameter("status");
+        String typeFilter = request.getParameter("type");
+
+        // Xử lý phân trang
+        int page = 1;
+        int pageSize = 10;
+
+        try {
+            String pageStr = request.getParameter("page");
+            if (pageStr != null && !pageStr.trim().isEmpty()) {
+                page = Integer.parseInt(pageStr);
+                if (page < 1) page = 1;
+            }
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+
+        int offset = (page - 1) * pageSize;
+
+        // Lấy danh sách coupon với tìm kiếm và phân trang
+        List<Coupon> coupons = couponService.searchCoupons(keyword, statusFilter, typeFilter, offset, pageSize);
+        int totalCoupons = couponService.countSearchCoupons(keyword, statusFilter, typeFilter);
+        int totalPages = (int) Math.ceil((double) totalCoupons / pageSize);
+
+        // Set attributes cho JSP
         request.setAttribute("coupons", coupons);
-        request.getRequestDispatcher("/Admin/couponList.jsp").forward(request, response);
+        request.setAttribute("page", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalCoupons", totalCoupons);
+        request.setAttribute("keyword", keyword);
+        request.setAttribute("statusFilter", statusFilter);
+        request.setAttribute("typeFilter", typeFilter);
+
+        // Chuyển đến trang quản lý coupon mới thay vì couponList.jsp
+        request.getRequestDispatcher("/Admin/manage_coupons.jsp").forward(request, response);
     }
 
     private void handleShowCreateForm(HttpServletRequest request, HttpServletResponse response)
@@ -176,7 +219,7 @@ public class CouponManagementServlet extends HttpServlet {
             
             request.setAttribute("coupon", coupon);
             request.setAttribute("usageHistory", usageHistory);
-            request.getRequestDispatcher("/Admin/couponDetail.jsp").forward(request, response);
+            request.getRequestDispatcher("/Admin/coupon_detail.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid coupon ID format");
@@ -420,6 +463,114 @@ public class CouponManagementServlet extends HttpServlet {
             request.getRequestDispatcher("/Admin/coupon.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("/Admin/couponList.jsp").forward(request, response);
+        }
+    }
+
+    // Phương thức cập nhật coupon
+    private void handleUpdateCoupon(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException, ValidationException {
+
+        String couponIdStr = request.getParameter("couponId");
+        if (couponIdStr == null || couponIdStr.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Thiếu ID coupon");
+            handleListCoupons(request, response);
+            return;
+        }
+
+        try {
+            int couponId = Integer.parseInt(couponIdStr);
+            Coupon coupon = buildCouponFromRequest(request);
+            coupon.setCouponId(couponId);
+
+            boolean updated = couponService.updateCoupon(coupon);
+
+            if (updated) {
+                response.sendRedirect(request.getContextPath() + "/admin/coupon?action=list&success=updated");
+            } else {
+                request.setAttribute("errorMessage", "Không thể cập nhật coupon");
+                request.setAttribute("coupon", coupon);
+                request.setAttribute("isEdit", true);
+                request.getRequestDispatcher("/Admin/coupon.jsp").forward(request, response);
+            }
+
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "ID coupon không hợp lệ");
+            handleListCoupons(request, response);
+        } catch (ParseException e) {
+            request.setAttribute("errorMessage", "Định dạng ngày không hợp lệ");
+            request.getRequestDispatcher("/Admin/coupon.jsp").forward(request, response);
+        }
+    }
+
+    // Phương thức xóa coupon
+    private void handleDeleteCoupon(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        String couponIdStr = request.getParameter("couponId");
+        if (couponIdStr == null || couponIdStr.trim().isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing coupon ID");
+            return;
+        }
+
+        try {
+            int couponId = Integer.parseInt(couponIdStr);
+            boolean deleted = couponService.deleteCoupon(couponId);
+
+            response.setContentType("application/json");
+            if (deleted) {
+                response.getWriter().write("{\"success\": true, \"message\": \"Xóa coupon thành công\"}");
+            } else {
+                response.getWriter().write("{\"success\": false, \"message\": \"Không thể xóa coupon\"}");
+            }
+
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid coupon ID format");
+        }
+    }
+
+    // Phương thức xử lý bulk actions
+    private void handleBulkAction(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        String action = request.getParameter("bulk_action");
+        String[] couponIds = request.getParameterValues("coupon_ids");
+
+        if (action == null || couponIds == null || couponIds.length == 0) {
+            response.sendRedirect(request.getContextPath() + "/admin/coupon?action=list&error=invalid_bulk");
+            return;
+        }
+
+        int successCount = 0;
+
+        try {
+            for (String idStr : couponIds) {
+                int couponId = Integer.parseInt(idStr);
+
+                switch (action) {
+                    case "activate":
+                        if (couponService.updateCouponStatus(couponId, true)) {
+                            successCount++;
+                        }
+                        break;
+                    case "deactivate":
+                        if (couponService.updateCouponStatus(couponId, false)) {
+                            successCount++;
+                        }
+                        break;
+                    case "delete":
+                        if (couponService.deleteCoupon(couponId)) {
+                            successCount++;
+                        }
+                        break;
+                }
+            }
+
+            String message = "Đã xử lý thành công " + successCount + "/" + couponIds.length + " coupon";
+            response.sendRedirect(request.getContextPath() + "/admin/coupon?action=list&success=" +
+                                java.net.URLEncoder.encode(message, "UTF-8"));
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/admin/coupon?action=list&error=invalid_id");
         }
     }
 
