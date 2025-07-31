@@ -312,22 +312,75 @@ public class UserDAO {
         return false;
     }
 
-    public boolean deleteUser(int userId) {
-        String sql = "DELETE FROM Users WHERE UserID = ?";
+ public boolean deleteUser(int userId) {
+    // Bắt đầu giao dịch
+    String sqlDeleteCouponUsage = "DELETE FROM CouponUsage WHERE OrderID IN (SELECT OrderID FROM Orders WHERE CustomerID = ?)";
+    String sqlDeleteOrders = "DELETE FROM Orders WHERE CustomerID = ?";
+    String sqlDeleteShoppingCart = "DELETE FROM ShoppingCart WHERE UserID = ?";
+    String sqlDeleteReviews = "DELETE FROM Reviews WHERE UserID = ?";
+    String sqlDeleteStockMovements = "DELETE FROM StockMovements WHERE CreatedBy = ?";
+    String sqlDeleteUser = "DELETE FROM Users WHERE UserID = ?";
 
-        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+    // Thực hiện xóa dữ liệu liên quan đến người dùng trong các bảng
+    try (Connection conn = DatabaseConfig.getConnection()) {
+        // Bắt đầu giao dịch
+        conn.setAutoCommit(false);
 
+        // Xóa CouponUsage
+        try (PreparedStatement ps = conn.prepareStatement(sqlDeleteCouponUsage)) {
             ps.setInt(1, userId);
-
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            ps.executeUpdate();
         }
 
-        return false;
+        // Xóa Orders
+        try (PreparedStatement ps = conn.prepareStatement(sqlDeleteOrders)) {
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        }
+
+        // Xóa ShoppingCart
+        try (PreparedStatement ps = conn.prepareStatement(sqlDeleteShoppingCart)) {
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        }
+
+        // Xóa Reviews
+        try (PreparedStatement ps = conn.prepareStatement(sqlDeleteReviews)) {
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        }
+
+        // Xóa StockMovements
+        try (PreparedStatement ps = conn.prepareStatement(sqlDeleteStockMovements)) {
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        }
+
+        // Xóa User cuối cùng
+        try (PreparedStatement ps = conn.prepareStatement(sqlDeleteUser)) {
+            ps.setInt(1, userId);
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                // Cam kết giao dịch nếu mọi thứ thành công
+                conn.commit();
+                return true;
+            } else {
+                // Nếu không xóa được người dùng, hủy bỏ giao dịch
+                conn.rollback();
+            }
+        } catch (SQLException e) {
+            // Nếu có lỗi trong quá trình xóa User, hủy bỏ giao dịch
+            conn.rollback();
+            e.printStackTrace();
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return false;
+}
+
 
     public List<User> getUsersByPage(int offset, int pageSize) {
         List<User> users = new ArrayList<>();
