@@ -519,6 +519,46 @@ public int getTotalOrders(String searchName, String status, String fromDate, Str
     
     return count;
 }
+public List<Order> getOrdersByCustomerId(int customerId) {
+    List<Order> orders = new ArrayList<>();
+    String sql = "SELECT * FROM [Orders] WHERE customerID = ? ORDER BY orderDate DESC";
+
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, customerId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Order order = new Order();
+            order.setOrderID(rs.getInt("orderID"));
+            order.setOrderNumber(rs.getString("orderNumber"));
+            order.setCustomerID(rs.getInt("customerID"));
+            order.setOrderDate(rs.getTimestamp("orderDate"));
+            order.setOrderType(rs.getString("orderType"));
+            order.setStatus(rs.getString("status"));
+            order.setTotalAmount(rs.getDouble("totalAmount"));
+            order.setDiscountAmount(rs.getDouble("discountAmount"));
+            order.setTaxAmount(rs.getDouble("taxAmount"));
+            order.setFinalAmount(rs.getDouble("finalAmount"));
+            order.setPaymentStatus(rs.getString("paymentStatus"));
+            order.setPaymentMethod(rs.getString("paymentMethod"));
+            order.setDeliveryAddress(rs.getString("deliveryAddress"));
+            order.setDeliveryDate(rs.getTimestamp("deliveryDate"));
+            order.setCompletedDate(rs.getTimestamp("completedDate"));
+            order.setProcessedBy(rs.getInt("processedBy"));
+            order.setNotes(rs.getString("notes"));
+
+            orders.add(order);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return orders;
+}
+
 
 }
 
