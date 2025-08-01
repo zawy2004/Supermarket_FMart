@@ -17,10 +17,12 @@ import java.sql.Timestamp;
 import config.OAuthConfig;
 import dao.UserDAO;
 import model.User;
+import service.UserCouponService;
 
 @WebServlet("/User/login-google")
 public class LoginGoogleServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private UserCouponService userCouponService = new UserCouponService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -121,6 +123,19 @@ public class LoginGoogleServlet extends HttpServlet {
                     throw new SQLException("Failed to save new Google user");
                 }
                 System.out.println("New Google user created with ID: " + user.getUserId());
+
+                // Auto-assign welcome coupon to new Google user
+                try {
+                    User savedUser = userDAO.findByEmail(user.getEmail());
+                    if (savedUser != null) {
+                        boolean couponAssigned = userCouponService.assignWelcomeCoupon(savedUser.getUserId());
+                        if (couponAssigned) {
+                            System.out.println("Welcome coupon assigned to new Google user: " + savedUser.getUserId());
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error assigning welcome coupon to Google user: " + e.getMessage());
+                }
             } else {
                 // Update existing user info
                 System.out.println("Updating existing user...");

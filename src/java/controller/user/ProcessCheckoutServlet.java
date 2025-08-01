@@ -165,28 +165,36 @@ public class ProcessCheckoutServlet extends HttpServlet {
             order.setOrderID(orderId);
 
             // Áp dụng coupon nếu có (sau khi tạo order thành công)
-            String pendingCouponCode = (String) session.getAttribute("pendingCouponCode");
-            Double pendingCouponDiscount = (Double) session.getAttribute("pendingCouponDiscount");
+            String appliedCouponCode = (String) session.getAttribute("appliedCouponCode");
+            Double couponDiscount = (Double) session.getAttribute("couponDiscount");
 
-            if (pendingCouponCode != null && pendingCouponDiscount != null && pendingCouponDiscount > 0) {
+            if (appliedCouponCode != null && couponDiscount != null && couponDiscount > 0) {
                 try {
-                    // Áp dụng coupon vào order đã tạo
-                    double appliedDiscount = couponService.applyCouponToOrder(orderId, pendingCouponCode, customerId, finalAmount);
+                    // Áp dụng coupon vào order đã tạo - INTEGRATED VERSION
+                    // Procedure sẽ tự động cập nhật Orders table
+                    double appliedDiscount = couponService.applyCouponToOrder(orderId, appliedCouponCode, customerId, finalAmount);
 
                     if (appliedDiscount > 0) {
-                        // Cập nhật lại final amount trong order
-                        double newFinalAmount = finalAmount - appliedDiscount;
-                        orderService.updateOrderAmount(orderId, order.getTotalAmount(), appliedDiscount, newFinalAmount);
-                        order.setDiscountAmount(appliedDiscount);
-                        order.setFinalAmount(newFinalAmount);
-                        finalAmount = newFinalAmount; // Cập nhật cho payment
+                        // CRITICAL FIX: Get updated values from database after procedure execution
+                        // Procedure đã cập nhật Orders table, cần lấy giá trị mới
+                        Order updatedOrder = orderService.getOrderById(orderId);
+                        if (updatedOrder != null) {
+                            order.setDiscountAmount(updatedOrder.getDiscountAmount());
+                            order.setFinalAmount(updatedOrder.getFinalAmount());
+                            finalAmount = updatedOrder.getFinalAmount(); // Use actual final amount from DB
+                        } else {
+                            // Fallback calculation if can't get from DB
+                            order.setDiscountAmount(appliedDiscount);
+                            order.setFinalAmount(finalAmount - appliedDiscount);
+                            finalAmount = finalAmount - appliedDiscount;
+                        }
 
-                        System.out.println("Đã áp dụng coupon " + pendingCouponCode + " với discount: " + appliedDiscount);
+                        System.out.println("Đã áp dụng coupon " + appliedCouponCode + " với discount: " + appliedDiscount);
                     }
 
-                    // Xóa coupon khỏi session sau khi áp dụng
-                    session.removeAttribute("pendingCouponCode");
-                    session.removeAttribute("pendingCouponDiscount");
+                    // Xóa coupon khỏi session sau khi áp dụng thành công
+                    session.removeAttribute("appliedCouponCode");
+                    session.removeAttribute("couponDiscount");
 
                 } catch (Exception e) {
                     System.err.println("Lỗi khi áp dụng coupon: " + e.getMessage());

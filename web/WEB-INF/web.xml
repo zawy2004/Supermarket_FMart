@@ -135,7 +135,12 @@
     <servlet-name>press</servlet-name>
     <url-pattern>/press</url-pattern>
 </servlet-mapping>
-<!-- check-out -->
+
+<!-- CheckoutServlet with Coupon Management -->
+<servlet>
+    <servlet-name>CheckoutServlet</servlet-name>
+    <servlet-class>controller.user.CheckoutServlet</servlet-class>
+</servlet>
 <servlet-mapping>
     <servlet-name>CheckoutServlet</servlet-name>
     <url-pattern>/checkout</url-pattern>

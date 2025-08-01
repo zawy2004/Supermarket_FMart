@@ -166,4 +166,113 @@ public class CouponValidationUtil {
     public static String formatErrorMessage(String field, String message) {
         return String.format("[%s] %s", field, message);
     }
+
+    // ===== CHECKOUT INTEGRATION METHODS - START =====
+
+    /**
+     * Check if coupon is valid for a specific order
+     */
+    public static boolean isValidForOrder(Coupon coupon, Integer userId, double orderTotal) {
+        try {
+            if (coupon == null) return false;
+
+            // Check if coupon is active
+            if (!coupon.isActive()) return false;
+
+            // Check date range
+            java.util.Date now = new java.util.Date();
+            if (coupon.getStartDate().after(now) || coupon.getEndDate().before(now)) {
+                return false;
+            }
+
+            // Check minimum order amount
+            if (orderTotal < coupon.getMinOrderAmount()) return false;
+
+            // Check global usage limit
+            if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
+                return false;
+            }
+
+            // Check per-user usage limit (orderLimit field)
+            if (userId != null && coupon.getOrderLimit() > 0) {
+                try {
+                    dao.CouponUsageDAO couponUsageDAO = new dao.CouponUsageDAO();
+                    int userUsageCount = couponUsageDAO.getUserCouponUsageCount(coupon.getCouponId(), userId);
+                    if (userUsageCount >= coupon.getOrderLimit()) {
+                        return false;
+                    }
+                } catch (Exception e) {
+                    // If can't check usage, assume invalid for safety
+                    return false;
+                }
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Calculate discount amount for an order
+     */
+    public static double calculateDiscount(Coupon coupon, double orderTotal) {
+        if (coupon == null || orderTotal <= 0) return 0.0;
+
+        double discount = 0.0;
+
+        if ("Percentage".equalsIgnoreCase(coupon.getDiscountType())) {
+            discount = orderTotal * (coupon.getDiscountValue() / 100.0);
+        } else if ("Fixed".equalsIgnoreCase(coupon.getDiscountType())) {
+            discount = coupon.getDiscountValue();
+        }
+
+        // Apply maximum discount limit
+        if (coupon.getMaxDiscountAmount() > 0 && discount > coupon.getMaxDiscountAmount()) {
+            discount = coupon.getMaxDiscountAmount();
+        }
+
+        // Ensure discount doesn't exceed order total
+        if (discount > orderTotal) {
+            discount = orderTotal;
+        }
+
+        return discount;
+    }
+
+    /**
+     * Get validation error message for checkout
+     */
+    public static String getValidationErrorMessage(Coupon coupon, Integer userId, double orderTotal) {
+        if (coupon == null) {
+            return "Mã coupon không tồn tại";
+        }
+
+        if (!coupon.isActive()) {
+            return "Mã coupon đã bị vô hiệu hóa";
+        }
+
+        java.util.Date now = new java.util.Date();
+        if (coupon.getStartDate().after(now)) {
+            return "Mã coupon chưa có hiệu lực";
+        }
+
+        if (coupon.getEndDate().before(now)) {
+            return "Mã coupon đã hết hạn";
+        }
+
+        if (orderTotal < coupon.getMinOrderAmount()) {
+            return String.format("Đơn hàng tối thiểu %,.0fđ để sử dụng coupon này",
+                coupon.getMinOrderAmount());
+        }
+
+        if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
+            return "Mã coupon đã hết lượt sử dụng";
+        }
+
+        return "Mã coupon không hợp lệ";
+    }
+
+    // ===== CHECKOUT INTEGRATION METHODS - END =====
 }

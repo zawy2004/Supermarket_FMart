@@ -31,6 +31,71 @@
         <link href="${pageContext.request.contextPath}/User/vendor/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 
         <style>
+            /* ===== COUPON MANAGEMENT STYLES - START ===== */
+            .coupon-item {
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 1px solid #e0e0e0;
+            }
+
+            .coupon-item:hover {
+                border-color: #007bff;
+                box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+                transform: translateY(-1px);
+            }
+
+            .coupon-code {
+                font-family: 'Courier New', monospace;
+                font-weight: bold;
+                font-size: 1.1rem;
+            }
+
+            .available-coupons-list {
+                max-height: 400px;
+                overflow-y: auto;
+            }
+
+            .coupon-input-section .input-group {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .promo-link45 {
+                color: #007bff;
+                text-decoration: none;
+                font-weight: 500;
+                transition: color 0.3s ease;
+            }
+
+            .promo-link45:hover {
+                color: #0056b3;
+                text-decoration: underline;
+            }
+
+            .coupon-discount {
+                background: linear-gradient(135deg, #e8f5e8, #f0f9f0);
+                border: 1px solid #28a745;
+                border-radius: 8px;
+                margin: 10px 0;
+                padding: 10px 15px;
+            }
+
+            .coupon-discount h4 {
+                margin-bottom: 0;
+                font-size: 0.95rem;
+            }
+
+            .spin {
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            /* ===== COUPON MANAGEMENT STYLES - END ===== */
+
             .payment-method-radio {
                 list-style: none;
                 padding: 0;
@@ -367,15 +432,38 @@
                                     <h4>Tổng tiết kiệm</h4>
                                     <span><fmt:formatNumber value="${totalSaving != null ? totalSaving : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
                                 </div>
+
+                                <c:if test="${couponApplied && couponDiscount > 0}">
+                                    <div class="cart-total-dil coupon-discount">
+                                        <h4 style="color: #28a745;">
+                                            <i class="uil uil-tag-alt"></i> Mã giảm giá (${appliedCouponCode})
+                                        </h4>
+                                        <span style="color: #28a745;">
+                                            -<fmt:formatNumber value="${couponDiscount}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫
+                                        </span>
+                                    </div>
+                                </c:if>
+
                                 <div class="main-total-cart p-4">
                                     <h2>Tổng cộng</h2>
-                                    <span id="total-amount"><fmt:formatNumber value="${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 30000) : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫</span>
+                                    <span id="total-amount">
+                                        <c:choose>
+                                            <c:when test="${finalTotal != null}">
+                                                <fmt:formatNumber value="${finalTotal}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫
+                                            </c:when>
+                                            <c:otherwise>
+                                                <fmt:formatNumber value="${cartTotal != null ? cartTotal + (deliveryCharge != null ? deliveryCharge : 30000) : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </span>
                                 </div>
                                 <div class="payment-secure">
                                     <i class="uil uil-padlock"></i>Thanh toán an toàn
                                 </div>
                             </div>
-                            <a href="#" class="promo-link45" data-bs-toggle="modal" data-bs-target="#promoCodeModal">Có mã khuyến mãi?</a>
+                            <a href="#" class="promo-link45" data-bs-toggle="modal" data-bs-target="#couponModal">
+                                <i class="uil uil-tag-alt"></i> Có mã giảm giá?
+                            </a>
                             <div class="checkout-safety-alerts">
                                 <p><i class="uil uil-sync"></i>Đảm bảo đổi trả 100%</p>
                                 <p><i class="uil uil-check-square"></i>Sản phẩm chính hãng 100%</p>
@@ -385,27 +473,140 @@
                     </div>
                 </div>
             </div>
-            <!-- Promo Code Modal -->
-            <div class="modal fade" id="promoCodeModal" tabindex="-1" aria-labelledby="promoCodeModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+            <!-- ===== COUPON MANAGEMENT MODAL - START ===== -->
+            <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="promoCodeModalLabel">Áp dụng mã khuyến mãi</h5>
+                            <h5 class="modal-title" id="couponModalLabel">
+                                <i class="uil uil-tag-alt"></i> Áp dụng mã giảm giá
+                            </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <label for="promoCodeInput">Mã khuyến mãi</label>
-                                <input type="text" class="form-control" id="promoCodeInput" placeholder="Nhập mã khuyến mãi">
+                            <!-- Coupon Input Section -->
+                            <div class="coupon-input-section mb-4">
+                                <div class="form-group">
+                                    <label for="couponCodeInput" class="form-label">
+                                        <i class="uil uil-ticket"></i> Mã giảm giá
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="couponCodeInput"
+                                               placeholder="Nhập mã giảm giá (VD: WELCOME10)"
+                                               value="${appliedCouponCode != null ? appliedCouponCode : ''}"
+                                               style="text-transform: uppercase;">
+                                        <button class="btn btn-primary" type="button" onclick="applyCoupon()">
+                                            <i class="uil uil-check"></i> Áp dụng
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Coupon Status -->
+                                <div id="couponStatus" class="mt-2">
+                                    <!-- Success Message -->
+                                    <c:if test="${not empty sessionScope.couponSuccess}">
+                                        <div class="alert alert-success alert-dismissible fade show">
+                                            <i class="uil uil-check-circle me-2"></i>
+                                            ${sessionScope.couponSuccess}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                        <c:remove var="couponSuccess" scope="session"/>
+                                    </c:if>
+
+                                    <!-- Error Message -->
+                                    <c:if test="${not empty sessionScope.couponError}">
+                                        <div class="alert alert-danger alert-dismissible fade show">
+                                            <i class="uil uil-exclamation-triangle me-2"></i>
+                                            ${sessionScope.couponError}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                        <c:remove var="couponError" scope="session"/>
+                                    </c:if>
+
+                                    <!-- Applied Coupon Status -->
+                                    <c:if test="${couponApplied}">
+                                        <div class="alert alert-success d-flex align-items-center">
+                                            <i class="uil uil-check-circle me-2"></i>
+                                            <div>
+                                                <strong>Đã áp dụng:</strong> ${appliedCouponCode}
+                                                - Tiết kiệm <strong><fmt:formatNumber value="${couponDiscount}" type="currency" currencySymbol="₫" groupingUsed="true"/></strong>
+                                                <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeCoupon()">
+                                                    <i class="uil uil-times"></i> Hủy
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </div>
+
+                            <!-- Available Coupons Section -->
+                            <div class="available-coupons-section">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="mb-0">
+                                        <i class="uil uil-gift"></i> Mã giảm giá khả dụng
+                                    </h6>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="loadAvailableCoupons()">
+                                        <i class="uil uil-refresh"></i> Tải lại
+                                    </button>
+                                </div>
+
+                                <div id="availableCoupons" class="available-coupons-list">
+                                    <c:choose>
+                                        <c:when test="${not empty availableCoupons}">
+                                            <c:forEach var="coupon" items="${availableCoupons}">
+                                                <div class="coupon-item card mb-2" onclick="selectCoupon('${coupon.couponCode}')">
+                                                    <div class="card-body p-3">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                            <div>
+                                                                <h6 class="coupon-code text-primary mb-1">${coupon.couponCode}</h6>
+                                                                <p class="coupon-name mb-1">${coupon.couponName}</p>
+                                                                <small class="text-muted">${coupon.description}</small>
+                                                            </div>
+                                                            <div class="text-end">
+                                                                <span class="badge bg-success">
+                                                                    <c:choose>
+                                                                        <c:when test="${coupon.discountType == 'Percentage'}">
+                                                                            -${coupon.discountValue}%
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            -<fmt:formatNumber value="${coupon.discountValue}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="coupon-details mt-2">
+                                                            <small class="text-muted">
+                                                                <i class="uil uil-shopping-cart-alt"></i>
+                                                                Đơn tối thiểu: <fmt:formatNumber value="${coupon.minOrderAmount}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                                                                <c:if test="${coupon.maxDiscountAmount > 0}">
+                                                                    | Giảm tối đa: <fmt:formatNumber value="${coupon.maxDiscountAmount}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                                                                </c:if>
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="text-center py-4">
+                                                <i class="uil uil-exclamation-triangle text-muted" style="font-size: 2rem;"></i>
+                                                <p class="text-muted mt-2">Không có mã giảm giá khả dụng cho đơn hàng này</p>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="button" class="btn btn-primary" onclick="applyPromoCode()">Áp dụng</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="uil uil-times"></i> Đóng
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- ===== COUPON MANAGEMENT MODAL - END ===== -->
 
             <!-- Confirm Payment Modal -->
             <div class="modal fade" id="confirmPaymentModal" tabindex="-1" aria-labelledby="confirmPaymentModalLabel" aria-hidden="true">
@@ -522,210 +723,125 @@
                                     });
                                 }
 
-                                // Apply Promo Code
-                                function applyPromoCode() {
-                                    const promoCode = document.getElementById('promoCodeInput').value;
-                                    if (!promoCode) {
-                                        showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
+                                // ===== COUPON MANAGEMENT FUNCTIONS - START =====
+                                function applyCoupon() {
+                                    const couponCode = document.getElementById('couponCodeInput').value.trim().toUpperCase();
+                                    if (!couponCode) {
+                                        showNotification('Vui lòng nhập mã giảm giá!', 'error');
                                         return;
                                     }
+
+                                    const orderTotal = <c:out value="${originalTotal != null ? originalTotal : cartTotal}" default="0"/>;
+
+                                    // Show loading
+                                    const applyBtn = event.target;
+                                    const originalText = applyBtn.innerHTML;
+                                    applyBtn.innerHTML = '<i class="uil uil-spinner-alt spin"></i> Đang xử lý...';
+                                    applyBtn.disabled = true;
+
                                     $.ajax({
-                                        url: '${pageContext.request.contextPath}/cart',
+                                        url: '${pageContext.request.contextPath}/checkout',
                                         type: 'POST',
                                         data: {
-                                            action: 'applyPromo',
-                                            promoCode: promoCode
+                                            action: 'applyCoupon',
+                                            couponCode: couponCode,
+                                            orderTotal: orderTotal,
+                                            csrfToken: '${csrfToken}'
                                         },
                                         success: function (response) {
-                                            showNotification('Áp dụng mã khuyến mãi thành công!', 'success');
-                                            $('#promoCodeModal').modal('hide');
+                                            showNotification('Áp dụng mã giảm giá thành công!', 'success');
+                                            $('#couponModal').modal('hide');
                                             location.reload();
                                         },
                                         error: function (xhr) {
-                                            showNotification('Lỗi khi áp dụng mã khuyến mãi: ' + xhr.responseText, 'error');
+                                            showNotification('Lỗi khi áp dụng mã giảm giá: ' + xhr.responseText, 'error');
+                                        },
+                                        complete: function() {
+                                            applyBtn.innerHTML = originalText;
+                                            applyBtn.disabled = false;
                                         }
                                     });
                                 }
 
-                                // Show Confirm Modal
+                                function removeCoupon() {
+                                    $.ajax({
+                                        url: '${pageContext.request.contextPath}/checkout',
+                                        type: 'POST',
+                                        data: {
+                                            action: 'removeCoupon',
+                                            csrfToken: '${csrfToken}'
+                                        },
+                                        success: function (response) {
+                                            showNotification('Đã hủy áp dụng mã giảm giá!', 'info');
+                                            location.reload();
+                                        },
+                                        error: function (xhr) {
+                                            showNotification('Lỗi khi hủy mã giảm giá: ' + xhr.responseText, 'error');
+                                        }
+                                    });
+                                }
+
+                                function selectCoupon(couponCode) {
+                                    document.getElementById('couponCodeInput').value = couponCode;
+                                    applyCoupon();
+                                }
+
+                                function loadAvailableCoupons() {
+                                    const orderTotal = <c:out value="${originalTotal != null ? originalTotal : cartTotal}" default="0"/>;
+
+                                    $('#availableCoupons').html('<div class="text-center py-3"><i class="uil uil-spinner-alt spin"></i> Đang tải...</div>');
+
+                                    $.ajax({
+                                        url: '${pageContext.request.contextPath}/checkout',
+                                        type: 'GET',
+                                        data: {
+                                            loadCoupons: true,
+                                            orderTotal: orderTotal
+                                        },
+                                        success: function (response) {
+                                            // Reload page to get updated coupon list
+                                            location.reload();
+                                        },
+                                        error: function (xhr) {
+                                            $('#availableCoupons').html('<div class="text-center py-3 text-danger"><i class="uil uil-exclamation-triangle"></i> Lỗi khi tải mã giảm giá</div>');
+                                        }
+                                    });
+                                }
+
+                                // ===== COUPON MANAGEMENT FUNCTIONS - END =====
+
                                 function showConfirmModal() {
-                                    // Sao chép tóm tắt đơn hàng vào modal
                                     const summary = document.getElementById('order-summary').innerHTML;
                                     document.getElementById('confirm-order-summary').innerHTML = summary;
 
-                                    // Lấy phương thức thanh toán đã chọn
                                     const selectedPayment = document.querySelector('input[name="paymentmethod"]:checked').nextElementSibling.textContent;
                                     document.getElementById('confirm-payment-method').textContent = selectedPayment;
 
-                                    // Lấy tổng giá
                                     const totalAmount = document.getElementById('total-amount').textContent;
                                     document.getElementById('confirm-total-amount').textContent = totalAmount;
 
-                                    // Hiện modal
                                     $('#confirmPaymentModal').modal('show');
                                 }
 
-                                // Submit Form sau xác nhận
                                 function submitCheckoutForm() {
                                     document.getElementById('checkoutForm').submit();
                                 }
 
-                                // Toggle Payment Method Description
                                 $(document).ready(function () {
                                     $('input[name="paymentmethod"]').on('change', function () {
                                         const method = $(this).val();
                                         $('.payment-description').hide();
                                         $('#payment-' + method).show();
                                     });
-                                    // Mặc định hiển thị cho COD
                                     $('#payment-cod').show();
                                 });
             </script>
-            // Apply Promo Code
-            function applyPromoCode() {
-                const promoCode = document.getElementById('promoCodeInput').value.trim();
-                if (!promoCode) {
-                    showNotification('Vui lòng nhập mã khuyến mãi!', 'error');
-                    return;
-                }
-                applyCoupon(promoCode);
-            }
 
-            // Apply Coupon
-            function applyCoupon(couponCode) {
-                <c:set var="orderAmountValue" value="${(cartTotal != null ? cartTotal : 0) + (deliveryCharge != null ? deliveryCharge : 30000)}" />
-                const orderAmount = ${orderAmountValue};
-                $('.loading-spinner').show();
-                $.ajax({
-                    url: '${pageContext.request.contextPath}/user/coupons',
-                    type: 'GET',
-                    data: {
-                        action: 'validate',
-                        couponCode: couponCode,
-                        orderAmount: orderAmount,
-                        format: 'json'
-                    },
-                    success: function(response) {
-                        $('.loading-spinner').hide();
-                        if (response.valid) {
-                            showNotification('Áp dụng mã giảm giá thành công! Giảm: ' + formatVND(response.discount), 'success');
-                            $('#discount-amount').text(formatVND(response.discount));
-                            $('#total-amount').text(formatVND(orderAmount - response.discount));
-                            $('#appliedCouponCode').val(couponCode);
-                            $('#appliedDiscount').val(response.discount);
-                            $('#couponCodeInput').val(couponCode);
-                            $('#promoCodeModal').modal('hide');
-                            // Lưu vào session
-                            $.ajax({
-                                url: '${pageContext.request.contextPath}/cart',
-                                type: 'POST',
-                                data: {
-                                    action: 'applyPromo',
-                                    promoCode: couponCode
-                                },
-                                success: function() {
-                                    // Session đã được cập nhật
-                                }
-                            });
-                        } else {
-                            showNotification('Lỗi: ' + response.message, 'error');
-                        }
-                    },
-                    error: function() {
-                        $('.loading-spinner').hide();
-                        showNotification('Lỗi hệ thống khi áp dụng mã giảm giá.', 'error');
-                    }
-                });
-            }
 
-            // Show Available Coupons
-            function showAvailableCoupons() {
-                const orderAmount = ${orderAmountValue};
-                $('.loading-spinner').show();
-                $.ajax({
-                    url: '${pageContext.request.contextPath}/user/coupons',
-                    type: 'GET',
-                    data: {
-                        action: 'available',
-                        orderAmount: orderAmount,
-                        format: 'json'
-                    },
-                    success: function(response) {
-                        $('.loading-spinner').hide();
-                        const coupons = response.coupons;
-                        let html = '';
-                        if (coupons.length > 0) {
-                            html = '<h5>Mã giảm giá khả dụng:</h5>';
-                            coupons.forEach(coupon => {
-                                html += `<div class="coupon-item" onclick="$('#couponCodeInput').val('${coupon.code}'); applyCoupon('${coupon.code}');">
-                                    <strong>${coupon.code}</strong> - ${coupon.name}
-                                    (${coupon.discountType == 'Percentage' ? coupon.discountValue + '%' : formatVND(coupon.discountValue)})
-                                    <br><small>Đơn tối thiểu: ${formatVND(coupon.minOrderAmount)}</small>
-                                    ${coupon.description ? '<br><small>' + coupon.description + '</small>' : ''}
-                                </div>`;
-                            });
-                        } else {
-                            html = '<p>Không có mã giảm giá khả dụng.</p>';
-                        }
-                        $('#availableCoupons').html(html);
-                    },
-                    error: function() {
-                        $('.loading-spinner').hide();
-                        $('#availableCoupons').html('<p>Lỗi khi tải mã giảm giá.</p>');
-                    }
-                });
-            }
 
-            // Show Confirm Modal
-            function showConfirmModal() {
-                const summary = document.getElementById('order-summary').innerHTML;
-                document.getElementById('confirm-order-summary').innerHTML = summary;
-                const selectedPayment = document.querySelector('input[name="paymentmethod"]:checked').nextElementSibling.textContent;
-                document.getElementById('confirm-payment-method').textContent = selectedPayment;
-                const totalAmount = document.getElementById('total-amount').textContent;
-                document.getElementById('confirm-total-amount').textContent = totalAmount;
-                $('#confirmPaymentModal').modal('show');
-            }
 
-            // Submit Form sau xác nhận
-            function submitCheckoutForm() {
-                const couponCode = $('#appliedCouponCode').val();
-                if (couponCode) {
-                    $.ajax({
-                        url: '${pageContext.request.contextPath}/user/coupons',
-                        type: 'POST',
-                        data: {
-                            action: 'apply',
-                            couponCode: couponCode,
-                            orderId: 0, // OrderId sẽ được tạo trong CheckoutServlet
-                            orderAmount: ${orderAmountValue},
-                            format: 'json'
-                        },
-                        async: false,
-                        success: function(response) {
-                            if (!response.success) {
-                                showNotification('Lỗi khi áp dụng mã giảm giá: ' + response.message, 'error');
-                                return;
-                            }
-                        },
-                        error: function() {
-                            showNotification('Lỗi hệ thống khi áp dụng mã giảm giá.', 'error');
-                            return;
-                        }
-                    });
-                }
-                document.getElementById('checkoutForm').submit();
-            }
 
-            // Toggle Payment Method Description
-            $(document).ready(function() {
-                $('input[name="paymentmethod"]').on('change', function() {
-                    const method = $(this).val().toLowerCase();
-                    $('.payment-description').hide();
-                    $('#payment-' + method).show();
-                });
-                $('#payment-cod').show();
-            });
+
         </script>
     </body>
 </html>

@@ -2,6 +2,7 @@ package controller.user;
 
 import dao.UserDAO;
 import model.User;
+import service.UserCouponService;
 import util.PasswordUtil;
 import util.ValidationUtil;
 
@@ -19,11 +20,13 @@ import java.util.Calendar;
 public class RegisterServlet extends HttpServlet {
 
     private UserDAO userDAO;
+    private UserCouponService userCouponService;
 
     @Override
     public void init() {
         System.out.println("Initializing RegisterServlet...");
         userDAO = new UserDAO();
+        userCouponService = new UserCouponService();
         // Test connection
         if (userDAO.testConnection()) {
             System.out.println("UserDAO initialized successfully");
@@ -285,15 +288,32 @@ public class RegisterServlet extends HttpServlet {
                 session.removeAttribute("verifyCode");
                 session.removeAttribute("verifyCodeTime");
                 session.removeAttribute("sendAttempts");
-                
+
                 // Lưu user vào session để hiển thị tên trên header
                 session.setAttribute("user", user);
-                
+
                 System.out.println("User saved successfully with ID: " + user.getUserId());
-                
+
+                // Auto-assign welcome coupon to new user
+                try {
+                    // Get the saved user to get the actual UserID
+                    User savedUser = userDAO.findByEmail(user.getEmail());
+                    if (savedUser != null) {
+                        boolean couponAssigned = userCouponService.assignWelcomeCoupon(savedUser.getUserId());
+                        if (couponAssigned) {
+                            System.out.println("Welcome coupon assigned to new user: " + savedUser.getUserId());
+                        } else {
+                            System.out.println("Failed to assign welcome coupon to user: " + savedUser.getUserId());
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error assigning welcome coupon: " + e.getMessage());
+                    // Don't fail registration if coupon assignment fails
+                }
+
                 // Trả về JSON response cho AJAX
                 response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().write("{\"success\": true, \"message\": \"Đăng ký thành công!\"}");
+                response.getWriter().write("{\"success\": true, \"message\": \"Đăng ký thành công! Bạn đã nhận được coupon chào mừng.\"}");
 
             } else {
                 System.err.println("Failed to save user to database");

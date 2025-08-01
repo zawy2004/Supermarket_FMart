@@ -6,7 +6,12 @@ import model.Coupon;
 import model.CouponUsage;
 import util.CouponValidationUtil;
 import util.CouponValidationUtil.ValidationException;
+import util.TransactionManager;
+import config.DatabaseConfig;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,9 +64,19 @@ public class CouponService {
         return couponDAO.getCouponById(couponId);
     }
 
-    public void validateCouponForUser(String couponCode, int userId, double orderAmount) 
+    /**
+     * UNIFIED validation for both personal and global coupons
+     */
+    public void validateCouponForUser(String couponCode, int userId, double orderAmount)
             throws SQLException, ValidationException {
-        
+
+        // Step 1: Check if user has personal coupon first
+        if (hasPersonalCoupon(userId, couponCode)) {
+            validatePersonalCoupon(userId, couponCode, orderAmount);
+            return;
+        }
+
+        // Step 2: Validate as global coupon (original logic)
         Coupon coupon = getCouponByCode(couponCode);
         if (coupon == null) {
             throw new ValidationException("Mã coupon không tồn tại");
@@ -69,12 +84,90 @@ public class CouponService {
 
         // Get user's usage count for this coupon
         int userUsageCount = couponUsageDAO.getUserCouponUsageCount(userId, coupon.getCouponId());
-        
+
         // Validate coupon usage
         CouponValidationUtil.validateCouponUsage(coupon, orderAmount, userUsageCount);
     }
 
+    /**
+     * Check if user has personal coupon
+     */
+    private boolean hasPersonalCoupon(int userId, String couponCode) throws SQLException {
+        String sql = """
+            SELECT 1 FROM UserCoupons uc
+            INNER JOIN Coupons c ON uc.CouponID = c.CouponID
+            WHERE uc.UserID = ? AND c.CouponCode = ?
+            AND uc.IsUsed = 0
+            AND c.IsActive = 1
+            AND (uc.ExpiryDate IS NULL OR uc.ExpiryDate > GETDATE())
+            """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            stmt.setString(2, couponCode);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    /**
+     * Validate personal coupon
+     */
+    private void validatePersonalCoupon(int userId, String couponCode, double orderAmount)
+            throws SQLException, ValidationException {
+
+        String sql = """
+            SELECT c.*, uc.ExpiryDate as PersonalExpiryDate
+            FROM UserCoupons uc
+            INNER JOIN Coupons c ON uc.CouponID = c.CouponID
+            WHERE uc.UserID = ? AND c.CouponCode = ?
+            AND uc.IsUsed = 0
+            AND c.IsActive = 1
+            AND (uc.ExpiryDate IS NULL OR uc.ExpiryDate > GETDATE())
+            """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            stmt.setString(2, couponCode);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    throw new ValidationException("Bạn không có coupon cá nhân này hoặc coupon đã hết hạn");
+                }
+
+                // Check minimum order amount
+                double minOrderAmount = rs.getDouble("MinOrderAmount");
+                if (minOrderAmount > 0 && orderAmount < minOrderAmount) {
+                    throw new ValidationException("Đơn hàng tối thiểu " + String.format("%,.0f", minOrderAmount) + " VND để sử dụng coupon này");
+                }
+
+                // Check coupon validity period
+                java.sql.Date startDate = rs.getDate("StartDate");
+                java.sql.Date endDate = rs.getDate("EndDate");
+                java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+
+                if (startDate != null && now.before(startDate)) {
+                    throw new ValidationException("Coupon chưa có hiệu lực");
+                }
+
+                if (endDate != null && now.after(endDate)) {
+                    throw new ValidationException("Coupon đã hết hạn sử dụng");
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculate discount - UNIFIED for both personal and global coupons
+     */
     public double calculateDiscount(String couponCode, double orderAmount) throws SQLException, ValidationException {
+        // Try to get coupon from database (works for both personal and global)
         Coupon coupon = getCouponByCode(couponCode);
         if (coupon == null) {
             throw new ValidationException("Mã coupon không tồn tại");
@@ -86,11 +179,10 @@ public class CouponService {
     public double applyCouponToOrder(int orderId, String couponCode, int userId, double orderAmount)
             throws SQLException, ValidationException {
 
-        // Step 1: Validate coupon for user
-        validateCouponForUser(couponCode, userId, orderAmount);
-
-        // Step 2: Apply coupon using stored procedure
-        // Stored procedure handles all validation and logging internally
+        // CRITICAL FIX: Let procedure handle all validation to avoid double validation
+        // Procedure will validate both personal and global coupons appropriately
+        // Note: orderAmount parameter is kept for API compatibility but not used
+        // The procedure will get order amount from database directly
         try {
             double appliedDiscount = couponDAO.applyCouponToOrder(orderId, couponCode, userId);
 
@@ -102,9 +194,73 @@ public class CouponService {
             return appliedDiscount;
 
         } catch (SQLException e) {
+            // Convert SQL errors to ValidationException for consistent error handling
+            String errorMessage = e.getMessage();
+            if (errorMessage.contains("Mã giảm giá không hợp lệ") ||
+                errorMessage.contains("đã hết hạn") ||
+                errorMessage.contains("đã hết số lần sử dụng") ||
+                errorMessage.contains("đạt giới hạn") ||
+                errorMessage.contains("không đủ để áp dụng")) {
+                throw new ValidationException(errorMessage);
+            }
+
             logger.log(Level.SEVERE, "Error applying coupon to order", e);
             throw e;
         }
+    }
+
+    /**
+     * Apply coupon to order with transaction management
+     */
+    public double applyCouponToOrderTransactional(int orderId, String couponCode, int userId, double orderAmount)
+            throws SQLException, ValidationException {
+
+        return TransactionManager.executeInTransaction(conn -> {
+            try {
+                // Step 1: Get and validate coupon
+                Coupon coupon = getCouponByCode(couponCode);
+                if (coupon == null) {
+                    throw new SQLException("Coupon not found: " + couponCode);
+                }
+
+                // Step 2: Validate coupon for user and order
+                if (!CouponValidationUtil.isValidForOrder(coupon, userId, orderAmount)) {
+                    String errorMessage = CouponValidationUtil.getValidationErrorMessage(coupon, userId, orderAmount);
+                    throw new SQLException("Coupon validation failed: " + errorMessage);
+                }
+
+                // Step 3: Calculate discount
+                double discount = CouponValidationUtil.calculateDiscount(coupon, orderAmount);
+
+                // Step 4: Record coupon usage
+                CouponUsage usage = new CouponUsage();
+                usage.setCouponID(coupon.getCouponId());
+                usage.setUserID(userId);
+                usage.setOrderID(orderId);
+                usage.setDiscountAmount(discount);
+                usage.setUsedDate(new java.util.Date());
+
+                boolean usageRecorded = couponUsageDAO.logCouponUsage(usage);
+                if (!usageRecorded) {
+                    throw new SQLException("Failed to record coupon usage");
+                }
+
+                // Step 5: Update coupon usage count
+                couponDAO.incrementUsageCount(coupon.getCouponId());
+
+                logger.info("Successfully applied coupon " + couponCode + " to order " + orderId +
+                           " for user " + userId + ", discount: " + discount);
+
+                return discount;
+
+            } catch (Exception e) {
+                if (e instanceof SQLException) {
+                    throw (SQLException) e;
+                } else {
+                    throw new SQLException("Error applying coupon: " + e.getMessage(), e);
+                }
+            }
+        });
     }
 
     public double applyCouponManually(int orderId, String couponCode, int userId, double orderAmount)

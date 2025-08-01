@@ -487,6 +487,66 @@ public boolean updateUserInfo(User user) {
     return false;
 }
 
+/**
+ * Find user by ID
+ */
+public User findById(int userId) {
+    String sql = "SELECT u.*, r.RoleName FROM Users u LEFT JOIN Roles r ON u.RoleID = r.RoleID WHERE u.UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, userId);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error finding user by ID: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return null;
+}
+
+/**
+ * Find user by email
+ */
+public User findByEmail(String email) {
+    String sql = "SELECT u.*, r.RoleName FROM Users u LEFT JOIN Roles r ON u.RoleID = r.RoleID WHERE u.Email = ?";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, email);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error finding user by email: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return null;
+}
+
+/**
+ * Update last login date
+ */
+public boolean updateLastLoginDate(int userId) {
+    String sql = "UPDATE Users SET LastLoginDate = GETDATE() WHERE UserID = ?";
+    try (Connection conn = DatabaseConfig.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setInt(1, userId);
+        int rows = ps.executeUpdate();
+        return rows > 0;
+    } catch (SQLException e) {
+        System.err.println("Error updating last login date: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return false;
+}
+
 public boolean checkUserPassword(int userId, String rawPassword) {
     String sql = "SELECT PasswordHash FROM Users WHERE UserID = ?";
     try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {

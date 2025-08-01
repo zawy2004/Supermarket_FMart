@@ -440,6 +440,22 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ticket-alt"></i> Coupons
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/user/coupons?action=list">
+                                        <i class="fas fa-list"></i> Tất cả Coupon
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/user/coupons?action=my-coupons">
+                                        <i class="fas fa-wallet"></i> Coupon của tôi
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/user/coupons?action=history">
+                                        <i class="fas fa-history"></i> Lịch sử sử dụng
+                                    </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Blog
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">

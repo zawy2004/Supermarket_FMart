@@ -221,7 +221,130 @@ public class CouponDAO {
     }
 
  
+    /**
+     * Apply coupon to order - INTEGRATED VERSION using stored procedure
+     * This method now integrates both CouponUsage and UserCoupons systems
+     * Compatible with original sp_ApplyCouponToOrder signature
+     */
     public double applyCouponToOrder(int orderId, String couponCode, int createdBy) throws SQLException {
+        // LOGIC: Check personal coupon first, then fallback to global coupon
+        // Step 1: Try to use personal coupon first
+        try {
+            if (hasPersonalCoupon(createdBy, couponCode)) {
+                return applyPersonalCoupon(orderId, couponCode, createdBy);
+            }
+        } catch (SQLException e) {
+            logger.warning("Error checking personal coupon, falling back to global: " + e.getMessage());
+        }
+
+        // Step 2: Fallback to global coupon using original procedure
+        return applyGlobalCoupon(orderId, couponCode, createdBy);
+    }
+
+    /**
+     * Check if user has personal coupon
+     */
+    private boolean hasPersonalCoupon(int userId, String couponCode) throws SQLException {
+        String sql = """
+            SELECT 1 FROM UserCoupons uc
+            INNER JOIN Coupons c ON uc.CouponID = c.CouponID
+            WHERE uc.UserID = ? AND c.CouponCode = ?
+            AND uc.IsUsed = 0
+            AND c.IsActive = 1
+            AND (uc.ExpiryDate IS NULL OR uc.ExpiryDate > GETDATE())
+            """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            stmt.setString(2, couponCode);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    /**
+     * Apply personal coupon using sp_UseCoupon + manual order update
+     */
+    private double applyPersonalCoupon(int orderId, String couponCode, int userId) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DatabaseConfig.getConnection();
+            conn.setAutoCommit(false);
+
+            // Step 1: Get personal coupon details and mark as used
+            double discountValue = 0;
+            String discountType = "";
+
+            // Get coupon details first
+            String getCouponSql = """
+                SELECT c.DiscountValue, c.DiscountType, uc.UserCouponID
+                FROM UserCoupons uc
+                INNER JOIN Coupons c ON uc.CouponID = c.CouponID
+                WHERE uc.UserID = ? AND c.CouponCode = ?
+                AND uc.IsUsed = 0
+                AND c.IsActive = 1
+                AND (uc.ExpiryDate IS NULL OR uc.ExpiryDate > GETDATE())
+                """;
+
+            int userCouponId = 0;
+            try (PreparedStatement stmt = conn.prepareStatement(getCouponSql)) {
+                stmt.setInt(1, userId);
+                stmt.setString(2, couponCode);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        discountValue = rs.getDouble("DiscountValue");
+                        discountType = rs.getString("DiscountType");
+                        userCouponId = rs.getInt("UserCouponID");
+                    }
+                }
+            }
+
+            if (userCouponId == 0) {
+                throw new SQLException("Valid personal coupon not found for user");
+            }
+
+            // Mark personal coupon as used
+            String markUsedSql = "UPDATE UserCoupons SET IsUsed = 1, UsedDate = GETDATE() WHERE UserCouponID = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(markUsedSql)) {
+                stmt.setInt(1, userCouponId);
+                stmt.executeUpdate();
+            }
+
+            // Step 2: Calculate discount amount
+            double orderTotal = getOrderTotal(conn, orderId);
+            double discountAmount = calculateDiscountAmount(discountType, discountValue, orderTotal);
+
+            // Step 3: Update order with discount (same logic as sp_ApplyCouponToOrder)
+            updateOrderWithDiscount(conn, orderId, discountAmount);
+
+            // Step 4: Log to CouponUsage
+            logCouponUsage(conn, couponCode, orderId, discountAmount);
+
+            conn.commit();
+            logger.info("Applied personal coupon " + couponCode + " to order " + orderId + ", discount: " + discountAmount);
+            return discountAmount;
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) { /* ignore */ }
+            }
+            throw e;
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { /* ignore */ }
+            }
+        }
+    }
+
+    /**
+     * Apply global coupon using original sp_ApplyCouponToOrder
+     */
+    private double applyGlobalCoupon(int orderId, String couponCode, int createdBy) throws SQLException {
         String sql = "{call sp_ApplyCouponToOrder(?, ?, ?)}";
 
         try (Connection conn = DatabaseConfig.getConnection();
@@ -234,18 +357,20 @@ public class CouponDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     double discount = rs.getDouble("AppliedDiscount");
-                    logger.info("Applied coupon " + couponCode + " to order " + orderId + ", discount: " + discount);
+                    logger.info("Applied global coupon " + couponCode + " to order " + orderId + ", discount: " + discount);
                     return discount;
                 }
             }
 
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error applying coupon to order. Order: " + orderId + ", Coupon: " + couponCode, e);
+            logger.log(Level.SEVERE, "Error applying global coupon. Order: " + orderId + ", Coupon: " + couponCode, e);
             throw e;
         }
 
         return 0.0;
     }
+
+    // All methods now use integrated stored procedure
 
     /**
      * Get user's usage count for a specific coupon
@@ -503,5 +628,93 @@ public class CouponDAO {
         coupon.setCreatedBy(rs.getInt("CreatedBy"));
         coupon.setCreatedDate(rs.getDate("CreatedDate"));
         return coupon;
+    }
+
+    // =====================================================
+    // HELPER METHODS FOR PERSONAL COUPON INTEGRATION
+    // =====================================================
+
+    /**
+     * Get order total from database
+     */
+    private double getOrderTotal(Connection conn, int orderId) throws SQLException {
+        String sql = "SELECT FinalAmount FROM Orders WHERE OrderID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("FinalAmount");
+                }
+            }
+        }
+        throw new SQLException("Order not found: " + orderId);
+    }
+
+    /**
+     * Calculate discount amount (same logic as sp_ApplyCouponToOrder)
+     */
+    private double calculateDiscountAmount(String discountType, double discountValue, double orderTotal) {
+        double discountAmount = 0;
+
+        if ("Percentage".equals(discountType)) {
+            discountAmount = orderTotal * (discountValue / 100);
+        } else if ("Fixed".equals(discountType)) {
+            discountAmount = discountValue;
+        }
+
+        // Don't exceed order total
+        if (discountAmount > orderTotal) {
+            discountAmount = orderTotal;
+        }
+
+        return discountAmount;
+    }
+
+    /**
+     * Update order with discount (same logic as sp_ApplyCouponToOrder)
+     */
+    private void updateOrderWithDiscount(Connection conn, int orderId, double discountAmount) throws SQLException {
+        String sql = "UPDATE Orders SET DiscountAmount = ?, FinalAmount = FinalAmount - ? WHERE OrderID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDouble(1, discountAmount);
+            stmt.setDouble(2, discountAmount);
+            stmt.setInt(3, orderId);
+            stmt.executeUpdate();
+        }
+    }
+
+    /**
+     * Log coupon usage (same logic as sp_ApplyCouponToOrder)
+     */
+    private void logCouponUsage(Connection conn, String couponCode, int orderId, double discountAmount) throws SQLException {
+        // Get coupon ID
+        int couponId = 0;
+        String getCouponIdSql = "SELECT CouponID FROM Coupons WHERE CouponCode = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(getCouponIdSql)) {
+            stmt.setString(1, couponCode);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    couponId = rs.getInt("CouponID");
+                }
+            }
+        }
+
+        if (couponId > 0) {
+            // Log usage
+            String logSql = "INSERT INTO CouponUsage (CouponID, OrderID, UsedDate, DiscountAmount) VALUES (?, ?, GETDATE(), ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(logSql)) {
+                stmt.setInt(1, couponId);
+                stmt.setInt(2, orderId);
+                stmt.setDouble(3, discountAmount);
+                stmt.executeUpdate();
+            }
+
+            // Update usage count
+            String updateCountSql = "UPDATE Coupons SET UsageCount = UsageCount + 1 WHERE CouponID = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(updateCountSql)) {
+                stmt.setInt(1, couponId);
+                stmt.executeUpdate();
+            }
+        }
     }
 }

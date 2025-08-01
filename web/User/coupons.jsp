@@ -8,12 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${pageTitle} - FMart</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="User/vendor/unicons-2.0.1/css/unicons.css" rel="stylesheet">
-    <link href="User/css/style.css" rel="stylesheet">
-    <link href="User/css/responsive.css" rel="stylesheet">
-    <link href="User/css/night-mode.css" rel="stylesheet">
-    <link href="User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/User/vendor/unicons-2.0.1/css/unicons.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/User/css/style.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/User/css/responsive.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/User/css/night-mode.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/User/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .coupon-container {
             padding: 20px 0;
@@ -157,16 +157,16 @@
                 <div class="row">
                     <c:forEach var="coupon" items="${coupons}">
                         <div class="col-md-6 col-lg-4">
-                            <div class="coupon-card ${coupon.isExpired ? 'coupon-expired' : ''}">
+                            <div class="coupon-card ${coupon.expired ? 'coupon-expired' : ''}">
                                 <div class="coupon-header">
-                                    <div class="coupon-code">${coupon.code}</div>
-                                    <button class="copy-btn" onclick="copyCouponCode('${coupon.code}')" 
-                                            ${coupon.isExpired ? 'disabled' : ''}>
+                                    <div class="coupon-code">${coupon.couponCode}</div>
+                                    <button class="copy-btn" onclick="copyCouponCode('${coupon.couponCode}')"
+                                            ${coupon.expired ? 'disabled' : ''}>
                                         <i class="fas fa-copy"></i> Copy
                                     </button>
                                 </div>
-                                
-                                <div class="coupon-name">${coupon.name}</div>
+
+                                <div class="coupon-name">${coupon.couponName}</div>
                                 
                                 <div class="coupon-discount">
                                     <c:choose>
@@ -204,7 +204,7 @@
                                     <c:if test="${coupon.usageLimit > 0}">
                                         <div class="coupon-detail-item">
                                             <i class="fas fa-users"></i>
-                                            <span>Còn lại: ${coupon.usageLimit - coupon.usedCount}</span>
+                                            <span>Còn lại: ${coupon.usageLimit - coupon.usageCount}</span>
                                         </div>
                                     </c:if>
                                 </div>

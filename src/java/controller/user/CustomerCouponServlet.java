@@ -3,7 +3,9 @@ package controller.user;
 import model.Coupon;
 import model.CouponUsage;
 import model.User;
+import model.UserCoupon;
 import service.CouponService;
+import service.UserCouponService;
 import util.CouponValidationUtil.ValidationException;
 
 import java.io.IOException;
@@ -320,7 +322,23 @@ public class CustomerCouponServlet extends HttpServlet {
         return "CustomerCouponServlet - Handles customer coupon operations";
     }
 
-    private void handleListUserCoupons(HttpServletRequest request, HttpServletResponse response, User currentUser) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    /**
+     * Display user's personal coupons
+     */
+    private void handleListUserCoupons(HttpServletRequest request, HttpServletResponse response, User currentUser)
+            throws ServletException, IOException, SQLException {
+
+        UserCouponService userCouponService = new UserCouponService();
+
+        // Get user's personal coupons
+        List<UserCoupon> userCoupons = userCouponService.getUserCouponHistory(currentUser.getUserId());
+        UserCouponService.UserCouponStats stats = userCouponService.getUserCouponStats(currentUser.getUserId());
+
+        request.setAttribute("userCoupons", userCoupons);
+        request.setAttribute("couponStats", stats);
+        request.setAttribute("pageTitle", "Coupon của tôi");
+
+        // Use the my-coupons.jsp we created
+        request.getRequestDispatcher("/User/my-coupons.jsp").forward(request, response);
     }
 }
