@@ -280,8 +280,11 @@ public class CouponDAO {
             String discountType = "";
 
             // Get coupon details first
+            // Get coupon details first (with all validation fields)
             String getCouponSql = """
                 SELECT c.DiscountValue, c.DiscountType, uc.UserCouponID
+                SELECT c.DiscountValue, c.DiscountType, c.MinOrderAmount, c.MaxDiscountAmount,
+                       uc.UserCouponID, c.CouponID
                 FROM UserCoupons uc
                 INNER JOIN Coupons c ON uc.CouponID = c.CouponID
                 WHERE uc.UserID = ? AND c.CouponCode = ?
@@ -291,6 +294,10 @@ public class CouponDAO {
                 """;
 
             int userCouponId = 0;
+            int couponId = 0;
+            double minOrderAmount = 0;
+            double maxDiscountAmount = 0;
+
             try (PreparedStatement stmt = conn.prepareStatement(getCouponSql)) {
                 stmt.setInt(1, userId);
                 stmt.setString(2, couponCode);
@@ -299,7 +306,10 @@ public class CouponDAO {
                     if (rs.next()) {
                         discountValue = rs.getDouble("DiscountValue");
                         discountType = rs.getString("DiscountType");
+                        minOrderAmount = rs.getDouble("MinOrderAmount");
+                        maxDiscountAmount = rs.getDouble("MaxDiscountAmount");
                         userCouponId = rs.getInt("UserCouponID");
+                        couponId = rs.getInt("CouponID");
                     }
                 }
             }
@@ -308,6 +318,17 @@ public class CouponDAO {
                 throw new SQLException("Valid personal coupon not found for user");
             }
 
+            // Step 2: Get order total and validate
+            double orderTotal = getOrderTotal(conn, orderId);
+
+            // Validate minimum order amount (same as sp_ApplyCouponToOrder)
+            if (minOrderAmount > 0 && orderTotal < minOrderAmount) {
+                throw new SQLException("Tổng giá trị đơn hàng không đủ để áp dụng mã giảm giá");
+            }
+
+            // Calculate discount amount with proper validation
+            double discountAmount = calculateDiscountAmount(discountType, discountValue, orderTotal, maxDiscountAmount);
+
             // Mark personal coupon as used
             String markUsedSql = "UPDATE UserCoupons SET IsUsed = 1, UsedDate = GETDATE() WHERE UserCouponID = ?";
             try (PreparedStatement stmt = conn.prepareStatement(markUsedSql)) {
@@ -315,15 +336,11 @@ public class CouponDAO {
                 stmt.executeUpdate();
             }
 
-            // Step 2: Calculate discount amount
-            double orderTotal = getOrderTotal(conn, orderId);
-            double discountAmount = calculateDiscountAmount(discountType, discountValue, orderTotal);
-
             // Step 3: Update order with discount (same logic as sp_ApplyCouponToOrder)
             updateOrderWithDiscount(conn, orderId, discountAmount);
 
-            // Step 4: Log to CouponUsage
-            logCouponUsage(conn, couponCode, orderId, discountAmount);
+            // Step 4: Log to CouponUsage (use couponId directly for efficiency)
+            logCouponUsageWithId(conn, couponId, orderId, discountAmount);
 
             conn.commit();
             logger.info("Applied personal coupon " + couponCode + " to order " + orderId + ", discount: " + discountAmount);
@@ -654,12 +671,18 @@ public class CouponDAO {
      * Calculate discount amount (same logic as sp_ApplyCouponToOrder)
      */
     private double calculateDiscountAmount(String discountType, double discountValue, double orderTotal) {
+    private double calculateDiscountAmount(String discountType, double discountValue, double orderTotal, double maxDiscountAmount) {
         double discountAmount = 0;
 
         if ("Percentage".equals(discountType)) {
             discountAmount = orderTotal * (discountValue / 100);
         } else if ("Fixed".equals(discountType)) {
             discountAmount = discountValue;
+        }
+
+        // Apply max discount limit (same as sp_ApplyCouponToOrder)
+        if (maxDiscountAmount > 0 && discountAmount > maxDiscountAmount) {
+            discountAmount = maxDiscountAmount;
         }
 
         // Don't exceed order total
@@ -684,6 +707,27 @@ public class CouponDAO {
     }
 
     /**
+     * Log coupon usage with couponId (more efficient)
+     */
+    private void logCouponUsageWithId(Connection conn, int couponId, int orderId, double discountAmount) throws SQLException {
+        // Log usage
+        String logSql = "INSERT INTO CouponUsage (CouponID, OrderID, UsedDate, DiscountAmount) VALUES (?, ?, GETDATE(), ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(logSql)) {
+            stmt.setInt(1, couponId);
+            stmt.setInt(2, orderId);
+            stmt.setDouble(3, discountAmount);
+            stmt.executeUpdate();
+        }
+
+        // Update usage count
+        String updateCountSql = "UPDATE Coupons SET UsageCount = UsageCount + 1 WHERE CouponID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(updateCountSql)) {
+            stmt.setInt(1, couponId);
+            stmt.executeUpdate();
+        }
+    }
+
+    /**
      * Log coupon usage (same logic as sp_ApplyCouponToOrder)
      */
     private void logCouponUsage(Connection conn, String couponCode, int orderId, double discountAmount) throws SQLException {
@@ -700,21 +744,7 @@ public class CouponDAO {
         }
 
         if (couponId > 0) {
-            // Log usage
-            String logSql = "INSERT INTO CouponUsage (CouponID, OrderID, UsedDate, DiscountAmount) VALUES (?, ?, GETDATE(), ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(logSql)) {
-                stmt.setInt(1, couponId);
-                stmt.setInt(2, orderId);
-                stmt.setDouble(3, discountAmount);
-                stmt.executeUpdate();
-            }
-
-            // Update usage count
-            String updateCountSql = "UPDATE Coupons SET UsageCount = UsageCount + 1 WHERE CouponID = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(updateCountSql)) {
-                stmt.setInt(1, couponId);
-                stmt.executeUpdate();
-            }
+            logCouponUsageWithId(conn, couponId, orderId, discountAmount);
         }
     }
 }
