@@ -670,7 +670,6 @@ public class CouponDAO {
     /**
      * Calculate discount amount (same logic as sp_ApplyCouponToOrder)
      */
-    private double calculateDiscountAmount(String discountType, double discountValue, double orderTotal) {
     private double calculateDiscountAmount(String discountType, double discountValue, double orderTotal, double maxDiscountAmount) {
         double discountAmount = 0;
 
@@ -746,5 +745,37 @@ public class CouponDAO {
         if (couponId > 0) {
             logCouponUsageWithId(conn, couponId, orderId, discountAmount);
         }
+    }
+
+    /**
+     * Get optimized coupon statistics using single SQL query
+     */
+    public service.CouponService.CouponStatistics getCouponStatistics() throws SQLException {
+        String sql = """
+            SELECT
+                COUNT(*) as TotalCoupons,
+                SUM(CASE WHEN IsActive = 1 AND (EndDate IS NULL OR EndDate > GETDATE()) THEN 1 ELSE 0 END) as ActiveCoupons,
+                SUM(CASE WHEN IsActive = 1 AND EndDate IS NOT NULL AND EndDate <= GETDATE() THEN 1 ELSE 0 END) as ExpiredCoupons,
+                SUM(CASE WHEN UsageCount > 0 THEN 1 ELSE 0 END) as UsedCoupons,
+                ISNULL((SELECT SUM(DiscountAmount) FROM CouponUsage), 0) as TotalDiscountGiven
+            FROM Coupons
+            """;
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return new service.CouponService.CouponStatistics(
+                    rs.getInt("TotalCoupons"),
+                    rs.getInt("ActiveCoupons"),
+                    rs.getInt("ExpiredCoupons"),
+                    rs.getInt("UsedCoupons"),
+                    rs.getDouble("TotalDiscountGiven")
+                );
+            }
+        }
+
+        return new service.CouponService.CouponStatistics(0, 0, 0, 0, 0.0);
     }
 }

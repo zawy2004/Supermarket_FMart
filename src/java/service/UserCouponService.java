@@ -2,6 +2,7 @@ package service;
 
 import dao.UserCouponDAO;
 import model.UserCoupon;
+import config.CouponConfig;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -10,9 +11,10 @@ import java.util.logging.Logger;
 /**
  * Service class for UserCoupon operations
  * Handles business logic for personal coupon assignments
+ * Uses configuration for coupon codes and expiry days
  */
 public class UserCouponService {
-    
+
     private static final Logger logger = Logger.getLogger(UserCouponService.class.getName());
     private UserCouponDAO userCouponDAO = new UserCouponDAO();
 
@@ -22,11 +24,11 @@ public class UserCouponService {
     public boolean assignWelcomeCoupon(int userId) {
         try {
             return userCouponDAO.assignCouponToUser(
-                userId, 
-                "FMART50K", 
-                "SYSTEM", 
-                "Welcome coupon for new user registration", 
-                90 // 90 days expiry
+                userId,
+                CouponConfig.getFmart50kCode(),
+                "SYSTEM",
+                "Welcome coupon for new user registration",
+                CouponConfig.getFmart50kExpiryDays()
             );
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error assigning welcome coupon to user " + userId, e);
@@ -40,11 +42,11 @@ public class UserCouponService {
     public boolean assignBirthdayCoupon(int userId) {
         try {
             return userCouponDAO.assignCouponToUser(
-                userId, 
-                "BIRTHDAY20", 
-                "SYSTEM", 
-                "Birthday coupon - Happy Birthday!", 
-                60 // 60 days expiry
+                userId,
+                CouponConfig.getBirthday20Code(),
+                "SYSTEM",
+                "Birthday coupon - Happy Birthday!",
+                CouponConfig.getBirthday20ExpiryDays()
             );
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error assigning birthday coupon to user " + userId, e);
@@ -58,11 +60,11 @@ public class UserCouponService {
     public boolean assignVIPCoupon(int userId) {
         try {
             return userCouponDAO.assignCouponToUser(
-                userId, 
-                "VIP15", 
-                "SYSTEM", 
-                "VIP customer reward - Thank you for your loyalty", 
-                180 // 180 days expiry
+                userId,
+                CouponConfig.getVip15Code(),
+                "SYSTEM",
+                "VIP customer reward - Thank you for your loyalty",
+                CouponConfig.getVip15ExpiryDays()
             );
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error assigning VIP coupon to user " + userId, e);
@@ -76,11 +78,11 @@ public class UserCouponService {
     public boolean assignComebackCoupon(int userId) {
         try {
             return userCouponDAO.assignCouponToUser(
-                userId, 
-                "COMEBACK100K", 
-                "SYSTEM", 
-                "Welcome back! We missed you", 
-                60 // 60 days expiry
+                userId,
+                CouponConfig.getComeback100kCode(),
+                "SYSTEM",
+                "Welcome back! We missed you",
+                CouponConfig.getComeback100kExpiryDays()
             );
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error assigning comeback coupon to user " + userId, e);

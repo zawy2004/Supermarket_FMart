@@ -5,7 +5,8 @@ import model.CouponUsage;
 import model.User;
 import dao.CouponUsageDAO;
 import service.CouponService;
-import util.CouponValidationUtil.ValidationException;
+import service.CouponService.ValidationException;
+import util.CSRFTokenUtil;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -72,14 +73,23 @@ public class CouponManagementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Check admin authentication
         if (!isAdminAuthenticated(request)) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
+        // CSRF Protection for sensitive operations
         String action = request.getParameter("action");
+        if (action != null && (action.equals("create") || action.equals("update") ||
+                              action.equals("delete") || action.equals("bulk_action"))) {
+            if (!CSRFTokenUtil.validateToken(request)) {
+                request.setAttribute("errorMessage", "Invalid security token. Please refresh the page and try again.");
+                request.getRequestDispatcher("/Admin/coupon.jsp").forward(request, response);
+                return;
+            }
+        }
         
         try {
             switch (action != null ? action : "") {
@@ -452,9 +462,43 @@ public class CouponManagementServlet extends HttpServlet {
         if (session == null) {
             return false;
         }
-        
+
         User user = (User) session.getAttribute("user");
         return user != null && ("admin".equals(user.getRoleName()) || "manager".equals(user.getRoleName()));
+    }
+
+    /**
+     * Check if user has permission for specific action
+     */
+    private boolean hasPermission(HttpServletRequest request, String action) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return false;
+        }
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return false;
+        }
+
+        String roleName = user.getRoleName();
+
+        // Admin has all permissions
+        if ("admin".equals(roleName)) {
+            return true;
+        }
+
+        // Manager has limited permissions
+        if ("manager".equals(roleName)) {
+            // Manager cannot delete coupons or perform bulk delete
+            if ("delete".equals(action) ||
+                ("bulk_action".equals(action) && "delete".equals(request.getParameter("bulk_action_type")))) {
+                return false;
+            }
+            return true;
+        }
+
+        return false;
     }
 
     private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response)
@@ -507,6 +551,13 @@ public class CouponManagementServlet extends HttpServlet {
     // Phương thức xóa coupon
     private void handleDeleteCoupon(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
+
+        // Check permission for delete action
+        if (!hasPermission(request, "delete")) {
+            response.setContentType("application/json");
+            response.getWriter().write("{\"success\": false, \"message\": \"Bạn không có quyền xóa coupon\"}");
+            return;
+        }
 
         String couponIdStr = request.getParameter("couponId");
         if (couponIdStr == null || couponIdStr.trim().isEmpty()) {

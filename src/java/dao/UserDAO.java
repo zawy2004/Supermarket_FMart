@@ -581,4 +581,42 @@ public boolean checkUserPassword(int userId, String rawPassword) {
         return count;
     }
 
+    /**
+     * Get users with birthday today for coupon assignment
+     */
+    public List<User> getUsersWithBirthdayToday() throws SQLException {
+        String sql = """
+            SELECT UserID, Username, Email, FullName, PhoneNumber, DateOfBirth, Gender, RoleID, IsActive
+            FROM Users
+            WHERE IsActive = 1
+            AND DateOfBirth IS NOT NULL
+            AND MONTH(DateOfBirth) = MONTH(GETDATE())
+            AND DAY(DateOfBirth) = DAY(GETDATE())
+            """;
+
+        List<User> users = new ArrayList<>();
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("UserID"));
+                user.setUsername(rs.getString("Username"));
+                user.setEmail(rs.getString("Email"));
+                user.setFullName(rs.getString("FullName"));
+                user.setPhoneNumber(rs.getString("PhoneNumber"));
+                user.setDateOfBirth(rs.getDate("DateOfBirth"));
+                user.setGender(rs.getString("Gender"));
+                user.setRoleId(rs.getInt("RoleID"));
+                user.setIsActive(rs.getBoolean("IsActive"));
+
+                users.add(user);
+            }
+        }
+
+        return users;
+    }
+
 }

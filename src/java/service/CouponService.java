@@ -2,198 +2,50 @@ package service;
 
 import dao.CouponDAO;
 import dao.CouponUsageDAO;
+import dao.UserDAO;
 import model.Coupon;
 import model.CouponUsage;
-import util.CouponValidationUtil;
-import util.CouponValidationUtil.ValidationException;
-import util.TransactionManager;
-import config.DatabaseConfig;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import model.User;
+import config.CouponConfig;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
+/**
+ * Enhanced CouponService with full functionality
+ * Handles both personal and global coupons with proper validation
+ */
 public class CouponService {
-    
+
     private static final Logger logger = Logger.getLogger(CouponService.class.getName());
     private CouponDAO couponDAO = new CouponDAO();
     private CouponUsageDAO couponUsageDAO = new CouponUsageDAO();
-
-    public int createCoupon(Coupon coupon) throws SQLException, ValidationException {
-        // Validate coupon data
-        CouponValidationUtil.validateCoupon(coupon);
-        
-        // Check if coupon code already exists
-        if (couponDAO.couponCodeExists(coupon.getCouponCode())) {
-            throw new ValidationException("Mã coupon đã tồn tại: " + coupon.getCouponCode());
-        }
-        
-        // Set default values
-        coupon.setUsageCount(0);
-        coupon.setActive(true);
-        coupon.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
-        
-        return couponDAO.addCoupon(coupon);
-    }
-
-
-    public List<Coupon> getAllCoupons() throws SQLException {
-        return couponDAO.getAllCoupons();
-    }
-
-
-    public List<Coupon> getActiveCoupons() throws SQLException {
-        return couponDAO.getActiveCoupons();
-    }
-
-    public Coupon getCouponByCode(String couponCode) throws SQLException {
-        if (couponCode == null || couponCode.trim().isEmpty()) {
-            return null;
-        }
-        return couponDAO.getCouponByCode(couponCode.trim().toUpperCase());
-    }
-
-
-    public Coupon getCouponById(int couponId) throws SQLException {
-        return couponDAO.getCouponById(couponId);
-    }
-
+    private UserDAO userDAO = new UserDAO();
+    
     /**
-     * UNIFIED validation for both personal and global coupons
+     * Custom exception for validation errors
      */
-    public void validateCouponForUser(String couponCode, int userId, double orderAmount)
-            throws SQLException, ValidationException {
-
-        // Step 1: Check if user has personal coupon first
-        if (hasPersonalCoupon(userId, couponCode)) {
-            validatePersonalCoupon(userId, couponCode, orderAmount);
-            return;
+    public static class ValidationException extends Exception {
+        public ValidationException(String message) {
+            super(message);
         }
-
-        // Step 2: Validate as global coupon (original logic)
-        Coupon coupon = getCouponByCode(couponCode);
-        if (coupon == null) {
-            throw new ValidationException("Mã coupon không tồn tại");
-        }
-
-        // Get user's usage count for this coupon
-        int userUsageCount = couponUsageDAO.getUserCouponUsageCount(userId, coupon.getCouponId());
-
-        // Validate coupon usage
-        CouponValidationUtil.validateCouponUsage(coupon, orderAmount, userUsageCount);
     }
-
+    
     /**
-     * Check if user has personal coupon
+     * Apply coupon to order - MAIN METHOD
+     * Uses integrated CouponDAO logic (personal + global)
      */
-    private boolean hasPersonalCoupon(int userId, String couponCode) throws SQLException {
-        String sql = """
-            SELECT 1 FROM UserCoupons uc
-            INNER JOIN Coupons c ON uc.CouponID = c.CouponID
-            WHERE uc.UserID = ? AND c.CouponCode = ?
-            AND uc.IsUsed = 0
-            AND c.IsActive = 1
-            AND (uc.ExpiryDate IS NULL OR uc.ExpiryDate > GETDATE())
-            """;
-
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, userId);
-            stmt.setString(2, couponCode);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
-            }
-        }
-    }
-
-    /**
-     * Validate personal coupon
-     */
-    private void validatePersonalCoupon(int userId, String couponCode, double orderAmount)
-            throws SQLException, ValidationException {
-
-        String sql = """
-            SELECT c.*, uc.ExpiryDate as PersonalExpiryDate
-            FROM UserCoupons uc
-            INNER JOIN Coupons c ON uc.CouponID = c.CouponID
-            WHERE uc.UserID = ? AND c.CouponCode = ?
-            AND uc.IsUsed = 0
-            AND c.IsActive = 1
-            AND (uc.ExpiryDate IS NULL OR uc.ExpiryDate > GETDATE())
-            """;
-
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, userId);
-            stmt.setString(2, couponCode);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (!rs.next()) {
-                    throw new ValidationException("Bạn không có coupon cá nhân này hoặc coupon đã hết hạn");
-                }
-
-                // Check minimum order amount
-                double minOrderAmount = rs.getDouble("MinOrderAmount");
-                if (minOrderAmount > 0 && orderAmount < minOrderAmount) {
-                    throw new ValidationException("Đơn hàng tối thiểu " + String.format("%,.0f", minOrderAmount) + " VND để sử dụng coupon này");
-                }
-
-                // Check coupon validity period
-                java.sql.Date startDate = rs.getDate("StartDate");
-                java.sql.Date endDate = rs.getDate("EndDate");
-                java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
-
-                if (startDate != null && now.before(startDate)) {
-                    throw new ValidationException("Coupon chưa có hiệu lực");
-                }
-
-                if (endDate != null && now.after(endDate)) {
-                    throw new ValidationException("Coupon đã hết hạn sử dụng");
-                }
-            }
-        }
-    }
-
-    /**
-     * Calculate discount - UNIFIED for both personal and global coupons
-     */
-    public double calculateDiscount(String couponCode, double orderAmount) throws SQLException, ValidationException {
-        // Try to get coupon from database (works for both personal and global)
-        Coupon coupon = getCouponByCode(couponCode);
-        if (coupon == null) {
-            throw new ValidationException("Mã coupon không tồn tại");
-        }
-
-        return coupon.calculateDiscount(orderAmount);
-    }
-
-    public double applyCouponToOrder(int orderId, String couponCode, int userId, double orderAmount)
-            throws SQLException, ValidationException {
-
-        // CRITICAL FIX: Let procedure handle all validation to avoid double validation
-        // Procedure will validate both personal and global coupons appropriately
-        // Note: orderAmount parameter is kept for API compatibility but not used
-        // The procedure will get order amount from database directly
+    public double applyCouponToOrder(int orderId, String couponCode, int userId, double orderAmount) throws SQLException, ValidationException {
         try {
-            double appliedDiscount = couponDAO.applyCouponToOrder(orderId, couponCode, userId);
-
-            if (appliedDiscount > 0) {
-                logger.info("Successfully applied coupon " + couponCode + " to order " + orderId +
-                          " for user " + userId + ", discount: " + appliedDiscount);
-            }
-
-            return appliedDiscount;
-
+            logger.info("Applying coupon " + couponCode + " to order " + orderId + " for user " + userId);
+            double discount = couponDAO.applyCouponToOrder(orderId, couponCode, userId);
+            logger.info("Successfully applied coupon. Discount: " + discount);
+            return discount;
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error applying coupon: " + e.getMessage(), e);
             // Convert SQL errors to ValidationException for consistent error handling
             String errorMessage = e.getMessage();
             if (errorMessage.contains("Mã giảm giá không hợp lệ") ||
@@ -203,130 +55,198 @@ public class CouponService {
                 errorMessage.contains("không đủ để áp dụng")) {
                 throw new ValidationException(errorMessage);
             }
-
-            logger.log(Level.SEVERE, "Error applying coupon to order", e);
             throw e;
         }
     }
-
+    
     /**
-     * Apply coupon to order with transaction management
+     * Get coupon by code
      */
-    public double applyCouponToOrderTransactional(int orderId, String couponCode, int userId, double orderAmount)
-            throws SQLException, ValidationException {
-
-        return TransactionManager.executeInTransaction(conn -> {
-            try {
-                // Step 1: Get and validate coupon
-                Coupon coupon = getCouponByCode(couponCode);
-                if (coupon == null) {
-                    throw new SQLException("Coupon not found: " + couponCode);
-                }
-
-                // Step 2: Validate coupon for user and order
-                if (!CouponValidationUtil.isValidForOrder(coupon, userId, orderAmount)) {
-                    String errorMessage = CouponValidationUtil.getValidationErrorMessage(coupon, userId, orderAmount);
-                    throw new SQLException("Coupon validation failed: " + errorMessage);
-                }
-
-                // Step 3: Calculate discount
-                double discount = CouponValidationUtil.calculateDiscount(coupon, orderAmount);
-
-                // Step 4: Record coupon usage
-                CouponUsage usage = new CouponUsage();
-                usage.setCouponID(coupon.getCouponId());
-                usage.setUserID(userId);
-                usage.setOrderID(orderId);
-                usage.setDiscountAmount(discount);
-                usage.setUsedDate(new java.util.Date());
-
-                boolean usageRecorded = couponUsageDAO.logCouponUsage(usage);
-                if (!usageRecorded) {
-                    throw new SQLException("Failed to record coupon usage");
-                }
-
-                // Step 5: Update coupon usage count
-                couponDAO.incrementUsageCount(coupon.getCouponId());
-
-                logger.info("Successfully applied coupon " + couponCode + " to order " + orderId +
-                           " for user " + userId + ", discount: " + discount);
-
-                return discount;
-
-            } catch (Exception e) {
-                if (e instanceof SQLException) {
-                    throw (SQLException) e;
-                } else {
-                    throw new SQLException("Error applying coupon: " + e.getMessage(), e);
-                }
+    public Coupon getCouponByCode(String couponCode) throws SQLException {
+        if (couponCode == null || couponCode.trim().isEmpty()) {
+            return null;
+        }
+        return couponDAO.getCouponByCode(couponCode.trim().toUpperCase());
+    }
+    
+    /**
+     * Simple validation - just check if coupon exists and is active
+     */
+    public boolean validateCoupon(String couponCode, int userId, double orderTotal) {
+        try {
+            Coupon coupon = getCouponByCode(couponCode);
+            if (coupon == null || !coupon.isActive()) {
+                return false;
             }
-        });
+            
+            // Check minimum order amount
+            if (coupon.getMinOrderAmount() > 0 && orderTotal < coupon.getMinOrderAmount()) {
+                return false;
+            }
+            
+            return true;
+        } catch (SQLException e) {
+            logger.log(Level.WARNING, "Error validating coupon: " + e.getMessage(), e);
+            return false;
+        }
+    }
+    
+    /**
+     * Calculate discount for display purposes
+     */
+    public double calculateDiscount(String couponCode, double orderAmount) throws SQLException, ValidationException {
+        Coupon coupon = getCouponByCode(couponCode);
+        if (coupon == null) {
+            throw new ValidationException("Mã coupon không tồn tại");
+        }
+
+        return coupon.calculateDiscount(orderAmount);
     }
 
-    public double applyCouponManually(int orderId, String couponCode, int userId, double orderAmount)
-            throws SQLException, ValidationException {
+    /**
+     * Get all coupons (for admin)
+     */
+    public List<Coupon> getAllCoupons() throws SQLException {
+        return couponDAO.getAllCoupons();
+    }
 
-        // Use stored procedure for manual application as well
-        // This ensures consistency with automatic application
-        return applyCouponToOrder(orderId, couponCode, userId, orderAmount);
+    /**
+     * Get active coupons
+     */
+    public List<Coupon> getActiveCoupons() throws SQLException {
+        return couponDAO.getActiveCoupons();
+    }
+
+    /**
+     * Get coupon by ID
+     */
+    public Coupon getCouponById(int couponId) throws SQLException {
+        return couponDAO.getCouponById(couponId);
+    }
+
+    /**
+     * Create new coupon
+     */
+    public int createCoupon(Coupon coupon) throws SQLException, ValidationException {
+        // Basic validation
+        if (coupon.getCouponCode() == null || coupon.getCouponCode().trim().isEmpty()) {
+            throw new ValidationException("Mã coupon không được để trống");
+        }
+
+        if (coupon.getDiscountValue() <= 0) {
+            throw new ValidationException("Giá trị giảm giá phải lớn hơn 0");
+        }
+
+        // Check if coupon code already exists
+        if (couponDAO.couponCodeExists(coupon.getCouponCode())) {
+            throw new ValidationException("Mã coupon đã tồn tại: " + coupon.getCouponCode());
+        }
+
+        // Set default values
+        coupon.setUsageCount(0);
+        coupon.setActive(true);
+        coupon.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
+
+        return couponDAO.addCoupon(coupon);
+    }
+
+    /**
+     * Update coupon
+     */
+    public boolean updateCoupon(Coupon coupon) throws SQLException, ValidationException {
+        // Basic validation
+        if (coupon.getCouponCode() == null || coupon.getCouponCode().trim().isEmpty()) {
+            throw new ValidationException("Mã coupon không được để trống");
+        }
+
+        if (coupon.getDiscountValue() <= 0) {
+            throw new ValidationException("Giá trị giảm giá phải lớn hơn 0");
+        }
+
+        // Check if coupon code exists for other coupons
+        Coupon existingCoupon = getCouponByCode(coupon.getCouponCode());
+        if (existingCoupon != null && existingCoupon.getCouponId() != coupon.getCouponId()) {
+            throw new ValidationException("Mã coupon đã tồn tại: " + coupon.getCouponCode());
+        }
+
+        return couponDAO.updateCoupon(coupon);
+    }
+
+    /**
+     * Delete coupon (soft delete)
+     */
+    public boolean deleteCoupon(int couponId) throws SQLException {
+        return couponDAO.deleteCoupon(couponId);
+    }
+
+    /**
+     * Update coupon status
+     */
+    public boolean updateCouponStatus(int couponId, boolean isActive) throws SQLException {
+        return couponDAO.updateCouponStatus(couponId, isActive);
+    }
+
+    /**
+     * Search coupons with pagination
+     */
+    public List<Coupon> searchCoupons(String keyword, String statusFilter, String typeFilter, int offset, int limit) throws SQLException {
+        return couponDAO.searchCoupons(keyword, statusFilter, typeFilter, offset, limit);
+    }
+
+    /**
+     * Count search results
+     */
+    public int countSearchCoupons(String keyword, String statusFilter, String typeFilter) throws SQLException {
+        return couponDAO.countSearchCoupons(keyword, statusFilter, typeFilter);
     }
 
     /**
      * Get user's coupon usage history
      */
-    public List<CouponUsage> getUserCouponHistory(int userId) throws SQLException {
-        return couponUsageDAO.getCouponUsageByUser(userId);
-    }
-
-    /**
-     * Get user's coupon usage history by orders (compatible with database schema)
-     */
     public List<CouponUsage> getUserCouponHistoryByOrders(int userId) throws SQLException {
         return couponUsageDAO.getCouponUsageByUserOrders(userId);
     }
 
- 
+    /**
+     * Get order coupon usage
+     */
     public List<CouponUsage> getOrderCouponUsage(int orderId) throws SQLException {
         return couponUsageDAO.getCouponUsageByOrder(orderId);
     }
 
-  
-    public boolean canUserUseCoupon(String couponCode, int userId, double orderAmount) {
-        try {
-            validateCouponForUser(couponCode, userId, orderAmount);
-            return true;
-        } catch (SQLException | ValidationException e) {
-            logger.warning("User " + userId + " cannot use coupon " + couponCode + ": " + e.getMessage());
-            return false;
-        }
-    }
-
-   
-    public boolean updateCouponStatus(int couponId, boolean isActive) throws SQLException {
-        return couponDAO.updateCouponStatus(couponId, isActive);
-    }
-
+    /**
+     * Get coupon usage statistics
+     */
     public List<CouponUsageDAO.CouponUsageStats> getCouponUsageStatistics() throws SQLException {
         return couponUsageDAO.getCouponUsageStats();
     }
 
+    /**
+     * Get available coupons for user
+     */
     public List<Coupon> getAvailableCouponsForUser(int userId, double orderAmount) throws SQLException {
         List<Coupon> activeCoupons = getActiveCoupons();
         List<Coupon> availableCoupons = new ArrayList<>();
-        
+
         for (Coupon coupon : activeCoupons) {
-            if (canUserUseCoupon(coupon.getCouponCode(), userId, orderAmount)) {
+            if (validateCoupon(coupon.getCouponCode(), userId, orderAmount)) {
                 availableCoupons.add(coupon);
             }
         }
-        
+
         return availableCoupons;
     }
 
+    /**
+     * Check if coupon code is available
+     */
     public boolean isCouponCodeAvailable(String couponCode) throws SQLException {
         return !couponDAO.couponCodeExists(couponCode);
     }
 
+    /**
+     * Generate coupon code suggestion
+     */
     public String generateCouponCodeSuggestion(String baseName) {
         if (baseName == null || baseName.trim().isEmpty()) {
             baseName = "COUPON";
@@ -342,91 +262,55 @@ public class CouponService {
     }
 
     /**
-     * Tìm kiếm coupon với phân trang
-     */
-    public List<Coupon> searchCoupons(String keyword, String statusFilter, String typeFilter, int offset, int limit) throws SQLException {
-        return couponDAO.searchCoupons(keyword, statusFilter, typeFilter, offset, limit);
-    }
-
-    /**
-     * Đếm số lượng coupon theo điều kiện tìm kiếm
-     */
-    public int countSearchCoupons(String keyword, String statusFilter, String typeFilter) throws SQLException {
-        return couponDAO.countSearchCoupons(keyword, statusFilter, typeFilter);
-    }
-
-    /**
-     * Cập nhật thông tin coupon
-     */
-    public boolean updateCoupon(Coupon coupon) throws SQLException, ValidationException {
-        // Validate coupon data
-        CouponValidationUtil.validateCoupon(coupon);
-
-        // Check if coupon code exists for other coupons
-        Coupon existingCoupon = getCouponByCode(coupon.getCouponCode());
-        if (existingCoupon != null && existingCoupon.getCouponId() != coupon.getCouponId()) {
-            throw new ValidationException("Mã coupon đã tồn tại: " + coupon.getCouponCode());
-        }
-
-        return couponDAO.updateCoupon(coupon);
-    }
-
-    /**
-     * Xóa coupon (soft delete)
-     */
-    public boolean deleteCoupon(int couponId) throws SQLException {
-        return couponDAO.deleteCoupon(couponId);
-    }
-
-    /**
-     * Xóa coupon vĩnh viễn
-     */
-    public boolean hardDeleteCoupon(int couponId) throws SQLException {
-        return couponDAO.hardDeleteCoupon(couponId);
-    }
-
-    /**
-     * Lấy thống kê tổng quan về coupon
+     * Get optimized coupon statistics using single SQL query
      */
     public CouponStatistics getCouponStatistics() throws SQLException {
-        List<Coupon> allCoupons = getAllCoupons();
-
-        int totalCoupons = allCoupons.size();
-        int activeCoupons = 0;
-        int expiredCoupons = 0;
-        int usedCoupons = 0;
-        double totalDiscountGiven = 0.0;
-
-        Date now = new Date();
-
-        for (Coupon coupon : allCoupons) {
-            if (coupon.isActive()) {
-                if (coupon.getEndDate().before(now)) {
-                    expiredCoupons++;
-                } else {
-                    activeCoupons++;
-                }
-            }
-
-            if (coupon.getUsageCount() > 0) {
-                usedCoupons++;
-                // Tính tổng discount đã áp dụng - lấy từ CouponUsage table
-                try {
-                    List<CouponUsage> usageList = couponUsageDAO.getCouponUsageByCoupon(coupon.getCouponId());
-                    for (CouponUsage usage : usageList) {
-                        totalDiscountGiven += usage.getDiscountAmount();
-                    }
-                } catch (SQLException e) {
-                    logger.warning("Không thể tính tổng discount cho coupon " + coupon.getCouponCode() + ": " + e.getMessage());
-                }
-            }
-        }
-
-        return new CouponStatistics(totalCoupons, activeCoupons, expiredCoupons, usedCoupons, totalDiscountGiven);
+        return couponDAO.getCouponStatistics();
     }
 
     /**
-     * Inner class để lưu thống kê coupon
+     * Validate coupon for user with detailed error messages
+     */
+    public void validateCouponForUser(String couponCode, int userId, double orderAmount) throws SQLException, ValidationException {
+        Coupon coupon = getCouponByCode(couponCode);
+        if (coupon == null) {
+            throw new ValidationException("Mã coupon không tồn tại");
+        }
+
+        if (!coupon.isActive()) {
+            throw new ValidationException("Mã coupon đã bị vô hiệu hóa");
+        }
+
+        // Check validity period
+        Date now = new Date();
+        if (coupon.getStartDate() != null && now.before(coupon.getStartDate())) {
+            throw new ValidationException("Mã coupon chưa có hiệu lực");
+        }
+
+        if (coupon.getEndDate() != null && now.after(coupon.getEndDate())) {
+            throw new ValidationException("Mã coupon đã hết hạn sử dụng");
+        }
+
+        // Check minimum order amount
+        if (coupon.getMinOrderAmount() > 0 && orderAmount < coupon.getMinOrderAmount()) {
+            throw new ValidationException("Đơn hàng tối thiểu " + String.format("%,.0f", coupon.getMinOrderAmount()) + " VND để sử dụng coupon này");
+        }
+
+        // Check usage limits
+        if (coupon.getOrderLimit() > 0) {
+            int userUsageCount = couponUsageDAO.getUserCouponUsageCount(userId, coupon.getCouponId());
+            if (userUsageCount >= coupon.getOrderLimit()) {
+                throw new ValidationException("Bạn đã sử dụng hết số lần cho phép của mã coupon này");
+            }
+        }
+
+        if (coupon.getUsageLimit() > 0 && coupon.getUsageCount() >= coupon.getUsageLimit()) {
+            throw new ValidationException("Mã coupon đã hết số lần sử dụng");
+        }
+    }
+
+    /**
+     * Inner class for coupon statistics
      */
     public static class CouponStatistics {
         private int totalCoupons;

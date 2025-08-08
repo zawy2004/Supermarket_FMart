@@ -2,7 +2,9 @@ package scheduler;
 
 import service.UserCouponService;
 import dao.UserDAO;
+import dao.CouponDAO;
 import model.User;
+import config.CouponConfig;
 import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
@@ -127,10 +129,12 @@ public class CouponScheduler {
      * Get users with birthday today
      */
     private List<User> getUsersWithBirthdayToday() {
-        // This would need a specific query in UserDAO
-        // For now, return empty list as placeholder
-        // TODO: Implement getUsersWithBirthdayToday in UserDAO
-        return List.of();
+        try {
+            return userDAO.getUsersWithBirthdayToday();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error getting users with birthday today", e);
+            return List.of();
+        }
     }
     
     /**

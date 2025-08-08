@@ -751,7 +751,7 @@
                                         success: function (response) {
                                             showNotification('Áp dụng mã giảm giá thành công!', 'success');
                                             $('#couponModal').modal('hide');
-                                            location.reload();
+                                            updateOrderSummary();
                                         },
                                         error: function (xhr) {
                                             showNotification('Lỗi khi áp dụng mã giảm giá: ' + xhr.responseText, 'error');
@@ -773,7 +773,7 @@
                                         },
                                         success: function (response) {
                                             showNotification('Đã hủy áp dụng mã giảm giá!', 'info');
-                                            location.reload();
+                                            updateOrderSummary();
                                         },
                                         error: function (xhr) {
                                             showNotification('Lỗi khi hủy mã giảm giá: ' + xhr.responseText, 'error');
@@ -806,6 +806,72 @@
                                             $('#availableCoupons').html('<div class="text-center py-3 text-danger"><i class="uil uil-exclamation-triangle"></i> Lỗi khi tải mã giảm giá</div>');
                                         }
                                     });
+                                }
+
+                                /**
+                                 * Update order summary without page reload
+                                 */
+                                function updateOrderSummary() {
+                                    $.ajax({
+                                        url: '${pageContext.request.contextPath}/checkout',
+                                        type: 'GET',
+                                        data: {
+                                            action: 'getOrderSummary'
+                                        },
+                                        success: function (response) {
+                                            if (response.success) {
+                                                // Update order summary section
+                                                updateOrderSummaryUI(response.data);
+                                                // Update available coupons
+                                                loadAvailableCoupons();
+                                            } else {
+                                                showNotification('Lỗi khi cập nhật thông tin đơn hàng', 'error');
+                                            }
+                                        },
+                                        error: function (xhr) {
+                                            console.error('Error updating order summary:', xhr);
+                                            showNotification('Lỗi khi cập nhật thông tin đơn hàng', 'error');
+                                        }
+                                    });
+                                }
+
+                                /**
+                                 * Update order summary UI elements
+                                 */
+                                function updateOrderSummaryUI(data) {
+                                    // Update subtotal
+                                    $('.subtotal-amount').text(formatCurrency(data.subtotal));
+
+                                    // Update shipping
+                                    $('.shipping-amount').text(formatCurrency(data.shippingFee));
+
+                                    // Update discount
+                                    if (data.discount > 0) {
+                                        $('.discount-section').show();
+                                        $('.discount-amount').text('-' + formatCurrency(data.discount));
+                                        $('.applied-coupon-code').text(data.appliedCouponCode);
+                                        $('.remove-coupon-btn').show();
+                                    } else {
+                                        $('.discount-section').hide();
+                                        $('.remove-coupon-btn').hide();
+                                    }
+
+                                    // Update total
+                                    $('.total-amount').text(formatCurrency(data.total));
+
+                                    // Update hidden form fields
+                                    $('input[name="finalAmount"]').val(data.total);
+                                    $('input[name="appliedCouponCode"]').val(data.appliedCouponCode || '');
+                                }
+
+                                /**
+                                 * Format currency for display
+                                 */
+                                function formatCurrency(amount) {
+                                    return new Intl.NumberFormat('vi-VN', {
+                                        style: 'currency',
+                                        currency: 'VND'
+                                    }).format(amount);
                                 }
 
                                 // ===== COUPON MANAGEMENT FUNCTIONS - END =====

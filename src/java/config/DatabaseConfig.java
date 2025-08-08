@@ -12,6 +12,9 @@ public class DatabaseConfig {
     private static final String USER = "sa"; // Windows Authentication
     private static final String PASSWORD = "123456"; // Windows Authentication
 
+    private static final String URL = "jdbc:sqlserver://DESKTOP-MK7ODO2;databaseName=FmartDB;encrypt=false;integratedSecurity=true";
+    private static final String USER = "sa";
+    private static final String PASSWORD = "123456";
 
 
     private static Connection connection = null;

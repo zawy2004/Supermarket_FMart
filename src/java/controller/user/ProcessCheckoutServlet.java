@@ -15,7 +15,7 @@ import service.OrderService;
 import service.ProductService;
 import service.VnpayService;
 import service.CouponService;
-import util.CouponValidationUtil.ValidationException;
+import service.CouponService.ValidationException;
 
 import java.io.IOException;
 import java.net.URLEncoder;

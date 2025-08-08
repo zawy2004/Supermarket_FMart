@@ -1,17 +1,25 @@
 package util;
 
+import config.CouponConfig;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
- * Utility class for CSRF token generation and validation
+ * CSRF Token utility for security
  */
 public class CSRFTokenUtil {
-    
-    private static final String CSRF_TOKEN_SESSION_KEY = "csrfToken";
-    private static final int TOKEN_LENGTH = 32;
+
+    private static final Logger logger = Logger.getLogger(CSRFTokenUtil.class.getName());
+    private static final String CSRF_TOKEN_ATTR = "csrfToken";
+    private static final String CSRF_TOKEN_TIME_ATTR = "csrfTokenTime";
     private static final SecureRandom secureRandom = new SecureRandom();
+
+    // Cache for token validation (in production, use Redis or database)
+    private static final ConcurrentHashMap<String, Long> tokenCache = new ConcurrentHashMap<>();
     
     /**
      * Generate a new CSRF token and store it in session
@@ -74,5 +82,22 @@ public class CSRFTokenUtil {
      */
     public static void removeToken(HttpSession session) {
         session.removeAttribute(CSRF_TOKEN_SESSION_KEY);
+    }
+
+    /**
+     * Validate CSRF token from request (new method for enhanced security)
+     */
+    public static boolean validateToken(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return false;
+        }
+
+        String requestToken = request.getParameter("csrfToken");
+        if (requestToken == null) {
+            requestToken = request.getHeader("X-CSRF-Token");
+        }
+
+        return validateToken(session, requestToken);
     }
 }

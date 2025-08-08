@@ -6,7 +6,7 @@ import model.User;
 import model.UserCoupon;
 import service.CouponService;
 import service.UserCouponService;
-import util.CouponValidationUtil.ValidationException;
+import service.CouponService.ValidationException;
 
 import java.io.IOException;
 import java.sql.SQLException;
