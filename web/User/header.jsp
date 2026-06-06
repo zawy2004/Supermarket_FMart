@@ -443,7 +443,7 @@
                                     Blog
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a class="dropdown-item" href="User/our_blog.jsp">Our Blog</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/our_blog">Our Blog</a></li>
                                     
                                 </ul>
                             </li>

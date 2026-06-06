@@ -527,9 +527,7 @@
                                         <p class="mb-0 opacity-75">Manage all users, roles, and permissions in your system</p>
                                     </div>
                                     <div class="col-lg-4 text-end">
-                                        <button class="btn btn-light btn-lg">
-                                            <i class="fas fa-user-plus me-2"></i>Add New User
-                                        </button>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -828,7 +826,7 @@
                                             <c:if test="${i <= 3 || i > totalPages - 3 || (i >= page - 1 && i <= page + 1)}">
                                                 <li class="page-item ${i == page ? 'active' : ''}">
                                                     <a class="page-link" href="UserManagementServlet?action=list&page=${i}&${queryStr}">
-                                                        ${i}
+                                                         ${i}
                                                     </a>
                                                 </li>
                                             </c:if>

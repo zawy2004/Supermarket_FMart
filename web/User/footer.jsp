@@ -47,17 +47,11 @@
                     <div class="second-row-item">
                         <h4>Useful Links</h4>
                         <ul>
-                            <li><a href="${pageContext.request.contextPath}/User/about_us.jsp">About US</a></li>
+                            <li><a href="${pageContext.request.contextPath}/about_us">About US</a></li>
                             <li><a href="${pageContext.request.contextPath}/shop?sortBy=discount">Featured Products</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/offers.jsp">Offers</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/our_blog.jsp">Blog</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/blog_no_sidebar.jsp">Blog</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/blog_left_sidebar.jsp">Blog</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/blog_right_sidebar.jsp">Blog</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/blog_detail_view.jsp">Blog</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/blog_left_sidebar_single_view.jsp">Blog</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/faq.jsp">Faq</a></li>
-                            <li><a href="${pageContext.request.contextPath}/User/career.jsp">Careers</a></li>
+                            <li><a href="${pageContext.request.contextPath}/offers">Offers</a></li>
+                            <li><a href="${pageContext.request.contextPath}/our_blog">Blog</a></li>
+                            <li><a href="${pageContext.request.contextPath}/faq">Faq</a></li>
                             <li><a href="${pageContext.request.contextPath}/contact">Contact Us</a></li>
                         </ul>
                     </div>
